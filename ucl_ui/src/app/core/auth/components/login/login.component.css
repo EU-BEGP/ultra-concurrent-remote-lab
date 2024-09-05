@@ -1,0 +1,15 @@
+a:link,
+a:visited {
+  padding-left: 10px;
+  text-decoration: none;
+  color: #203587;
+}
+
+a:link:active,
+a:visited:active {
+  color: #6372ab;
+}
+
+#password-link {
+  margin-bottom: 20px;
+}

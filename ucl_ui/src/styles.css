@@ -1,0 +1,154 @@
+/* ---------------- General Layout and Utility Styles ---------------- */
+html,
+body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+.main-container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  min-height: 100vh;
+}
+
+.content {
+  flex: 1;
+  overflow: auto;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+.center {
+  margin: 0 auto;
+  display: block;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.title {
+  text-align: center;
+  font-weight: bold;
+  font-size: 17px;
+}
+
+/* -------------------------------------------------------------- */
+
+/* ---------------- Float-based Layout Styles ---------------- */
+.column {
+  float: left;
+  width: 50%;
+}
+
+.cols-3 {
+  float: left;
+  width: 33%;
+}
+
+.cols-4 {
+  float: left;
+  width: 25%;
+}
+
+.cols-5 {
+  float: left;
+  width: 20%;
+}
+
+.row:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+/* -------------------------------------------------------------- */
+
+/* ---------------- Flexbox and Spacing Utilities ---------------- */
+.spacer {
+  flex: 1 1 auto;
+}
+
+.container {
+  padding: 70px;
+}
+
+.toast-container .ngx-toastr {
+  box-shadow: 0 0 12px #3b3b3b !important;
+}
+
+/* -------------------------------------------------------------- */
+
+/* ---------------- Form Styles ---------------- */
+form {
+  padding: 30px;
+}
+
+.input-field {
+  width: 100%;
+  padding-left: 10px;
+  margin-bottom: 10px;
+}
+
+input[type="password"]::-ms-reveal,
+input[type="password"]::-ms-clear {
+  display: none;
+}
+
+.access-button {
+  width: 100%;
+}
+
+/* ---------------------------------------------- */
+
+/* ---------------- Table and Data Presentation Styles ---------------- */
+.mat-card-title-group {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.table {
+  border-radius: 10px;
+}
+
+.table-content {
+  width: 100%;
+  padding-top: 10px;
+}
+
+.table-header {
+  color: white;
+  padding: 18px 20px;
+  margin: 0px 15px;
+}
+
+.table-title {
+  font-size: 1.2rem;
+  font-weight: normal;
+}
+
+tr.no-data-row {
+  display: flex;
+  border-width: 0;
+  border-style: solid;
+  margin-top: 20px;
+}
+
+.mat-table {
+  overflow: auto;
+  max-height: 500px;
+}
+
+.mat-column-id {
+  flex: 0 0 10%;
+}
+
+/* -------------------------------------------------------------- */
