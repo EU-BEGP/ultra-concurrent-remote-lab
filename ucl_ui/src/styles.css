@@ -14,6 +14,7 @@ body {
   flex-direction: column;
   width: 100%;
   min-height: 100vh;
+  padding-bottom: 8px;
 }
 
 .content {
@@ -151,4 +152,155 @@ tr.no-data-row {
   flex: 0 0 10%;
 }
 
-/* -------------------------------------------------------------- */
+/* --------------------------TYPOGRAPHY------------------------- */
+
+.header1 {
+  font-weight: 700;
+  font-size: 1.5rem;
+}
+	  
+.header2 {
+  font-weight: 700;
+  font-size: 1.5rem;
+}
+
+.header3 {
+  font-weight: 700;
+  font-size: 0.6rem;
+}
+
+.body1 {
+  font-size: 0.4rem;
+}
+
+.body2 {
+  font-size: 0.5rem;
+}
+
+.buttons1 {
+  font-size: 0.6rem;
+  font-weight: 700;
+  margin: 0px ;
+}
+.buttonsHome {
+  font-size: 1.0rem;
+  font-weight: 700;
+  margin: 0px ;
+}
+
+.headerHome {
+  font-weight: 700;
+  font-size: 1.8rem;
+}
+
+@media screen and (min-width:200px) {
+  .header1 {
+    font-size: 1.3rem;
+  }
+  .header2 {
+    font-size: 1.2rem;
+  }
+  .header3 {
+    font-size: 0.8rem;
+  }
+  .body1 {
+    font-size: 0.6rem;
+  }
+  .body2 {
+    font-size: 0.6rem;
+  }
+  .buttons1 {
+    font-size: 0.6rem;
+  }
+  .headerHome {
+    font-size: 1.8rem;
+  }
+  .buttonsHome {
+    font-size: 1.1rem;
+  }
+}
+
+@media screen and (min-width:372px) {
+  .header1 {
+    font-size: 1.6rem;
+  }
+  .header2 {
+    font-size: 1.4rem;
+  }
+  .header3 {
+    font-size: 1.0rem;
+  }
+  .body1 {
+    font-size: 0.8rem;
+  }
+  .body2 {
+    font-size: 0.7rem;
+  }
+  .buttons1 {
+    font-size: 0.7rem;
+  }
+  .headerHome {
+    font-size: 2.1rem;
+  }
+  .buttonsHome {
+    font-size: 1.3rem;
+  }
+}
+
+@media screen and (min-width:538px) {
+  .header1 {
+    font-size: 1.8rem;
+  }
+  .header2 {
+    font-size: 1.6rem;
+  }
+  .header3 {
+    font-size: 1.4rem;
+  }
+  .body1 {
+    font-size: 0.9rem;
+  }
+  .body2 {
+    font-size: 0.8rem;
+  }
+  .buttons1 {
+    font-size: 1.0rem;
+  }
+  .headerHome {
+    font-size: 2.3rem;
+  }
+  .buttonsHome {
+    font-size: 1.5rem;
+  }
+}
+
+@media screen and (min-width:664px) {
+  .header1 {
+    font-size: 2.3rem;
+  }
+  .header2 {
+    font-size: 1.7rem;
+  }
+  .header3 {
+    font-size: 1.6rem;
+  }
+  .body1 {
+    font-size: 1.0rem;
+  }
+  .body2 {
+    font-size: 0.9rem;
+  }
+  .buttons1 {
+    font-size: 1.2rem;
+  }
+  .headerHome {
+    font-size: 2.8rem;
+  }
+  .buttonsHome {
+    font-size: 1.8rem;
+  }
+}
+
+
+
+

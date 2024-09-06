@@ -50,7 +50,7 @@ export class NavbarComponent implements OnInit {
   }
 
   goToHome(): void {
-    this.router.navigateByUrl('/home');
+    this.router.navigateByUrl('/');
   }
 
   goToMyProfile(): void {

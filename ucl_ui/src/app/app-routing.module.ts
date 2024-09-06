@@ -6,19 +6,17 @@ import { HomeComponent } from './laboratory/pages/home/home.component';
 import { AuthGuard } from './core/auth/services/guards/auth.guard';
 import { ProfileComponent } from './core/auth/pages/profile/profile.component';
 import { ActivationComponent } from './core/auth/pages/activation/activation.component';
+import { LabComponent } from './laboratory/pages/lab/lab.component';
 
 const routes: Routes = [
   {
-    path: '', redirectTo: '/home', pathMatch: 'full'
+    path: '', pathMatch: 'full',
+    component: HomeComponent
   },
   {
     path: 'access',
     component: AccessComponent,
     canActivate: [AuthGuard],
-  },
-  {
-    path: 'home',
-    component: HomeComponent,
   },
   {
     path: 'activate',
@@ -27,6 +25,10 @@ const routes: Routes = [
   {
     path: 'profile',
     component: ProfileComponent,
+  },
+  {
+    path: 'lab',
+    component: LabComponent,
   },
   {
     path: '**',

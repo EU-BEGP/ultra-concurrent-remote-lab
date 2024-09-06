@@ -1,16 +1,24 @@
 <app-navbar></app-navbar>
 <div>
-  <mat-tab-group mat-align-tabs="center">
-    <mat-tab label="Activity 1">
-      <div class="activity-content">
-        <div class="column">
-        </div>
-        <div class="column">
-        </div>
-      </div>
-    </mat-tab>
-    <mat-tab label="Activity 2">
-      Content for activity 2
-    </mat-tab>
-  </mat-tab-group>
+    <mat-card class="home-container">
+        <mat-card-content class="mat-card-content">
+            <video autoplay class="video" loop muted playsinline>
+                <source src="../../../../assets/Newton.mp4" type="video/mp4">
+            </video>
+            <div class="header-content">
+                <mat-grid-list cols="1" rowHeight="64px">
+                    <mat-grid-tile>
+                        <span class="headerHome">Ultra-Concurrent
+                            Remote Lab</span></mat-grid-tile>
+                    <mat-grid-tile>
+                        <button mat-raised-button color="primary"
+                            (click)="goToRemoteLab()"
+                            class="buttonsHome">
+                            Go to Remote Lab
+                        </button></mat-grid-tile>
+                </mat-grid-list>
+
+            </div>
+        </mat-card-content>
+    </mat-card>
 </div>

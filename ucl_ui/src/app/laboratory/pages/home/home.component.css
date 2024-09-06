@@ -19,12 +19,12 @@
 }
 
 /* ---------------- Angular Material ---------------- */
-.mat-button {
+.mat-raised-button {
   background-color: #203587;
   color: white;
-  padding: 8px 12px;
-  font-size: 16px;
+  padding: 8px 16px;
   cursor: pointer;
+  border-radius: 8px;
 }
 
 mat-tab-group {
@@ -34,4 +34,40 @@ mat-tab-group {
 
 mat-tab-group[mat-align-tabs='center'] .mat-tab-labels {
   justify-content: center;
+}
+
+.home-container {
+    height: calc(100vh - 152px);
+    width: 100%;
+    border-radius: 0;
+    padding: 0;
+}
+
+.content {
+  padding: 0;
+  margin: 0;
+  border-radius: 0;
+}
+
+.video{
+  height: calc(100vh - 160px);
+	width: 100%;
+  object-fit: cover;
+}
+.headerHome {
+  color:white;
+  border-color: white;
+  justify-content: center;
+  text-align: center;
+  min-width: 60vw;
+  line-height: 32px;
+}
+
+.header-content{
+  position: absolute;
+  color: white;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  min-width: 60vw;
 }

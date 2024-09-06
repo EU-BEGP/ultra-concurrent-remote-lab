@@ -22,4 +22,8 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
   }
+
+  goToRemoteLab(): void {
+    this.router.navigateByUrl('/lab');
+  }
 }

@@ -30,6 +30,7 @@ import { HomeComponent } from './laboratory/pages/home/home.component';
 import { ProfileComponent } from './core/auth/pages/profile/profile.component';
 import { ProfileFormComponent } from './core/auth/components/profile-form/profile-form.component';
 import { CountdownModule } from 'ngx-countdown';
+import { LabComponent } from './laboratory/pages/lab/lab.component';
 
 @NgModule({
   declarations: [
@@ -46,6 +47,7 @@ import { CountdownModule } from 'ngx-countdown';
     HomeComponent,
     ProfileComponent,
     ProfileFormComponent,
+    LabComponent,
   ],
   imports: [
     BrowserModule,
