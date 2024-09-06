@@ -1,13 +1,7 @@
-.exterior-container {
-  width: 65%;
-  padding-right: 30px;
-  padding-left: 30px;
-  padding-bottom: 30px;
-  margin: auto;
-}
 
-.access-button {
-  width: 50%;
+.mat-caption{
+  color:#f3ae20;
+  padding-left: 10px;
 }
 
 .button-container {
@@ -15,16 +9,11 @@
   width: 100%;
 }
 
-@media only screen and (max-width: 680px) {
-  .exterior-container {
-    width: 100%;
-    padding-right: 15px;
-    padding-left: 15px;
-    padding-bottom: 15px;
-    margin: auto;
-  }
-  .access-button {
-    width: 100%;
-  }
+.mat-raised-button {
+  background-color: #203587;
+  color: white;
+  padding: 8px 16px;
+  cursor: pointer;
+  border-radius: 8px;
+  margin-top: 16px;
 }
-

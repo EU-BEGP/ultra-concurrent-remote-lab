@@ -1,5 +1,6 @@
-<div class="exterior-container">
-  <form [formGroup]="editionForm" #formDirective="ngForm" (ngSubmit)="updateUser(formDirective)">
+<div>
+  <form [formGroup]="editionForm" #formDirective="ngForm"
+    (ngSubmit)="updateUser(formDirective)">
     <mat-form-field class="input-field">
       <mat-label>Name</mat-label>
       <input matInput formControlName="name" />
@@ -19,8 +20,10 @@
     <p class="mat-caption">Required fields are marked with *</p>
 
     <div class="button-container">
-      <button class="access-button" type="submit" mat-raised-button color="primary">
-        Update data
+
+      <button mat-raised-button color="primary" type="submit"
+        class="buttons1">
+        Update Data
       </button>
     </div>
   </form>

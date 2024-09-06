@@ -17,6 +17,16 @@ body {
   padding-bottom: 8px;
 }
 
+.center-container {
+  min-width: 100%;
+  min-height: calc(100vh - 152px);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center
+}
+
 .content {
   flex: 1;
   overflow: auto;
