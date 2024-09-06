@@ -1,20 +1,24 @@
+<app-navbar></app-navbar>
 <div class="main-container">
   <mat-card class="card">
     <div class="custom-header">
-      <mat-card-title class="custom-title">Account Activation</mat-card-title>
+      <mat-card-title class="title header2">
+        <span class="first-title">Account</span>
+        <span class="second-title">Activation</span>
+      </mat-card-title>
     </div>
     <mat-card-content class="text">
       <div *ngIf="!activationStatus">
-        <p>Please check your email (or your Spam folder).</p>
-        <p>An activation link has been sent.</p>
+        <p class="header3">Please check your email (or your Spam folder).</p>
+        <p class="header3">An activation link has been sent.</p>
       </div>
       <div *ngIf="activationStatus === 'success'">
-        <p>Your account has been activated successfully!</p>
-        <p>You will be redirected to the login page.</p>
+        <p class="header3">Your account has been activated successfully!</p>
+        <p class="header3">You will be redirected to the login page.</p>
       </div>
       <div *ngIf="activationStatus === 'error'">
-        <p>There was an error activating your account.</p>
-        <p>Invalid URL.</p>
+        <p class="header3">There was an error activating your account.</p>
+        <p class="header3">Invalid URL.</p>
       </div>
     </mat-card-content>
   </mat-card>

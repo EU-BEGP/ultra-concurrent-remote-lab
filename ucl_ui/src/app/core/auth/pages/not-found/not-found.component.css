@@ -1,24 +1,44 @@
-.page-404 {
-  padding: 60px 0;
-  background: #fff;
-  height: 85vh;
+.main-container {
+  min-width: 100%;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 
-.page-404 img {
-  width: 150px;
+.card {
+  width: 70%;
+  box-shadow: 0px 0px;
 }
 
-#title-404 {
-  font-size: 80px;
-  margin-bottom: 50px;
+.text {
+  font-size: 16px;
+  text-align: center;
+  padding: 10px;
+  margin-top: 16px;
 }
 
-h3 {
-  font-size: 40px;
-  font-weight: 100;
-  margin-bottom: 30px;
+
+.first-title{
+  color: #f3ae20;
+  margin-right: 8px;
 }
 
-.msg-box-404 {
-  margin-top: 40px;
+.second-title{
+  color: #203587;
+}
+
+.title {
+  text-align: center;
+  padding: 10px;
+}
+
+.mat-raised-button {
+  background-color: #203587;
+  color: white;
+  padding: 8px 16px;
+  cursor: pointer;
+  border-radius: 8px;
+  margin-top: 16px;
 }
