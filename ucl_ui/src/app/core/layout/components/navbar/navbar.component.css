@@ -11,7 +11,7 @@
 }
 
 .icon {
-  margin-right: 5px;
+  transform: scale(1.2);
 }
 
 ::ng-deep .mat-menu-panel {
