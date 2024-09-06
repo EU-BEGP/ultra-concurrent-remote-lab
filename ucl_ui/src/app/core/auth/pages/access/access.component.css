@@ -12,12 +12,33 @@
   padding: 10px;
 }
 
-.card {
-  width: 40%;
+.content{
+  margin-top: 8px;
 }
 
-@media only screen and (max-width: 1025px) {
+mat-card-title{
+  margin-bottom: 16px;
+}
+
+
+
+.card {
+  width: 30%;
+  border-radius: 24px;
+  padding: 48px 0px;
+}
+
+@media only screen and (max-width: 1100px) {
   .card {
     width: 80%;
   }
+}
+
+.first-title{
+  color: #f3ae20;
+  margin-right: 8px;
+}
+
+.second-title{
+  color: #203587;
 }

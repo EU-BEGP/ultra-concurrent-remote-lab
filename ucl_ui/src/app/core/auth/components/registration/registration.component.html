@@ -1,4 +1,5 @@
-<form [formGroup]="registrationForm" #formDirective="ngForm" (ngSubmit)="saveUser(formDirective)">
+<form [formGroup]="registrationForm" #formDirective="ngForm"
+  (ngSubmit)="saveUser(formDirective)">
   <mat-form-field class="input-field">
     <mat-label>Name</mat-label>
     <input matInput formControlName="name" />
@@ -17,25 +18,31 @@
 
   <mat-form-field class="input-field">
     <mat-label>Password</mat-label>
-    <input matInput [type]="hidePassword ? 'password' : 'text'" formControlName="password" autocomplete="on" />
+    <input matInput [type]="hidePassword ? 'password' : 'text'"
+      formControlName="password" autocomplete="on" />
     <mat-error *ngIf="getPasswordControlError()">
       Password must have at least 8 characters.
     </mat-error>
-    <button mat-icon-button matSuffix type="button" (click)="hidePassword = !hidePassword"
-      [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hidePassword" tabindex="-1">
+    <button mat-icon-button matSuffix type="button"
+      (click)="hidePassword = !hidePassword"
+      [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hidePassword"
+      tabindex="-1">
       <mat-icon>{{ hidePassword ? "visibility_off" : "visibility" }}</mat-icon>
     </button>
   </mat-form-field>
 
   <mat-form-field class="input-field">
     <mat-label>Password Confirmation</mat-label>
-    <input matInput [type]="hidePasswordConfirmation ? 'password' : 'text'" formControlName="passwordConfirmation"
+    <input matInput [type]="hidePasswordConfirmation ? 'password' : 'text'"
+      formControlName="passwordConfirmation"
       autocomplete="on" />
     <mat-error *ngIf="isPasswordConfirmationValid()">
       Password and confirmation password does not match.
     </mat-error>
-    <button mat-icon-button matSuffix type="button" (click)="hidePasswordConfirmation = !hidePasswordConfirmation"
-      [attr.aria-label]="'Hide password confirmation'" [attr.aria-pressed]="hidePasswordConfirmation" tabindex="-1">
+    <button mat-icon-button matSuffix type="button"
+      (click)="hidePasswordConfirmation = !hidePasswordConfirmation"
+      [attr.aria-label]="'Hide password confirmation'"
+      [attr.aria-pressed]="hidePasswordConfirmation" tabindex="-1">
       <mat-icon>{{
         hidePasswordConfirmation ? "visibility_off" : "visibility"
         }}</mat-icon>
@@ -44,7 +51,8 @@
 
   <p class="mat-caption">Required fields are marked with *</p>
 
-  <button class="access-button" type="submit" mat-raised-button color="primary">
+  <button class="access-button buttons1" type="submit" mat-raised-button
+    color="primary">
     Sign Up
   </button>
 </form>
