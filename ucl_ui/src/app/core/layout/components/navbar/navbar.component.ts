@@ -9,6 +9,8 @@ import { Observable } from 'rxjs';
 
 import { UserService } from 'src/app/core/auth/services/user.service';
 import { Group } from 'src/app/core/auth/enums/group';
+//import { MatDialog } from '@angular/material/dialog';
+import { CreateLaboratoryDialogComponent } from 'src/app/laboratory/components/create-laboratory-dialog/create-laboratory-dialog.component';
 
 @Component({
   selector: 'app-navbar',
@@ -17,7 +19,7 @@ import { Group } from 'src/app/core/auth/enums/group';
 })
 export class NavbarComponent implements OnInit {
   isHandset: Observable<BreakpointState> = this.breakPointObserver.observe(
-    Breakpoints.Handset
+    '(mn-width: 700px)'
   );
 
   shownMenu = false;
@@ -26,7 +28,8 @@ export class NavbarComponent implements OnInit {
   constructor(
     private router: Router,
     private breakPointObserver: BreakpointObserver,
-    private userService: UserService
+    private userService: UserService,
+    //private dialogRef: MatDialog
   ) { }
 
   ngOnInit(): void {
@@ -59,6 +62,16 @@ export class NavbarComponent implements OnInit {
 
   goToLogin(): void {
     this.router.navigateByUrl('/access');
+  }
+
+  goToCreateLab(){
+    this.router.navigateByUrl('/create-lab');
+   /*const dialogRef = this.dialogRef.open(CreateLaboratoryDialogComponent, {
+    width: '75vw'
+   })
+   dialogRef.afterClosed().subscribe(res => {
+    console.log(res);
+   })*/
   }
 
   logout(): void {

@@ -39,9 +39,15 @@
   <ng-template #navbarButtons>
     <div *ngIf="shownMenu; else showLoginButton">
 
-      <button mat-button aria-label="Create Lab Button">
+      <button mat-button aria-label="Create Lab Button"
+        (click)="goToCreateLab()">
         <mat-icon class="icon"
           matTooltip="Create New Laboratory">add_circle</mat-icon>
+      </button>
+
+      <button mat-button aria-label="My Labs Button">
+        <mat-icon class="icon"
+          matTooltip="My Laboratories">colorize</mat-icon>
       </button>
 
       <button mat-button aria-label="Profile list button"

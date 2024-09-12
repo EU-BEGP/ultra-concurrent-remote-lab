@@ -7,6 +7,7 @@ import { AuthGuard } from './core/auth/services/guards/auth.guard';
 import { ProfileComponent } from './core/auth/pages/profile/profile.component';
 import { ActivationComponent } from './core/auth/pages/activation/activation.component';
 import { LabComponent } from './laboratory/pages/lab/lab.component';
+import { CreateLaboratoryComponent } from './laboratory/pages/create-laboratory/create-laboratory.component';
 
 const routes: Routes = [
   {
@@ -27,8 +28,8 @@ const routes: Routes = [
     component: ProfileComponent,
   },
   {
-    path: 'lab',
-    component: LabComponent,
+    path: 'create-lab',
+    component: CreateLaboratoryComponent,
   },
   {
     path: '**',

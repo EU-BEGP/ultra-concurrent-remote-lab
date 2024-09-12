@@ -1,0 +1,12 @@
+
+
+.dialog-title{
+    padding: 24px 16px 0px 24px;
+}
+
+@media screen and (min-width:664px) {
+    .dialog-title{
+        padding: 0px;
+    }
+  }
+  

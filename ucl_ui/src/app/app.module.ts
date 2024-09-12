@@ -32,6 +32,7 @@ import { ProfileFormComponent } from './core/auth/components/profile-form/profil
 import { CountdownModule } from 'ngx-countdown';
 import { LabComponent } from './laboratory/pages/lab/lab.component';
 import { CreateLaboratoryDialogComponent } from './laboratory/components/create-laboratory-dialog/create-laboratory-dialog.component';
+import { CreateLaboratoryComponent } from './laboratory/pages/create-laboratory/create-laboratory.component';
 
 @NgModule({
   declarations: [
@@ -50,6 +51,7 @@ import { CreateLaboratoryDialogComponent } from './laboratory/components/create-
     ProfileFormComponent,
     LabComponent,
     CreateLaboratoryDialogComponent,
+    CreateLaboratoryComponent,
   ],
   imports: [
     BrowserModule,

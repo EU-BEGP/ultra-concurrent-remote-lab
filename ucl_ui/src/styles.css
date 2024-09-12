@@ -39,6 +39,8 @@ body {
 .center {
   margin: 0 auto;
   display: block;
+  justify-content: center;
+  text-align: center;
 }
 
 .text-center {
@@ -80,6 +82,43 @@ body {
   clear: both;
 }
 
+.mt-4{
+  margin-top: 4px;
+}
+
+.mt-8{
+  margin-top: 8px;
+}
+
+.mt-16{
+  margin-top: 16px;
+}
+
+.mb-4{
+  margin-bottom: 4px;
+}
+
+.mb-8{
+  margin-bottom: 8px;
+}
+
+.mb-16{
+  margin-bottom: 16px;
+}
+
+.my-4{
+  margin: 4px 0px;
+}
+
+.my-8{
+  margin: 8px 0px;
+}
+
+.my-16{
+  margin: 16px 0px;
+}
+
+
 /* -------------------------------------------------------------- */
 
 /* ---------------- Flexbox and Spacing Utilities ---------------- */
@@ -104,8 +143,12 @@ form {
 
 .input-field {
   width: 100%;
-  padding-left: 10px;
-  margin-bottom: 10px;
+}
+
+.input-label{
+  padding-bottom: 16px;
+  width:100%;
+  display:flex;
 }
 
 input[type="password"]::-ms-reveal,
@@ -115,6 +158,18 @@ input[type="password"]::-ms-clear {
 
 .access-button {
   width: 100%;
+}
+
+.no-margin{
+  margin: 0px 0px;
+}
+
+.mat-horizontal-stepper-header{
+  margin-bottom: 16px;
+}
+
+.mat-select-arrow{
+  color: #f6bd2b;
 }
 
 /* ---------------------------------------------- */
@@ -158,8 +213,55 @@ tr.no-data-row {
   max-height: 500px;
 }
 
+
+/* ---------------------------------------------- */
+
+/* ---------------- Dialog Styles ---------------- */
+
+mat-dialog-actions{
+  justify-content: end;
+}
+
+.accent{
+  color: #f3ae20;
+}
+
+.first-title{
+  color: #f3ae20;
+  margin-right: 8px;
+}
+
+.second-title{
+  color: #203587;
+}
+
 .mat-column-id {
   flex: 0 0 10%;
+}
+
+.mat-raised-button {
+  background-color: #203587;
+  color: white;
+  padding: 8px 16px;
+  cursor: pointer;
+  border-radius: 8px;
+  margin-top: 16px;
+}
+
+.secondary-button {
+  background-color: white;
+  color: #203587;
+}
+
+.mat-dialog-container {
+  border-radius: 16px !important;
+  padding: 0px !important;
+}
+
+@media screen and (min-width:664px) {
+  .mat-dialog-container{
+      padding: 40px !important ; 
+  }
 }
 
 /* --------------------------TYPOGRAPHY------------------------- */
@@ -187,6 +289,11 @@ tr.no-data-row {
   font-size: 0.5rem;
 }
 
+.mat-step-text-label{
+  font-weight: 700;
+  font-size: 0.6rem;
+}
+
 .buttons1 {
   font-size: 0.6rem;
   font-weight: 700;
@@ -208,11 +315,16 @@ tr.no-data-row {
     font-size: 1.1rem;
   }
   .header2 {
-    font-size: 1.2rem;
+    font-size: 1.0rem;
   }
   .header3 {
-    font-size: 0.8rem;
+    font-size: 0.7rem;
   }
+
+  .mat-step-text-label{
+    font-size: 0.6rem;
+  }
+
   .body1 {
     font-size: 0.6rem;
   }
@@ -235,11 +347,16 @@ tr.no-data-row {
     font-size: 1.4rem;
   }
   .header2 {
-    font-size: 1.4rem;
+    font-size: 1.1rem;
   }
   .header3 {
-    font-size: 1.0rem;
+    font-size: 0.8rem;
   }
+
+  .mat-step-text-label{
+    font-size: 0.7rem;
+  }
+
   .body1 {
     font-size: 0.8rem;
   }
@@ -262,10 +379,13 @@ tr.no-data-row {
     font-size: 1.6rem;
   }
   .header2 {
-    font-size: 1.6rem;
+    font-size: 1.5rem;
   }
   .header3 {
-    font-size: 1.4rem;
+    font-size: 1.0rem;
+  }
+  .mat-step-text-label{
+    font-size: 1.0rem;
   }
   .body1 {
     font-size: 0.9rem;
@@ -292,7 +412,10 @@ tr.no-data-row {
     font-size: 1.7rem;
   }
   .header3 {
-    font-size: 1.6rem;
+    font-size: 1.2rem;
+  }
+  .mat-step-text-label{
+    font-size: 1.2rem;
   }
   .body1 {
     font-size: 1.0rem;

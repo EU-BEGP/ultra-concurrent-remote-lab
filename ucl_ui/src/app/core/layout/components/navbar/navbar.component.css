@@ -1,11 +1,11 @@
 #logo {
   margin-right: 32px;
   margin-bottom: 5px;
+  width: 32px;
 }
 
 #main-label {
   display: flex;
-  justify-content: center;
   align-items: center;
   cursor: pointer;
 }
@@ -18,13 +18,18 @@
   width: 200px !important;
 }
 
-@media (max-width: 600px) {
+.toolbar {
+  padding: 0px 48px;
+}
+
+@media (max-width: 760px) {
   #logo {
-    width: 32px;
+    width: 28px;
+    margin-right: 16px;
+  }
+  .toolbar {
+    padding: 0px 16px;
   }
 
 }
 
-.toolbar {
-  padding: 0px 48px;
-}

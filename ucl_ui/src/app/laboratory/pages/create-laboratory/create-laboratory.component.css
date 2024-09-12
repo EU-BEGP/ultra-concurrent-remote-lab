@@ -1,0 +1,78 @@
+
+form{
+    padding: 0px 0px;
+}
+
+mat-card-actions{
+    justify-content: end;
+    display: flex;
+    margin: 0px 0px
+}
+
+.mat-button{
+    margin: 0px 0px !important;
+}
+  
+.page-container{
+    padding: 24px 16px;
+    box-shadow: none;
+}
+
+.page-title{
+    padding: 24px 16px 0px 24px;
+}
+
+@media screen and (min-width:750px) {
+    .page-container{
+        padding: 64px; ; 
+    }
+    .page-title{
+        padding: 0px 16px 16px 24px;
+    }
+  }
+.add-new{
+    margin-top: 4px;
+    color:#f6bd2b;
+    transform: scale(1.5);
+}
+mat-divider{
+    margin: 24px 0px;
+}
+
+.parameter-option {
+    height: 296px;
+    min-width: 160px;
+    .mat-form-field-wrapper{
+        padding-bottom: 0px;
+    }
+}
+  
+mat-grid-tile{
+    .mat-grid-tile-content{
+   justify-content: left;
+    }
+}
+
+#myInput{
+    opacity: 0; 
+    font-size: 0;
+    float: left; 
+    width: 64px;
+    height: 36px;
+    cursor: pointer;
+}
+#button{
+    float:left; 
+    position:absolute; 
+    height: 36px;
+}
+#label{
+    float: left; 
+    opacity: 0; 
+    height: 0px;
+    margin: 0px 0px;
+}
+img{ 
+    object-fit: cover; 
+    height: 140px; 
+}
