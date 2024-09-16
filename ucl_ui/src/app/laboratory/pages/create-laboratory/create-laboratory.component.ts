@@ -6,6 +6,7 @@ import {map} from 'rxjs/operators';
 import { FormArray, FormBuilder,FormGroup,Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { v4 as uuidv4 } from 'uuid'; 
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-create-laboratory',
@@ -27,7 +28,7 @@ export class CreateLaboratoryComponent implements OnInit {
     {name: 'Engineering'},
   ];
 
-  constructor( private builder:FormBuilder, private toastr: ToastrService,) {
+  constructor( private builder:FormBuilder, private toastr: ToastrService, private router: Router) {
       const breakpointObserver = inject(BreakpointObserver);
       this.stepperOrientation = breakpointObserver
         .observe('(min-width: 800px)')
@@ -51,12 +52,8 @@ export class CreateLaboratoryComponent implements OnInit {
     this.breakpointParameter =  Math.floor(event.target.innerWidth / 400);
   }
 
-  generateUniqueId() {
-    return Math.random().toString(36).substring(2, 9);
-  }
-
-
   newLaboratory=this.builder.group({
+    id: [uuidv4()],
     info: this.builder.group({
       institution: this.builder.control("",Validators.required),
       name: this.builder.control("",Validators.required),
@@ -67,7 +64,7 @@ export class CreateLaboratoryComponent implements OnInit {
       this.builder.group({
           name: [''], 
           options: new FormArray([this.builder.group({
-            id: [this.generateUniqueId()], 
+            id: [uuidv4()], 
             value: [''], 
             photo: [this.defaultImg]
           }
@@ -102,7 +99,7 @@ export class CreateLaboratoryComponent implements OnInit {
     const parametersFormGroup = this.builder.group({
       name: [''], 
       options: new FormArray([this.builder.group({
-        id: [this.generateUniqueId()],
+        id: [uuidv4()],
         value: [''], 
         photo: [this.defaultImg]
       }
@@ -117,7 +114,7 @@ export class CreateLaboratoryComponent implements OnInit {
 
   addOption(index:number):void{
     const optionFormGroup = this.builder.group({
-          id: [this.generateUniqueId()],
+          id: [uuidv4()],
           value: [''], 
           photo: [this.defaultImg]
       })
@@ -255,6 +252,11 @@ export class CreateLaboratoryComponent implements OnInit {
   onSubmit(): void {
     if (this.newLaboratory.valid) {
     console.log(this.newLaboratory.value)
+    this.toastr.success(
+      'Now you will be redirected to your new Laboratory!',
+      this.newLaboratory.value.info?.name + " Successfully Created!"
+    );
+    this.router.navigate(['laboratory', this.newLaboratory.value.id])
     } else {
       this.toastr.error(
         'Please, complete the required Information',

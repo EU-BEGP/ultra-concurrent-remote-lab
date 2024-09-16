@@ -67,10 +67,12 @@ import { VgBufferingModule } from '@videogular/ngx-videogular/buffering';
     ReactiveFormsModule,
     CountdownModule,
     ToastrModule.forRoot({
-      timeOut: 3000,
+      timeOut: 5000,
       closeButton: true,
       preventDuplicates: true,
       progressBar: true,
+      positionClass: 'toast-bottom-center',
+      toastClass: 'fit-content ngx-toastr'
     }),
     HttpClientModule,
     MatTooltipModule,

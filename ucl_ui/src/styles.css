@@ -297,6 +297,18 @@ mat-dialog-actions{
   }
 }
 
+.page-container{
+  padding: 24px 16px;
+  box-shadow: none;
+}
+
+.page-title{
+  padding: 24px 16px 0px 24px;
+}
+
+.fit-content {
+   min-width: 'fit-content'
+}
 /* --------------------------TYPOGRAPHY------------------------- */
 
 .header1 {

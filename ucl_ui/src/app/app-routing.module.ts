@@ -31,6 +31,7 @@ const routes: Routes = [
     path: 'create-lab',
     component: CreateLaboratoryComponent,
   },
+  {path: 'laboratory/:id', component: LabComponent},
   {
     path: '**',
     component: NotFoundComponent,

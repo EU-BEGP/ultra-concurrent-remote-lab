@@ -13,14 +13,6 @@ mat-card-actions{
     margin: 0px 0px !important;
 }
   
-.page-container{
-    padding: 24px 16px;
-    box-shadow: none;
-}
-
-.page-title{
-    padding: 24px 16px 0px 24px;
-}
 
 @media screen and (min-width:750px) {
     .page-container{
