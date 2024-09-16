@@ -1,17 +1,17 @@
 <div>
   <form [formGroup]="editionForm" #formDirective="ngForm"
     (ngSubmit)="updateUser(formDirective)">
-    <mat-form-field class="input-field">
+    <mat-form-field class="input-field" appearance="outline">
       <mat-label>Name</mat-label>
       <input matInput formControlName="name" />
     </mat-form-field>
 
-    <mat-form-field class="input-field">
+    <mat-form-field class="input-field" appearance="outline">
       <mat-label>Last name</mat-label>
       <input matInput formControlName="lastName" />
     </mat-form-field>
 
-    <mat-form-field class="input-field">
+    <mat-form-field class="input-field" appearance="outline">
       <mat-label>Email</mat-label>
       <input matInput placeholder="user@gmail.com" formControlName="email" />
       <mat-icon matSuffix>email</mat-icon>

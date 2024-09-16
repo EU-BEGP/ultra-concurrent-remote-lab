@@ -1,5 +1,5 @@
 <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
-  <mat-form-field class="input-field">
+  <mat-form-field class="input-field" appearance="outline">
     <mat-label>Email</mat-label>
     <input matInput placeholder="user@mail.com" formControlName="email" />
     <mat-icon matSuffix>email</mat-icon>
@@ -8,7 +8,7 @@
     </mat-error>
   </mat-form-field>
 
-  <mat-form-field class="input-field">
+  <mat-form-field class="input-field" appearance="outline">
     <mat-label>Password</mat-label>
     <input matInput [type]="hide ? 'password' : 'text'"
       formControlName="password" autocomplete="on" />
