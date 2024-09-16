@@ -82,6 +82,31 @@ body {
   clear: both;
 }
 
+.ml-4{
+  margin-left: 4px;
+}
+
+.ml-8{
+  margin-left: 8px;
+}
+
+.ml-16{
+  margin-left: 16px;
+}
+
+.mr-4{
+  margin-right: 4px;
+}
+
+.mr-8{
+  margin-right: 8px;
+}
+
+.mr-16{
+  margin-right: 16px;
+}
+
+
 .mt-4{
   margin-top: 4px;
 }
@@ -226,6 +251,10 @@ mat-dialog-actions{
   color: #f3ae20;
 }
 
+.primary{
+  color: #203587;
+}
+
 .first-title{
   color: #f3ae20;
   margin-right: 8px;
@@ -246,6 +275,10 @@ mat-dialog-actions{
   cursor: pointer;
   border-radius: 8px;
   margin-top: 16px;
+}
+
+.bigger-icon{
+  transform: scale(1.5);
 }
 
 .secondary-button {

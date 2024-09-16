@@ -76,3 +76,38 @@ img{
     object-fit: cover; 
     height: 140px; 
 }
+.parameter-title{
+    color:  #203587;
+    align-items: center;
+    width: fit-content;
+}
+
+.upload-title{
+    width: fit-content;
+    justify-content: center;
+    align-items: center;
+    padding-bottom: 0px;
+}
+
+.video-container {
+    width: 100%;
+    height: 264px;
+  }
+  
+  video {
+    position: relative;
+    width: 100%;
+    height: 264px;
+  }
+
+  .video-card {
+    height: 420px;
+    min-width: 280px;
+    .mat-form-field-wrapper{
+        padding-bottom: 0px;
+    }
+}
+.video-actions{
+    justify-content: center;
+    padding-bottom: 8px;
+}

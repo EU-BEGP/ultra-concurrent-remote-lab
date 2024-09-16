@@ -8,10 +8,12 @@
         </mat-card-title>
 
         <mat-card-content>
-            <form [formGroup]="newLaboratory">
-                <mat-stepper [orientation]="(stepperOrientation | async)!">
+            <form [formGroup]="newLaboratory" (ngSubmit)="onSubmit()">
+                <mat-stepper [linear]="true"
+                    [orientation]="(stepperOrientation | async)!">
                     <div formGroupName="info">
-                        <mat-step label="Laboratory Info">
+                        <mat-step label="Laboratory Info"
+                            [stepControl]="info">
                             <span mat-caption class="input-label header3"> Enter
                                 the
                                 Name
@@ -57,13 +59,15 @@
                                     formControlName="description" required>
                             </mat-form-field>
                             <mat-card-actions>
-                                <button class="buttons1" mat-raised-button
+                                <button type="button" class="buttons1"
+                                    mat-raised-button
                                     matStepperNext>Next</button>
                             </mat-card-actions>
                         </mat-step>
                     </div>
                     <div formArrayName="parameters">
-                        <mat-step label="Parameters">
+                        <mat-step label="Parameters"
+                            [stepControl]="parameters">
                             <div
                                 *ngFor="let parameter of parameters.controls; index as i"
                                 [formGroupName]="i">
@@ -73,10 +77,10 @@
                                         Parameter
                                         {{i+1}}
                                     </span>
-                                    <button mat-button
+                                    <button mat-button type="button"
                                         (click)="deleteParameter(i)">
                                         <mat-icon
-                                            class="accent"
+                                            class="bigger-icon accent"
                                             matTooltip="Delete Parameter">delete</mat-icon>
                                     </button>
                                 </div>
@@ -120,10 +124,11 @@
                                                 <mat-card-actions>
                                                     <div style="height: 36px;">
                                                         <button #file
+                                                            type="button"
                                                             id="button"
                                                             mat-button>
                                                             <mat-icon
-                                                                class="accent">camera_alt</mat-icon>
+                                                                class="accent">upload</mat-icon>
                                                         </button>
                                                         <div
                                                             style="display: inline-block"
@@ -140,6 +145,7 @@
                                                     </div>
 
                                                     <button mat-button
+                                                        type="button"
                                                         (click)="deleteOption(i, optionIndex)">
                                                         <mat-icon
                                                             class="accent"
@@ -151,6 +157,7 @@
                                     </mat-grid-tile>
                                     <mat-grid-tile>
                                         <button mat-button
+                                            type="button"
                                             (click)="addOption(i)">
                                             <mat-icon class="add-new"
                                                 matTooltip="New Option">library_add</mat-icon>
@@ -166,37 +173,246 @@
                                     Add new
                                     Parameter </span>
                                 <br>
-                                <button mat-button (click)="addParameter()">
+                                <button type="button" mat-button
+                                    (click)="addParameter()">
                                     <mat-icon class="add-new"
                                         matTooltip="New Parameter">add_circle_outline</mat-icon>
                                 </button>
                             </div>
                             <mat-card-actions>
-                                <button mat-raised-button matStepperPrevious
+                                <button type="button" mat-raised-button
+                                    matStepperPrevious
                                     class="secondary-button buttons1">Back</button>
-                                <button class="buttons1" mat-raised-button
+                                <button type="button" class="buttons1"
+                                    mat-raised-button
                                     matStepperNext>Next</button>
                             </mat-card-actions>
                         </mat-step>
                     </div>
+
                     <div formGroupName="experiments">
-                        <mat-step label="Experiments">
+                        <mat-step label="Experiments"
+                            [stepControl]="experiments">
+                            <span mat-caption
+                                class="input-label primary buttons1">
+                                Almost done! Now Generate Experiments by
+                                combining the Parameters you want and Upload
+                                Videos for each one </span>
+                            <div
+                                *ngFor="let experiment of experiments.controls; index as i"
+                                [formGroupName]="i">
+                                <div style="display: flex">
+                                    <span mat-caption
+                                        class="accent input-label header3">
+                                        Experiment
+                                        {{i+1}}
+                                    </span>
+                                    <button type="button" mat-button
+                                        (click)="deleteExperiment(i)">
+                                        <mat-icon
+                                            class="bigger-icon accent"
+                                            matTooltip="Delete Experiment">delete</mat-icon>
+                                    </button>
+                                </div>
+                                <span mat-caption
+                                    class="input-label header3"> Choose the
+                                    Parameters of this Experiment </span>
+                                <mat-grid-list [cols]="breakpointParameter"
+                                    [gutterSize]="'16px'"
+                                    rowHeight="80px"
+                                    (window:resize)="onResizeParameter($event)"
+                                    formArrayName="selectedOptions">
+                                    <mat-grid-tile
+                                        *ngFor="let parameter of parameters.controls; index as j"
+                                        style="display: flex">
+                                        <span mat-caption
+                                            class="parameter-title input-label header3">
+                                            {{parameter.value.name}}
+                                        </span>
+                                        <mat-form-field
+                                            appearance="outline"
+                                            class="ml-8 input-field">
+                                            <mat-select
+                                                placeholder="Choose Option"
+                                                required
+                                                [formControlName]="j">
+                                                <mat-option
+                                                    *ngFor="let option of getAvailableOptions(j)"
+                                                    [value]="option.value.id">
+                                                    {{option.value.value}}
+                                                </mat-option>
+                                            </mat-select>
+                                        </mat-form-field>
+                                    </mat-grid-tile>
+
+                                </mat-grid-list>
+                                <div
+                                    style="display: flex; align-items: stretch">
+                                    <span mat-caption
+                                        class="upload-title input-label header3">
+                                        Upload
+                                        Video(s)
+                                        for this Experiment </span>
+                                </div>
+                                <mat-grid-list
+                                    [cols]="breakpointParameter"
+                                    [gutterSize]="'16px'"
+                                    rowHeight="440px"
+                                    (window:resize)="onResizeParameter($event)"
+                                    formArrayName="videos">
+                                    <mat-grid-tile
+                                        *ngFor="let video of getVideos(i).controls; index as videoIndex">
+                                        <mat-card
+                                            class="video-card mat-elevation-z4"
+                                            [formGroupName]="videoIndex">
+
+                                            <vg-player
+                                                class="video-container mb-8">
+                                                <video [vgMedia]="$any(media)"
+                                                    #media id="singleVideo"
+                                                    preload="auto" controls
+                                                    [src]="video.value.video"></video>
+                                            </vg-player>
+                                            <mat-card-content>
+                                                <mat-label
+                                                    class="body1">Video
+                                                    Name</mat-label>
+                                                <mat-form-field
+                                                    class="input-field"
+                                                    appearance="outline">
+                                                    <input matInput
+                                                        placeholder="Front View"
+                                                        formControlName="name"
+                                                        required
+                                                        class="option-input">
+                                                </mat-form-field>
+                                                <mat-card-actions
+                                                    class="video-actions">
+                                                    <div style="height: 36px;">
+                                                        <button type="button"
+                                                            #file
+                                                            id="button"
+                                                            mat-button>
+                                                            <mat-icon
+                                                                class="accent">upload</mat-icon>
+                                                        </button>
+                                                        <div
+                                                            style="display: inline-block"
+                                                            matTooltip="Upload Video">
+                                                            <input id="myInput"
+                                                                name="video"
+                                                                type="file"
+                                                                accept="video/*"
+                                                                (change)="onUploadFile($event, i,videoIndex, 'video')" />
+                                                            <p
+                                                                id="label">{{file}}</p>
+
+                                                        </div>
+                                                    </div>
+
+                                                    <button type="button"
+                                                        mat-button
+                                                        (click)="deleteVideo(i, videoIndex)">
+                                                        <mat-icon
+                                                            class="accent"
+                                                            matTooltip="Delete Video">delete</mat-icon>
+                                                    </button>
+                                                </mat-card-actions>
+                                            </mat-card-content>
+                                        </mat-card>
+                                    </mat-grid-tile>
+                                    <mat-grid-tile>
+                                        <button type="button" mat-button
+                                            (click)="addVideo(i)">
+                                            <mat-icon class="add-new"
+                                                matTooltip="New Video">library_add</mat-icon>
+                                        </button>
+                                    </mat-grid-tile>
+
+                                </mat-grid-list>
+
+                                <mat-divider></mat-divider>
+                            </div>
+
+                            <div class="center">
+                                <span mat-caption
+                                    class="header3">
+                                    Add new
+                                    Experiment </span>
+                                <br>
+                                <button type="button" mat-button
+                                    (click)="addExperiment()">
+                                    <mat-icon class="add-new"
+                                        matTooltip="New Parameter">add_circle_outline</mat-icon>
+                                </button>
+                            </div>
                             <mat-card-actions>
-                                <button mat-raised-button matStepperPrevious
+                                <button type="button" mat-raised-button
+                                    matStepperPrevious
                                     class="secondary-button buttons1">Back</button>
-                                <button class="buttons1" mat-raised-button
+                                <button type="button" class="buttons1"
+                                    mat-raised-button
                                     matStepperNext>Next</button>
                             </mat-card-actions>
                         </mat-step>
                     </div>
                     <div formGroupName="activities">
-                        <mat-step label="Activities">
+                        <mat-step label="Activities"
+                            [stepControl]="activities">
+                            <div
+                                *ngFor="let activity of activities.controls; index as i"
+                                [formGroupName]="i">
+                                <div style="display: flex">
+                                    <span mat-caption
+                                        class="accent input-label header3">
+                                        Activity
+                                        {{i+1}}
+                                    </span>
+                                    <button type="button" mat-button
+                                        (click)="deleteActivity(i)">
+                                        <mat-icon
+                                            class="bigger-icon accent"
+                                            matTooltip="Delete Experiment">delete</mat-icon>
+                                    </button>
+                                </div>
+                                <span mat-caption class="input-label header3">
+                                    Enter
+                                    the Exercise Statement </span>
+                                <mat-form-field class="input-field"
+                                    appearance="outline">
+                                    <input matInput placeholder="Question 1"
+                                        formControlName="statement" required>
+                                </mat-form-field>
+                                <span mat-caption class="input-label header3">
+                                    Enter
+                                    the Expected Result (Optional) </span>
+                                <mat-form-field class="input-field"
+                                    appearance="outline">
+                                    <input matInput placeholder="Question 1"
+                                        formControlName="result">
+                                </mat-form-field>
+                            </div>
+                            <div class="center">
+                                <span mat-caption
+                                    class="header3">
+                                    Add new
+                                    Activity </span>
+                                <br>
+                                <button type="button" mat-button
+                                    (click)="addActivity()">
+                                    <mat-icon class="add-new"
+                                        matTooltip="New Parameter">add_circle_outline</mat-icon>
+                                </button>
+                            </div>
+
                             <mat-card-actions>
-                                <button mat-raised-button matStepperPrevious
+                                <button type="button" mat-raised-button
+                                    matStepperPrevious
                                     class="secondary-button buttons1">Back</button>
-                                <button mat-raised-button
-                                    class="buttons1">Save</button>
+                                <button type="submit" mat-raised-button
+                                    class="buttons1">Create Laboratory</button>
                             </mat-card-actions>
+
                         </mat-step>
                     </div>
                 </mat-stepper>

@@ -34,6 +34,11 @@ import { LabComponent } from './laboratory/pages/lab/lab.component';
 import { CreateLaboratoryDialogComponent } from './laboratory/components/create-laboratory-dialog/create-laboratory-dialog.component';
 import { CreateLaboratoryComponent } from './laboratory/pages/create-laboratory/create-laboratory.component';
 
+import { VgCoreModule } from '@videogular/ngx-videogular/core';
+import { VgControlsModule } from '@videogular/ngx-videogular/controls';
+import { VgOverlayPlayModule } from '@videogular/ngx-videogular/overlay-play';
+import { VgBufferingModule } from '@videogular/ngx-videogular/buffering';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -70,6 +75,10 @@ import { CreateLaboratoryComponent } from './laboratory/pages/create-laboratory/
     HttpClientModule,
     MatTooltipModule,
     NgHttpLoaderModule.forRoot(),
+    VgCoreModule,
+    VgControlsModule,
+    VgOverlayPlayModule,
+    VgBufferingModule
   ],
   providers: [
     CookieService,
