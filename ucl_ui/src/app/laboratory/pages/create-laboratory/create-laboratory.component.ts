@@ -21,11 +21,12 @@ export class CreateLaboratoryComponent implements OnInit {
   breakpointParameter: any
   defaultImg = '../../../../assets/emptyimage.jpeg';
   categories = [
-    {name: 'Physics'},
-    {name: 'Biology'},
-    {name: 'Chemistry'},
-    {name: 'Electronics'},
-    {name: 'Engineering'},
+    {name: 'Photovoltaic Energy'},
+    {name: 'Thermal Energy'},
+    {name: 'Spectometry'},
+    {name: 'Wind Energy'},
+    {name: 'Hydraulic Energy'},
+    {name: 'Other'},
   ];
 
   constructor( private builder:FormBuilder, private toastr: ToastrService, private router: Router) {

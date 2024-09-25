@@ -193,6 +193,10 @@ input[type="password"]::-ms-clear {
   margin-bottom: 16px;
 }
 
+.mat-step-header{
+  color: #f6bd2b;
+}
+
 .mat-select-arrow{
   color: #f6bd2b;
 }
@@ -478,6 +482,11 @@ mat-dialog-actions{
     font-size: 1.8rem;
   }
 }
+
+.mat-step-header .mat-step-icon-selected {
+  background-color: #f3ae20;
+}
+
 
 
 
