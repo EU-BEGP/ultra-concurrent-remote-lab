@@ -9,6 +9,10 @@ mat-card-actions{
     margin: 0px 0px
 }
 
+.mat-raised-button{
+    padding: 4px 24px;
+  }
+
 .mat-button{
     margin: 0px 0px !important;
 }
@@ -90,11 +94,11 @@ img{
     position: relative;
     width: 100%;
     height: 264px;
+    object-fit: cover;
   }
 
   .video-card {
     height: 420px;
-    min-width: 280px;
     .mat-form-field-wrapper{
         padding-bottom: 0px;
     }

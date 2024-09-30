@@ -22,6 +22,12 @@
   padding: 0px 48px;
 }
 
+mat-toolbar{
+  position:fixed;
+  top:0;
+  z-index: 2;
+}
+
 @media (max-width: 760px) {
   #logo {
     width: 28px;
