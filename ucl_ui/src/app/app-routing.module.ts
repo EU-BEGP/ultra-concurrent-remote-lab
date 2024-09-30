@@ -10,9 +10,15 @@ import { LabComponent } from './laboratory/pages/lab/lab.component';
 import { CreateLaboratoryComponent } from './laboratory/pages/create-laboratory/create-laboratory.component';
 
 const routes: Routes = [
-  {
-    path: '', pathMatch: 'full',
-    component: HomeComponent
+  { path: 'ultra-concurrent-rl',
+    redirectTo: 'ultra-concurrent-rl/', pathMatch: 'full'
+  },
+  { path: 'ultra-concurrent-rl/:id',
+    component: HomeComponent 
+  },
+  { path: '',
+    redirectTo: 'ultra-concurrent-rl/',
+    pathMatch: 'full' 
   },
   {
     path: 'access',

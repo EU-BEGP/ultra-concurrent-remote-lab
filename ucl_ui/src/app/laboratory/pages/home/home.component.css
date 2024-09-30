@@ -1,11 +1,16 @@
 
 /* ---------------- Angular Material ---------------- */
 .mat-raised-button {
-  background-color: #203587;
-  color: white;
-  padding: 8px 16px;
+  padding: 4px 12px;
   cursor: pointer;
-  border-radius: 8px;
+  border-radius: 12px;
+}
+
+@media screen and (min-width:664px) {
+
+  .mat-raised-button {
+    padding: 8px 16px;
+  }
 }
 
 mat-tab-group {
@@ -32,7 +37,7 @@ mat-tab-group[mat-align-tabs='center'] .mat-tab-labels {
 }
 
 .video{
-  height: calc(100vh - 160px);
+  height: calc(100vh - 152px);
 	width: 100%;
   object-fit: cover;
 }
@@ -43,7 +48,6 @@ mat-tab-group[mat-align-tabs='center'] .mat-tab-labels {
   text-align: center;
   min-width: 60vw;
   line-height: 32px;
-  margin-bottom: 24px;
 }
 
 .header-content{
@@ -52,5 +56,5 @@ mat-tab-group[mat-align-tabs='center'] .mat-tab-labels {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  min-width: 60vw;
+  min-width: 80vw;
 }

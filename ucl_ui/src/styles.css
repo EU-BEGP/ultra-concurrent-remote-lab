@@ -398,7 +398,7 @@ mat-dialog-actions{
 
 .headerHome {
   font-weight: 700;
-  font-size: 1.8rem;
+  font-size: 1.6rem;
 }
 
 @media screen and (min-width:200px) {
@@ -426,7 +426,7 @@ mat-dialog-actions{
     font-size: 0.6rem;
   }
   .headerHome {
-    font-size: 1.8rem;
+    font-size: 1.7rem;
   }
   .buttonsHome {
     font-size: 1.1rem;
@@ -458,7 +458,7 @@ mat-dialog-actions{
     font-size: 0.7rem;
   }
   .headerHome {
-    font-size: 2.1rem;
+    font-size: 2.0rem;
   }
   .buttonsHome {
     font-size: 1.3rem;
@@ -488,7 +488,7 @@ mat-dialog-actions{
     font-size: 1.0rem;
   }
   .headerHome {
-    font-size: 2.3rem;
+    font-size: 2.2rem;
   }
   .buttonsHome {
     font-size: 1.5rem;
@@ -518,10 +518,15 @@ mat-dialog-actions{
     font-size: 1.2rem;
   }
   .headerHome {
-    font-size: 2.8rem;
+    font-size: 2.4rem;
   }
   .buttonsHome {
     font-size: 1.8rem;
+  }
+}
+@media screen and (min-width:800px) {
+  .headerHome {
+    font-size: 2.8rem;
   }
 }
 

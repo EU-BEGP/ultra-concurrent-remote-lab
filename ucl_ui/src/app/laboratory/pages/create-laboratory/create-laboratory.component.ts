@@ -252,12 +252,11 @@ export class CreateLaboratoryComponent implements OnInit {
 
   onSubmit(): void {
     if (this.newLaboratory.valid) {
-    console.log(this.newLaboratory.value)
     this.toastr.success(
       'Now you will be redirected to your new Laboratory!',
       this.newLaboratory.value.info?.name + " Successfully Created!"
     );
-    this.router.navigate(['laboratory', this.newLaboratory.value.id])
+    this.router.navigate(['/ultra-concurrent-rl', this.newLaboratory.value.id])
     } else {
       this.toastr.error(
         'Please, complete the required Information',
