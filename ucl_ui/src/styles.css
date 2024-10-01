@@ -27,6 +27,12 @@ body {
   text-align: center
 }
 
+
+.vertical-center {
+  vertical-align: middle;
+  line-height: normal;
+}
+
 .content {
   flex: 1;
   overflow: auto;
@@ -112,6 +118,11 @@ body {
 
 .mr-16{
   margin-right: 16px;
+}
+
+
+.mr-32{
+  margin-right: 32px;
 }
 
 
@@ -315,6 +326,10 @@ mat-dialog-actions{
   cursor: pointer;
   border-radius: 8px;
   margin-top: 16px;
+}
+
+.pointer{
+  cursor: pointer;
 }
 
 .bigger-icon{

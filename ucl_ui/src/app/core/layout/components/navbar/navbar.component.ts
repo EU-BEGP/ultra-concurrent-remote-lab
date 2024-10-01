@@ -9,6 +9,10 @@ import { Observable } from 'rxjs';
 
 import { UserService } from 'src/app/core/auth/services/user.service';
 import { Group } from 'src/app/core/auth/enums/group';
+import { MatIconRegistry } from "@angular/material/icon";
+import { DomSanitizer } from "@angular/platform-browser";
+import { User } from '../../../auth/interfaces/user';
+
 //import { MatDialog } from '@angular/material/dialog';
 import { CreateLaboratoryDialogComponent } from 'src/app/laboratory/components/create-laboratory-dialog/create-laboratory-dialog.component';
 
@@ -19,20 +23,48 @@ import { CreateLaboratoryDialogComponent } from 'src/app/laboratory/components/c
 })
 export class NavbarComponent implements OnInit {
   isHandset: Observable<BreakpointState> = this.breakPointObserver.observe(
-    '(mn-width: 700px)'
+    '(max-width: 940px)'
   );
 
   shownMenu = false;
   showLabsButton = false;
+  user: User = {name : "", last_name:"", email:''};
 
   constructor(
     private router: Router,
     private breakPointObserver: BreakpointObserver,
     private userService: UserService,
     //private dialogRef: MatDialog
-  ) { }
+    private matIconRegistry: MatIconRegistry,
+    private domSanitizer: DomSanitizer){
+    this.matIconRegistry.addSvgIcon(
+     "experiment",
+      this.domSanitizer.bypassSecurityTrustResourceUrl("../../../../assets/experiment.svg")
+    );
+
+    this.matIconRegistry.addSvgIcon(
+      "laboratories",
+       this.domSanitizer.bypassSecurityTrustResourceUrl("../../../../assets/laboratories.svg")
+     );
+
+     this.matIconRegistry.addSvgIcon(
+      "account",
+       this.domSanitizer.bypassSecurityTrustResourceUrl("../../../../assets/account.svg")
+     );
+
+     this.matIconRegistry.addSvgIcon(
+      "add",
+       this.domSanitizer.bypassSecurityTrustResourceUrl("../../../../assets/add.svg")
+     );
+
+     this.matIconRegistry.addSvgIcon(
+      "arrowdown",
+       this.domSanitizer.bypassSecurityTrustResourceUrl("../../../../assets/arrowdown.svg")
+     );
+  }
 
   ngOnInit(): void {
+    this.getUserData()
     const token = localStorage.getItem('token');
 
     if (token) {
@@ -44,12 +76,17 @@ export class NavbarComponent implements OnInit {
         },
         (err) => (this.shownMenu = false)
       );
-
       this.shownMenu = true;
     } else {
       this.shownMenu = false;
       this.showLabsButton = false;
     }
+  }
+
+  getUserData() {
+    this.userService.getUserData().subscribe((response) => {
+      this.user=response
+    });
   }
 
   goToHome(): void {

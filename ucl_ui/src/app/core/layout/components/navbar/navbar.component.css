@@ -10,8 +10,23 @@
   cursor: pointer;
 }
 
+.mat-menu-item .mat-icon-no-color{
+  color: #203587;
+}
+
 .icon {
   transform: scale(1.2);
+}
+
+.padding_smaller {
+  padding: 0px 0px;
+  min-width: 24px;
+  transform: scale(0.8);
+}
+
+.padding_medium {
+  padding: 0px 8px 0px 16px;
+  min-width: 32px;
 }
 
 ::ng-deep .mat-menu-panel {
@@ -35,6 +50,23 @@ mat-toolbar{
   }
   .toolbar {
     padding: 0px 16px;
+  }
+
+  .icon{
+    transform: scale(1.0);
+  }
+
+  .navbar-button{
+    padding: 0px 8px;
+    min-width: 36px;
+    width: 44px;
+  }
+
+}
+@media (max-width: 500px) {
+
+  .icon{
+    transform: scale(0.9);
   }
 
 }

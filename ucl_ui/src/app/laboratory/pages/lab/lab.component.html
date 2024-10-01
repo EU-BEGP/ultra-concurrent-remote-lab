@@ -2,20 +2,19 @@
 <div>
     <div class="page-container">
 
-        <mat-grid-list style="display: flex;"
-            [cols]="1" rowHeight="28px" class="mb-16">
-            <mat-grid-tile rowspan='2'>
-                <span
-                    class="header1 primary ">{{labinfo.info.name}}</span>
-            </mat-grid-tile>
-            <mat-grid-tile>
-                <span
-                    class="header3 ">{{labinfo.info.institution}}</span>
-            </mat-grid-tile>
-
-        </mat-grid-list>
-
         <mat-card class="main-card mt-24 mb-16">
+            <mat-grid-list style="display: flex;"
+                [cols]="1" rowHeight="28px" class="mb-16">
+                <mat-grid-tile rowspan='2'>
+                    <span
+                        class="header1 primary ">{{labinfo.info.name}}</span>
+                </mat-grid-tile>
+                <mat-grid-tile>
+                    <span
+                        class="header3 ">{{labinfo.info.institution}}</span>
+                </mat-grid-tile>
+
+            </mat-grid-list>
             <mat-card-content>
 
                 <mat-stepper [linear]="false"

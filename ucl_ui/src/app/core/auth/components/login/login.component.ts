@@ -50,7 +50,7 @@ export class LoginComponent implements OnInit {
         if (response != undefined) {
           localStorage.setItem('token', response.body.token);
           this.checkReturnUrl();
-          this.toastr.success(`Welcome ${user.email}`);
+          this.toastr.success(`Welcome back`);
         }
       });
     } else {

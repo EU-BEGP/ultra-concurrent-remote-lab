@@ -6,69 +6,66 @@
 
   <span class="spacer"></span>
 
-  <!-- Mobile menu -->
-  <button type="button" aria-label="side nav" [matMenuTriggerFor]="menu"
-    mat-icon-button
-    *ngIf="(isHandset | async)!.matches; else navbarButtons">
-    <mat-icon aria-label="Side nav icon">menu</mat-icon>
-  </button>
-
-  <mat-menu class="navbar-menu" #menu="matMenu">
-    <div *ngIf="shownMenu; else showLoginButton">
-      <button mat-menu-item aria-label="Profile list button"
-        (click)="goToMyProfile()">
-        <mat-icon class="icon">person</mat-icon>
-        <span> Profile </span>
-      </button>
-
-      <button mat-menu-item aria-label="Logout icon" (click)="logout()">
-        <mat-icon class="icon">logout</mat-icon>
-        <span>Logout </span>
-      </button>
-    </div>
-
-    <ng-template #showLoginButton>
-      <button mat-button aria-label="Logout icon" (click)="goToLogin()">
-        <mat-icon class="icon">login</mat-icon>
-        Login
-      </button>
-    </ng-template>
+  <mat-menu #menu="matMenu">
+    <button mat-menu-item (click)="goToMyProfile()">
+      <mat-icon class="primary icon">person</mat-icon>
+      <span class="body1">My Account</span>
+    </button>
+    <button mat-menu-item (click)="logout()">
+      <mat-icon class="primary icon">logout</mat-icon>
+      <span class="body1">Log Out</span>
+    </button>
   </mat-menu>
 
   <!-- Web menu -->
-  <ng-template #navbarButtons>
-    <div *ngIf="shownMenu; else showLoginButton">
+  <div *ngIf="shownMenu; else loginButtons">
 
-      <button mat-button aria-label="Create Lab Button"
+    <ng-template #showLabsButton>
+      <button mat-button class="navbar-button"
         (click)="goToCreateLab()">
         <mat-icon class="icon"
-          matTooltip="Create New Laboratory">add_circle</mat-icon>
-      </button>
-
-      <button mat-button aria-label="My Labs Button">
-        <mat-icon class="icon"
-          matTooltip="Laboratories">widgets</mat-icon>
-      </button>
-
-      <button mat-button aria-label="My Experiments Button">
-        <mat-icon class="icon"
-          matTooltip="Saved Experiments">restore</mat-icon>
-      </button>
-
-      <button mat-button aria-label="Profile list button"
-        (click)="goToMyProfile()">
-        <mat-icon class="icon" matTooltip="My Profile">account_circle</mat-icon>
-      </button>
-
-      <button mat-button aria-label="Logout icon" (click)="logout()">
-        <mat-icon class="icon" matTooltip="Log Out">logout</mat-icon>
-      </button>
-    </div>
-
-    <ng-template #showLoginButton>
-      <button mat-button aria-label="Logout icon" (click)="goToLogin()">
-        <mat-icon class="icon" matTooltip="Log In">login</mat-icon>
+          svgIcon="add"
+          matTooltip="Create New Laboratory"></mat-icon>
       </button>
     </ng-template>
+
+    <button mat-button class="navbar-button">
+      <mat-icon class="icon"
+        matTooltip="Laboratories" svgIcon="laboratories"></mat-icon>
+    </button>
+
+    <button mat-button class="navbar-button">
+
+      <mat-icon class="icon"
+        matTooltip="Saved Experiments" svgIcon="experiment"></mat-icon>
+    </button>
+
+    <button mat-button
+      [matMenuTriggerFor]="menu"
+      class="padding_medium navbar-button">
+      <mat-icon class="icon" svgIcon="account"
+        matTooltip="My Profile"></mat-icon>
+    </button>
+
+    <span *ngIf="!(isHandset | async)!.matches" mat-caption
+      class="vertical-center body1">
+      {{user.name || "" }}{{' ' + user.last_name || "" }}
+    </span>
+
+    <button *ngIf="!(isHandset | async)!.matches" mat-button
+      class="padding_smaller" [matMenuTriggerFor]="menu">
+      <mat-icon class="icon"
+        svgIcon="arrowdown"></mat-icon>
+    </button>
+
+  </div>
+
+  <!--Login Buttons-->
+  <ng-template #loginButtons>
+    <span
+      class="pointer header3 mr-32" (click)="goToLogin()">Sign Up</span>
+    <button type="button" mat-raised-button
+      class="secondary-button header3" (click)="goToLogin()">Sign
+      In</button>
   </ng-template>
 </mat-toolbar>
