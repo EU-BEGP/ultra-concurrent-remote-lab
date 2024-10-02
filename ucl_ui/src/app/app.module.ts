@@ -31,13 +31,13 @@ import { ProfileComponent } from './core/auth/pages/profile/profile.component';
 import { ProfileFormComponent } from './core/auth/components/profile-form/profile-form.component';
 import { CountdownModule } from 'ngx-countdown';
 import { LabComponent } from './laboratory/pages/lab/lab.component';
-import { CreateLaboratoryDialogComponent } from './laboratory/components/create-laboratory-dialog/create-laboratory-dialog.component';
 import { CreateLaboratoryComponent } from './laboratory/pages/create-laboratory/create-laboratory.component';
 
 import { VgCoreModule } from '@videogular/ngx-videogular/core';
 import { VgControlsModule } from '@videogular/ngx-videogular/controls';
 import { VgOverlayPlayModule } from '@videogular/ngx-videogular/overlay-play';
 import { VgBufferingModule } from '@videogular/ngx-videogular/buffering';
+import { LaboratoriesDialogComponent } from './laboratory/components/laboratories-dialog/laboratories-dialog.component';
 
 @NgModule({
   declarations: [
@@ -55,8 +55,8 @@ import { VgBufferingModule } from '@videogular/ngx-videogular/buffering';
     ProfileComponent,
     ProfileFormComponent,
     LabComponent,
-    CreateLaboratoryDialogComponent,
     CreateLaboratoryComponent,
+    LaboratoriesDialogComponent,
   ],
   imports: [
     BrowserModule,

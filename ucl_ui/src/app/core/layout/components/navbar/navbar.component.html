@@ -1,7 +1,13 @@
 <mat-toolbar color="primary" class="toolbar">
   <div id="main-label" (click)="goToHome()">
     <img id="logo" src="./assets/logo.png" alt="logo" width="32px" />
-    <span id="navbar-title" class="header2">Ultra-Concurrent Remote Labs</span>
+    <span *ngIf="(isHandset | async)!.matches; else completeHeader"
+      id="navbar-title"
+      class="header2">Ultra-Concurrent RLs</span>
+    <ng-template #completeHeader>
+      <span id="navbar-title" class="header2">Ultra-Concurrent
+        Remote Labs</span>
+    </ng-template>
   </div>
 
   <span class="spacer"></span>
@@ -20,16 +26,14 @@
   <!-- Web menu -->
   <div *ngIf="shownMenu; else loginButtons">
 
-    <ng-template #showLabsButton>
-      <button mat-button class="navbar-button"
-        (click)="goToCreateLab()">
-        <mat-icon class="icon"
-          svgIcon="add"
-          matTooltip="Create New Laboratory"></mat-icon>
-      </button>
-    </ng-template>
+    <button *ngIf="showLabsButton" mat-button class="navbar-button"
+      (click)="goToCreateLab()">
+      <mat-icon class="icon"
+        svgIcon="add"
+        matTooltip="Create New Laboratory"></mat-icon>
+    </button>
 
-    <button mat-button class="navbar-button">
+    <button mat-button class="navbar-button" (click)="openLaboratories()">
       <mat-icon class="icon"
         matTooltip="Laboratories" svgIcon="laboratories"></mat-icon>
     </button>

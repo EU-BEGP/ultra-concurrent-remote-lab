@@ -1,0 +1,55 @@
+<mat-card-title class="dialog-title">
+    <span class="first-title header2">Create New</span>
+    <span class="second-title header2">Laboratory</span>
+</mat-card-title>
+<mat-dialog-content class="mat-typography">
+    <table mat-table [dataSource]="allData" class="demo-table">
+        <!-- Position Column -->
+        <ng-container matColumnDef="name">
+            <th mat-header-cell *matHeaderCellDef class="header3 table-header">
+                Name </th>
+            <td mat-cell *matCellDef="let element" class="body1">
+                {{element.info.name}} </td>
+        </ng-container>
+
+        <!-- Name Column -->
+        <ng-container matColumnDef="institution">
+            <th mat-header-cell *matHeaderCellDef class="header3 table-header">
+                Institution
+            </th>
+            <td mat-cell *matCellDef="let element" class="body1">
+                {{element.info.institution}}
+            </td>
+        </ng-container>
+
+        <!-- Weight Column -->
+        <ng-container matColumnDef="category">
+            <th mat-header-cell *matHeaderCellDef class="header3 table-header">
+                Category
+            </th>
+            <td mat-cell *matCellDef="let element" class="body1">
+                {{element.info.category}}
+            </td>
+        </ng-container>
+
+        <ng-container matColumnDef="actions">
+            <th mat-header-cell *matHeaderCellDef class="header3 table-header">
+                Access</th>
+            <td mat-cell *matCellDef="let element" class="actions-column">
+                <button mat-menu-item (click)="redirectTo(element.id)"
+                    mat-dialog-close>
+                    <span class="header3"> Go to Remote Lab</span>
+                    <mat-icon
+                        class="accent bigger-icon ml-24">open_in_new</mat-icon>
+                </button>
+            </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+    <button mat-dialog-close type="button" mat-raised-button
+        class="header2">Close</button>
+</mat-dialog-actions>

@@ -3,7 +3,7 @@ import {
   Breakpoints,
   BreakpointState,
 } from '@angular/cdk/layout';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 
@@ -13,8 +13,8 @@ import { MatIconRegistry } from "@angular/material/icon";
 import { DomSanitizer } from "@angular/platform-browser";
 import { User } from '../../../auth/interfaces/user';
 
-//import { MatDialog } from '@angular/material/dialog';
-import { CreateLaboratoryDialogComponent } from 'src/app/laboratory/components/create-laboratory-dialog/create-laboratory-dialog.component';
+import { MatDialog } from '@angular/material/dialog';
+import { LaboratoriesDialogComponent } from 'src/app/laboratory/components/laboratories-dialog/laboratories-dialog.component';
 
 @Component({
   selector: 'app-navbar',
@@ -34,7 +34,7 @@ export class NavbarComponent implements OnInit {
     private router: Router,
     private breakPointObserver: BreakpointObserver,
     private userService: UserService,
-    //private dialogRef: MatDialog
+    private dialogRef: MatDialog,
     private matIconRegistry: MatIconRegistry,
     private domSanitizer: DomSanitizer){
     this.matIconRegistry.addSvgIcon(
@@ -103,12 +103,15 @@ export class NavbarComponent implements OnInit {
 
   goToCreateLab(){
     this.router.navigateByUrl('/create-lab');
-   /*const dialogRef = this.dialogRef.open(CreateLaboratoryDialogComponent, {
-    width: '75vw'
-   })
-   dialogRef.afterClosed().subscribe(res => {
-    console.log(res);
-   })*/
+  }
+
+  openLaboratories(){
+    const dialogRef = this.dialogRef.open(LaboratoriesDialogComponent, {
+      width: '75vw'
+     })
+     dialogRef.afterClosed().subscribe((res: any) => {
+      console.log(res);
+     })
   }
 
   logout(): void {

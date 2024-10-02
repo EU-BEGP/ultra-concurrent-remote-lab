@@ -69,5 +69,16 @@ mat-toolbar{
     transform: scale(0.9);
   }
 
+  .navbar-button{
+    padding: 0px 0px;
+    min-width: 28px;
+    width: 32px;
+  }
+
+  #logo {
+    width: 24px;
+    margin-right: 8px;
+  }
+
 }
 
