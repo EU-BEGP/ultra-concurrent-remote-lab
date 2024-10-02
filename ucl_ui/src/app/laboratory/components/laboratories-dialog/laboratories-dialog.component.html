@@ -1,34 +1,55 @@
 <mat-card-title class="dialog-title">
-    <span class="first-title header2">Create New</span>
-    <span class="second-title header2">Laboratory</span>
+    <span class="first-title header2">Available</span>
+    <span class="second-title header2">Laboratories</span>
 </mat-card-title>
+
+<mat-grid-list [cols]="breakpoint" rowHeight="72px"
+    (window:resize)="onResize($event)">
+    <mat-grid-tile>
+        <span mat-caption class="input-label header3"> Search by Name, Category
+            or
+            Institution </span>
+    </mat-grid-tile>
+    <mat-grid-tile>
+        <mat-form-field class="input-field"
+            appearance="outline">
+            <input matInput (keyup)="applyFilter($event)"
+                placeholder="Name, Category, Institution"
+                #input required>
+        </mat-form-field>
+    </mat-grid-tile>
+</mat-grid-list>
+
 <mat-dialog-content class="mat-typography">
-    <table mat-table [dataSource]="allData" class="demo-table">
+    <table mat-table [dataSource]="dataSource" class="demo-table" matSort>
         <!-- Position Column -->
         <ng-container matColumnDef="name">
-            <th mat-header-cell *matHeaderCellDef class="header3 table-header">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header
+                class="header3 table-header">
                 Name </th>
             <td mat-cell *matCellDef="let element" class="body1">
-                {{element.info.name}} </td>
+                {{element.name}} </td>
         </ng-container>
 
         <!-- Name Column -->
         <ng-container matColumnDef="institution">
-            <th mat-header-cell *matHeaderCellDef class="header3 table-header">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header
+                class="header3 table-header">
                 Institution
             </th>
             <td mat-cell *matCellDef="let element" class="body1">
-                {{element.info.institution}}
+                {{element.institution}}
             </td>
         </ng-container>
 
         <!-- Weight Column -->
         <ng-container matColumnDef="category">
-            <th mat-header-cell *matHeaderCellDef class="header3 table-header">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header
+                class="header3 table-header">
                 Category
             </th>
             <td mat-cell *matCellDef="let element" class="body1">
-                {{element.info.category}}
+                {{element.category}}
             </td>
         </ng-container>
 
@@ -47,7 +68,17 @@
 
         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
         <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+        <tr class="mat-row" *matNoDataRow>
+            <td class="mat-cell" colspan="4"><span class="header"> No data
+                    matching the filter
+                    "{{input.value}}"</span></td>
+        </tr>
+
     </table>
+
+    <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
+
 </mat-dialog-content>
 <mat-dialog-actions align="end">
     <button mat-dialog-close type="button" mat-raised-button

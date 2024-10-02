@@ -3,6 +3,8 @@ import { Router } from '@angular/router';
 import { ActivatedRoute } from '@angular/router';
 import * as data from '../../../mockdata.json'
 import { ToastrService } from 'ngx-toastr';
+import { LaboratoriesDialogComponent } from '../../components/laboratories-dialog/laboratories-dialog.component';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-home',
@@ -15,7 +17,8 @@ export class HomeComponent implements OnInit, OnDestroy {
   constructor(
     private router: Router,
     private route: ActivatedRoute,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private dialogRef: MatDialog
   ) { 
   }
 
@@ -56,6 +59,20 @@ loadLabInfo():void{
   }
 
   goToRemoteLab(): void {
-    this.router.navigateByUrl('/laboratory/'+this.labId);
+    if(this.labId){
+      this.router.navigateByUrl('/laboratory/'+this.labId);
+    }
+    else{
+      this.openLaboratories()
+    }
+  }
+
+  openLaboratories(){
+    const dialogRef = this.dialogRef.open(LaboratoriesDialogComponent, {
+      width: '75vw'
+     })
+     dialogRef.afterClosed().subscribe((res: any) => {
+      console.log(res);
+     })
   }
 }
