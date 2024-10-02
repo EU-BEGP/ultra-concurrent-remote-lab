@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ViewChild, OnInit } from '@angular/core';
 import * as data from '../../../mockdata.json'
 import { ActivatedRoute, Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
@@ -8,10 +8,11 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 
 export interface LaboratoryData {
-    institution: string,
-    name: string,
-    category: string,
-    description: string
+  id: string,
+  institution: string,
+  name: string,
+  category: string,
+  description: string
 }
 
 
@@ -20,7 +21,7 @@ export interface LaboratoryData {
   templateUrl: './laboratories-dialog.component.html',
   styleUrls: ['./laboratories-dialog.component.css']
 })
-export class LaboratoriesDialogComponent implements AfterViewInit {
+export class LaboratoriesDialogComponent implements AfterViewInit, OnInit {
 
   allData: any = (data as any).default;
   dataSource: MatTableDataSource<LaboratoryData>;
@@ -36,13 +37,20 @@ export class LaboratoriesDialogComponent implements AfterViewInit {
   sort!: MatSort;
 
   constructor(private http: HttpClient, private toastr: ToastrService, private router: Router) {
-    this.dataSource = new MatTableDataSource(this.allData.map(function(laboratory:any) {return laboratory.info;}));
+    this.dataSource = new MatTableDataSource(this.allData.map(function(laboratory:any) {return {
+      id: laboratory.id,
+      institution: laboratory.info.institution,
+      name: laboratory.info.name,
+      category: laboratory.info.category,
+    }}));
    }
+  ngOnInit(): void {
+    this.breakpoint = (window.innerWidth <= 1100) ? 1 : 2;
+  }
 
   ngAfterViewInit() {
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
-    this.breakpoint = (window.innerWidth <= 1100) ? 1 : 2;
   }
 
   redirectTo(id: string) {
