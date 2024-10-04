@@ -30,7 +30,7 @@ body {
 
 .vertical-center {
   vertical-align: middle;
-  line-height: normal;
+  line-height: 36px;
 }
 
 .content {

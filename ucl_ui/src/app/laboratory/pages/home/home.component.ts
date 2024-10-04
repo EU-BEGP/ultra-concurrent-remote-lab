@@ -72,7 +72,6 @@ loadLabInfo():void{
       width: '75vw'
      })
      dialogRef.afterClosed().subscribe((res: any) => {
-      console.log(res);
      })
   }
 }

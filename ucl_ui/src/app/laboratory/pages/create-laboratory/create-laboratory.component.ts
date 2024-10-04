@@ -18,7 +18,8 @@ export class CreateLaboratoryComponent implements OnInit {
   @ViewChild('videoPlayer') videoplayer!: ElementRef;
   stepperOrientation: Observable<StepperOrientation>
   breakpoint: any
-  breakpointParameter: any
+  breakpointVideo: any
+  breakpointOption: any
   defaultImg = '../../../../assets/emptyimage.jpeg';
   categories = [
     {name: 'Photovoltaic Energy'},
@@ -39,7 +40,8 @@ export class CreateLaboratoryComponent implements OnInit {
 
   ngOnInit():void {
     this.breakpoint = Math.floor(window.innerWidth / 200);
-    this.breakpointParameter =  Math.floor(window.innerWidth / 400);
+    this.breakpointVideo =  Math.floor((window.innerWidth  / 400) / 2);
+    this.breakpointOption = Math.floor(window.innerWidth  / 400);
     this.parameters.valueChanges.subscribe(() => {
       this.syncSelectedOptionsWithParameters();
     });
@@ -50,7 +52,8 @@ export class CreateLaboratoryComponent implements OnInit {
   }
 
   onResizeParameter(event : any):void {
-    this.breakpointParameter =  Math.floor(event.target.innerWidth / 400);
+    this.breakpointOption = Math.floor(window.innerWidth  / 400);
+    this.breakpointVideo =  Math.floor((event.target.innerWidth / 400) / 2);
   }
 
   newLaboratory=this.builder.group({
@@ -59,7 +62,18 @@ export class CreateLaboratoryComponent implements OnInit {
       institution: this.builder.control("",Validators.required),
       name: this.builder.control("",Validators.required),
       category: this.builder.control("",Validators.required),
-      description: this.builder.control("",Validators.required)
+    }),
+    introduction: this.builder.group({
+      description: this.builder.control("",Validators.required),
+      introVideo:this.builder.group({
+        video: [''],
+      }),
+      guides:new FormArray([
+        this.builder.group({
+          title: [''],
+          link: ['']
+        })
+      ]),
     }),
     parameters: this.builder.array([
       this.builder.group({
@@ -77,7 +91,14 @@ export class CreateLaboratoryComponent implements OnInit {
       videos: new FormArray([this.builder.group({
         name: [''], 
         video: ['']
-      })])
+      })]),
+      activities: new FormArray([
+        this.builder.group({
+          statement: [''],
+          result: ['']
+        })
+      ]),
+      dataFile: this.builder.control("")
     })]),
     activities: this.builder.array([
       this.builder.group({
@@ -87,10 +108,32 @@ export class CreateLaboratoryComponent implements OnInit {
     ])
   })
 
+  get introVideo():FormGroup {
+    return this.newLaboratory.get('introduction')?.get('introVideo') as FormGroup
+  }
 
   get info():FormGroup {
     return this.newLaboratory.get('info') as FormGroup
   }
+
+  get introduction():FormGroup {
+    return this.newLaboratory.get('introduction') as FormGroup
+  }
+  get guides():FormArray {
+    return this.newLaboratory.get("introduction")?.get('guides') as FormArray
+    }
+  
+    deleteGuide(index:any):void{
+    this.guides.removeAt(index)
+    }
+  
+    addGuide():void{
+      const guideFormGroup = this.builder.group({
+        title: [''],
+        link: ['']
+      })
+      this.guides.push(guideFormGroup)
+    }
 
   get parameters():FormArray {
     return this.newLaboratory.get('parameters') as FormArray
@@ -150,7 +193,14 @@ export class CreateLaboratoryComponent implements OnInit {
       videos: new FormArray([this.builder.group({
         name: [''], 
         video: ['']
-      })])
+      })]),
+      activities:  new FormArray([
+        this.builder.group({
+          statement: [''],
+          result: ['']
+        })
+      ]),
+      dataFile:this.builder.control('')
     }));
   }
 
@@ -189,9 +239,25 @@ export class CreateLaboratoryComponent implements OnInit {
     this.getVideos(index).push(videoFormGroup)
   }
 
-  deleteVideo(index:number, optionIndex:number):void{
-   this.getVideos(index).removeAt(optionIndex)
+  deleteVideo(index:number, videoIndex:number):void{
+   this.getVideos(index).removeAt(videoIndex)
   }
+
+  getExperimentActivites(index:number){
+    return this.experiments.at(index).get('activities') as FormArray
+  }
+
+  addExperimentActivity(index:number):void{
+    const activityFormGroup = this.builder.group({
+      statement: [''],
+      result: ['']
+    })
+    this.getExperimentActivites(index).push(activityFormGroup)
+  }
+
+  deleteExperimentActivity(index:number, activityIndex:number):void{
+    this.getExperimentActivites(index).removeAt(activityIndex)
+   }
 
   get activities():FormArray {
     return this.newLaboratory.get('activities') as FormArray
@@ -224,6 +290,33 @@ export class CreateLaboratoryComponent implements OnInit {
     
   }
 
+  onUploadIntro(event: any): void {
+    if (event.target.files.length > 0) {
+      const file = event.target.files[0] as File;
+      const file_size = file.size;
+      if (file_size <= 50000000) {
+        this.getUrlIntro(file);
+      }
+      else {
+        this.toastr.error("File size must be 50MB or smaller.");
+      }
+    }
+  }
+
+  async getUrlIntro(file: any) {
+    var reader = new FileReader();
+    reader.onload = (event: any) => {
+        this.introVideo.patchValue({
+          video:event.target.result
+        })
+        this.introVideo.get('video')?.updateValueAndValidity();
+    };
+    reader.onerror = (event: any) => {
+      console.log('File could not be read: ' + event.target.error.code);
+    };
+    reader.readAsDataURL(file);
+  }
+
   async getUrlFile(file: any,parameterIndex:number, index: number, field: string) {
     var reader = new FileReader();
     reader.onload = (event: any) => {
@@ -243,7 +336,6 @@ export class CreateLaboratoryComponent implements OnInit {
     reader.onerror = (event: any) => {
       console.log('File could not be read: ' + event.target.error.code);
     };
-
     reader.readAsDataURL(file);
   }
   toggleVideo(event: any) {
@@ -256,6 +348,7 @@ export class CreateLaboratoryComponent implements OnInit {
       'Now you will be redirected to your new Laboratory!',
       this.newLaboratory.value.info?.name + " Successfully Created!"
     );
+    console.log(this.newLaboratory.value)
     this.router.navigate(['/ultra-concurrent-rl', this.newLaboratory.value.id])
     } else {
       this.toastr.error(

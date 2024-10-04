@@ -110,7 +110,6 @@ export class NavbarComponent implements OnInit {
       width: '75vw'
      })
      dialogRef.afterClosed().subscribe((res: any) => {
-      console.log(res);
      })
   }
 

@@ -38,6 +38,7 @@ import { VgControlsModule } from '@videogular/ngx-videogular/controls';
 import { VgOverlayPlayModule } from '@videogular/ngx-videogular/overlay-play';
 import { VgBufferingModule } from '@videogular/ngx-videogular/buffering';
 import { LaboratoriesDialogComponent } from './laboratory/components/laboratories-dialog/laboratories-dialog.component';
+import { NgxMatFileInputModule } from '@angular-material-components/file-input';
 
 @NgModule({
   declarations: [
@@ -80,7 +81,8 @@ import { LaboratoriesDialogComponent } from './laboratory/components/laboratorie
     VgCoreModule,
     VgControlsModule,
     VgOverlayPlayModule,
-    VgBufferingModule
+    VgBufferingModule,
+    NgxMatFileInputModule
   ],
   providers: [
     CookieService,
