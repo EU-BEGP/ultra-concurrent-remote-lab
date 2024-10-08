@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Component, OnInit, inject } from '@angular/core';
+import { AfterViewInit, Component, OnInit, ViewChild, inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import {map} from 'rxjs/operators';
 import {Observable} from 'rxjs';
@@ -8,13 +8,21 @@ import { FormGroup, FormArray, FormBuilder, Validators } from '@angular/forms';
 import { StepperOrientation } from '@angular/cdk/stepper';
 import * as data from '../../../mockdata.json'
 import { ToastrService } from 'ngx-toastr';
+import { MatSort} from '@angular/material/sort';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatTableDataSource } from '@angular/material/table';
+
+export interface GuideData {
+  title: string,
+  link: string,
+}
 
 @Component({
   selector: 'app-lab',
   templateUrl: './lab.component.html',
   styleUrls: ['./lab.component.css']
 })
-export class LabComponent implements OnInit {
+export class LabComponent implements OnInit, AfterViewInit {
 
   stepperOrientation: Observable<StepperOrientation>
   breakpoint: any
@@ -25,6 +33,13 @@ export class LabComponent implements OnInit {
   experimentId: any
   experimentActivities: any = []
   experimentVideos:any=[]
+  dataSource: MatTableDataSource<GuideData>;
+  displayedColumns: string[] = ['title', 'link'];
+
+  @ViewChild(MatPaginator)
+  paginator!: MatPaginator;
+  @ViewChild(MatSort)
+  sort!: MatSort;
 
 
   constructor(private route: ActivatedRoute, private http: HttpClient, private builder:FormBuilder, private toastr: ToastrService, private router: Router) 
@@ -32,10 +47,19 @@ export class LabComponent implements OnInit {
     this.stepperOrientation = breakpointObserver
       .observe('(min-width: 800px)')
       .pipe(map(({matches}) => (matches ? 'horizontal' : 'vertical')));
-}
+      this.loadLabInfo()
+    this.dataSource = new MatTableDataSource(this.labinfo.introduction.guides.map(function(guide:any) {return {
+      title: guide.title,
+      link: guide.link,
+    }}));
+  }
+
+  ngAfterViewInit() {
+    this.dataSource.paginator = this.paginator;
+    this.dataSource.sort = this.sort;
+  }
 
   ngOnInit(): void {
-    this.loadLabInfo()
     this.breakpoint = Math.floor(window.innerWidth / 200);
     this.breakpointParameter =  Math.floor(window.innerWidth / 400);
     this.syncSelectedOptionsWithVideos();
@@ -60,6 +84,10 @@ export class LabComponent implements OnInit {
     this.breakpointParameter =  Math.floor(event.target.innerWidth / 400);
   }
 
+  redirectTo(link: string) {
+    window.open(link)
+  }
+
 
   studentExperiment = this.builder.group({
     selectedOptions : new FormArray([]),
@@ -67,12 +95,15 @@ export class LabComponent implements OnInit {
   })
 
   getVideos(){
-    this.labinfo.experiments.forEach((experiment: { selectedOptions: any; videos: any, id:any; }) => {
+    this.experimentVideos=[]
+    this.labinfo.experiments.forEach((experiment: {
+      activities: any; selectedOptions: any; videos: any, id:any; 
+    }) => {
       if (experiment.selectedOptions.every( (v: any) => this.getSelectedOptions().value.includes(v)) ) {
         this.experimentVideos = experiment.videos;
         this.experimentId = experiment.id
-        //this.experimentActivities = experiment.activies
-        this.experimentActivities = this.labinfo.activities
+        this.experimentActivities = experiment.activities
+        //this.experimentActivities = this.labinfo.activities
       }
     });
     this.syncActivities()

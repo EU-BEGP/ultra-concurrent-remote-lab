@@ -3,7 +3,7 @@ import { StepperOrientation } from '@angular/cdk/stepper';
 import {Observable} from 'rxjs';
 import {BreakpointObserver} from '@angular/cdk/layout';
 import {map} from 'rxjs/operators';
-import { FormArray, FormBuilder,FormGroup,Validators } from '@angular/forms';
+import { FormArray, FormBuilder,FormControl,FormGroup,Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { v4 as uuidv4 } from 'uuid'; 
 import { Router } from '@angular/router';
@@ -20,6 +20,7 @@ export class CreateLaboratoryComponent implements OnInit {
   breakpoint: any
   breakpointVideo: any
   breakpointOption: any
+  videoRowHeight: any
   defaultImg = '../../../../assets/emptyimage.jpeg';
   categories = [
     {name: 'Photovoltaic Energy'},
@@ -39,6 +40,7 @@ export class CreateLaboratoryComponent implements OnInit {
   }
 
   ngOnInit():void {
+    this.videoRowHeight = window.innerWidth <= 600 ? 340 : 380
     this.breakpoint = Math.floor(window.innerWidth / 200);
     this.breakpointVideo =  Math.floor((window.innerWidth  / 400) / 2);
     this.breakpointOption = Math.floor(window.innerWidth  / 400);
@@ -52,6 +54,7 @@ export class CreateLaboratoryComponent implements OnInit {
   }
 
   onResizeParameter(event : any):void {
+    this.videoRowHeight = window.innerWidth <= 600 ? 340 : 380
     this.breakpointOption = Math.floor(window.innerWidth  / 400);
     this.breakpointVideo =  Math.floor((event.target.innerWidth / 400) / 2);
   }
@@ -238,7 +241,6 @@ export class CreateLaboratoryComponent implements OnInit {
       })
     this.getVideos(index).push(videoFormGroup)
   }
-
   deleteVideo(index:number, videoIndex:number):void{
    this.getVideos(index).removeAt(videoIndex)
   }
@@ -246,6 +248,7 @@ export class CreateLaboratoryComponent implements OnInit {
   getExperimentActivites(index:number){
     return this.experiments.at(index).get('activities') as FormArray
   }
+
 
   addExperimentActivity(index:number):void{
     const activityFormGroup = this.builder.group({
@@ -274,6 +277,11 @@ export class CreateLaboratoryComponent implements OnInit {
     })
       this.activities.push(activityFormGroup)
     }
+
+    getDataFile(index:number){
+      return this.experiments.at(index).get('dataFile') as FormControl
+    }
+  
   
 
   onUploadFile(event: any,parameterIndex:number, index: number, field: string): void {
@@ -331,6 +339,10 @@ export class CreateLaboratoryComponent implements OnInit {
           video:event.target.result
         })
         this.getVideos(parameterIndex).at(index).get('video')?.updateValueAndValidity();
+      }
+      else if(field == 'file'){
+        this.experiments.at(index).get('dataFile')?.patchValue({dataFile:event.target.result})
+        this.experiments.at(index).get('dataFile')?.updateValueAndValidity();
       }
     };
     reader.onerror = (event: any) => {

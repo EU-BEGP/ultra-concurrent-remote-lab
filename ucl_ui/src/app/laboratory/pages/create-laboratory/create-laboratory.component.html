@@ -226,7 +226,7 @@
                                             <img mat-card-image
                                                 [src]="option.value.photo">
                                             <mat-card-content>
-                                                <mat-label class="body1">Name /
+                                                <mat-label class="body">Name /
                                                     Value</mat-label>
                                                 <mat-form-field
                                                     class="input-field"
@@ -376,7 +376,7 @@
                                         <mat-grid-list
                                             [cols]="breakpointVideo"
                                             [gutterSize]="'16px'"
-                                            rowHeight="400px"
+                                            [rowHeight]="videoRowHeight"
                                             (window:resize)="onResizeParameter($event)"
                                             formArrayName="videos"
                                             class="grid-left">
@@ -398,7 +398,7 @@
                                                     </vg-player>
                                                     <mat-card-content>
                                                         <mat-label
-                                                            class="body1">Video
+                                                            class="body">Video
                                                             Name</mat-label>
                                                         <mat-form-field
                                                             class="input-field"
@@ -518,9 +518,10 @@
                                         {{i+1}} (Optional)
                                     </span>
                                     <mat-form-field appearance="outline"
-                                        style="width:50%">
+                                        style="width:25%">
                                         <ngx-mat-file-input
-                                            formControlName="dataFile">
+                                            formControlName="dataFile"
+                                            (change)="onUploadFile($event, i,0, 'file')">
                                             <mat-icon ngxMatFileInputIcon
                                                 class="accent bigger-icon">upload</mat-icon>
                                         </ngx-mat-file-input>

@@ -92,6 +92,7 @@ img{
 }
 
 .video-card {
+    width: 55vw;
     .mat-form-field-wrapper{
         padding-bottom: 0px;
     }
@@ -113,6 +114,14 @@ img{
 .column {
     float: left;
     width: 50%;
+    padding: 24px;
+}
+
+@media screen and (min-width:600px) {
+
+    .video-card {
+        width: 45vw;
+    }
 }
 
 
@@ -124,4 +133,27 @@ img{
         width: 100%;
     }
 }
+
+@media screen and (min-width:900px) {
+    .video-card {
+        width: 32vw;
+    }
+}
+
+
+@media screen and (min-width:1300px) {
+
+    .video-card {
+        width: 25vw;
+    }
+}
+
+
+@media screen and (min-width:1600px) {
+
+    .video-card {
+        width: 35vw;
+    }
+}
+
 

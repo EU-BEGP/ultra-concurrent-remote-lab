@@ -399,6 +399,10 @@ mat-dialog-actions{
   font-size: 0.6rem;
 }
 
+.body {
+  font-size: 0.6rem;
+}
+
 .body1 {
   font-size: 0.4rem;
 }
@@ -442,7 +446,9 @@ mat-dialog-actions{
   .mat-step-text-label{
     font-size: 0.6rem;
   }
-
+  .body {
+    font-size: 0.7rem;
+  }
   .body1 {
     font-size: 0.6rem;
   }
@@ -474,7 +480,9 @@ mat-dialog-actions{
   .mat-step-text-label{
     font-size: 0.7rem;
   }
-
+  .body {
+    font-size: 0.8rem;
+  }
   .body1 {
     font-size: 0.8rem;
   }
@@ -505,6 +513,9 @@ mat-dialog-actions{
   .mat-step-text-label{
     font-size: 1.0rem;
   }
+  .body {
+    font-size: 1.0rem;
+  }
   .body1 {
     font-size: 0.9rem;
   }
@@ -533,6 +544,9 @@ mat-dialog-actions{
     font-size: 1.2rem;
   }
   .mat-step-text-label{
+    font-size: 1.2rem;
+  }
+  .body {
     font-size: 1.2rem;
   }
   .body1 {

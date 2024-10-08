@@ -101,3 +101,15 @@ mat-card-actions{
 
 }
 
+
+.demo-table {
+  width: 100%;
+}
+
+.mat-menu-item .mat-icon-no-color{
+  color: #f3ae20;
+}
+.table-header{
+  border-bottom: 3px solid currentColor;
+}
+

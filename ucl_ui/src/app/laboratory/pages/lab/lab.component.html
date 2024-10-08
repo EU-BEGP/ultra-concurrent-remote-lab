@@ -21,13 +21,9 @@
                     [orientation]="(stepperOrientation | async)!"
                     [formGroup]="studentExperiment" hide-header>
                     <mat-step label="Introduction">
-                        <span mat-caption
-                            class="input-label header3 mt-16 primary">
-                            Introduction
-                        </span>
 
                         <span
-                            class="body1">{{labinfo.info.description}}</span>
+                            class="body">{{labinfo.introduction.description}}</span>
                         <div
                             class="introduction-video-card center mt-16 mb-8">
                             <vg-player
@@ -36,14 +32,53 @@
                                     #media id="singleVideo"
                                     preload="auto" controls
                                     class="video-player"
-                                    [src]="labinfo.experiments[0].videos[0].video"></video>
+                                    [src]="labinfo.introduction.introVideo.video"></video>
                             </vg-player>
 
                         </div>
 
                         <span mat-caption
-                            class="input-label header3 mt-24 primary"> Guides
+                            class="input-label header3 mt-24 accent"> Guides
                         </span>
+
+                        <table mat-table [dataSource]="dataSource"
+                            class="demo-table" matSort>
+                            <!-- Position Column -->
+                            <ng-container matColumnDef="title">
+                                <th mat-header-cell *matHeaderCellDef
+                                    mat-sort-header
+                                    class="header3 table-header">
+                                    Title </th>
+                                <td mat-cell *matCellDef="let element"
+                                    class="body">
+                                    {{element.title}} </td>
+                            </ng-container>
+
+                            <ng-container matColumnDef="link">
+                                <th mat-header-cell *matHeaderCellDef
+                                    class="header3 table-header">
+                                </th>
+                                <td mat-cell *matCellDef="let element"
+                                    class="actions-column">
+                                    <button mat-menu-item
+                                        (click)="redirectTo(element.link)">
+                                        <span class="header3"> Open Guide
+                                        </span>
+                                        <mat-icon
+                                            class="accent bigger-icon ml-24">open_in_new</mat-icon>
+                                    </button>
+                                </td>
+                            </ng-container>
+
+                            <tr mat-header-row
+                                *matHeaderRowDef="displayedColumns"></tr>
+                            <tr mat-row
+                                *matRowDef="let row; columns: displayedColumns;"></tr>
+
+                        </table>
+
+                        <mat-paginator
+                            [pageSizeOptions]="[5, 10]"></mat-paginator>
                         <mat-card-actions>
                             <button type="button" class="header2"
                                 mat-raised-button
@@ -52,7 +87,7 @@
                     </mat-step>
                     <mat-step label="Experimentation">
                         <span mat-caption
-                            class="input-label header3 mt-16 primary">
+                            class="input-label header3 mt-16 accent">
                             Configuration </span>
                         <mat-grid-list [cols]="breakpointParameter"
                             [gutterSize]="'16px'"
@@ -93,9 +128,9 @@
                             </mat-grid-tile>
 
                         </mat-grid-list>
-                        <div *ngIf="experimentVideos?.length">
+                        <div *ngIf="experimentVideos?.length; else noVideos">
                             <span mat-caption
-                                class="input-label header3 primary">
+                                class="input-label header3 accent">
                                 Visualization
                             </span>
 
@@ -121,10 +156,20 @@
                                     </div>
                                 </mat-tab>
                             </mat-tab-group>
+                            <span mat-caption
+                                class="center input-label header3 vertical-center header3 mt-16">
+                                Download the Experiment data in Excel or CSV
+                                File:
+                                <button mat-button>
+                                    <mat-icon class="bigger-icon accent"
+                                        matTooltip="Download">save_alt</mat-icon>
+                                </button>
+                            </span>
+
                             <div formArrayName="results">
                                 <span mat-caption
-                                    class="input-label header3 mt-16 primary">
-                                    Experiment Activities
+                                    class="input-label header3 mt-16 accent">
+                                    Activities
                                 </span>
                                 <div
                                     *ngFor="let activity of experimentActivities; index as activityIndex">
@@ -142,6 +187,17 @@
                             </div>
 
                         </div>
+
+                        <ng-template #noVideos>
+                            <mat-icon
+                                class="center bigger-icon mt-24 accent"
+                                style="display: block;">error_outline</mat-icon>
+                            <span
+                                class="header3 accent center mt-24">There is no
+                                experiment with the selected parameters, change
+                                it and try
+                                again</span>
+                        </ng-template>
 
                         <mat-card-actions>
                             <button type="button" mat-raised-button
