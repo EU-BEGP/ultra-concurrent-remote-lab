@@ -97,6 +97,7 @@ export class CreateLaboratoryComponent implements OnInit {
       })]),
       activities: new FormArray([
         this.builder.group({
+          id: [uuidv4()], 
           statement: [''],
           result: ['']
         })
@@ -105,6 +106,7 @@ export class CreateLaboratoryComponent implements OnInit {
     })]),
     activities: this.builder.array([
       this.builder.group({
+        id: [uuidv4()], 
         statement: [''],
         result: ['']
       })

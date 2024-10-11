@@ -113,3 +113,42 @@ mat-card-actions{
   border-bottom: 3px solid currentColor;
 }
 
+.add-new{
+  color:#f6bd2b;
+  transform: scale(1.2);
+}
+
+.label{
+  display: flex;
+  align-items: center; 
+  gap: 16px;
+}
+.label button {
+  padding-left: 0px; 
+  padding-right: 0px;
+  min-width: 0px;
+}
+.buttons-container {
+  display: flex;
+  align-items: center;
+  gap: 16px; 
+}
+
+::ng-deep .mat-tab-label {
+  opacity: 1 !important; 
+}
+
+::ng-deep .mat-tab-label.mat-tab-label-active {
+  opacity: 1 !important; 
+}
+
+::ng-deep .mat-tab-label:hover {
+  opacity: 1 !important; 
+}
+
+::ng-deep .custom-stepper .mat-horizontal-stepper-header {
+  height: 48px !important; 
+  margin-bottom: 0px; 
+}
+
+

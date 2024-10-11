@@ -4,7 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import {map} from 'rxjs/operators';
 import {Observable} from 'rxjs';
 import {BreakpointObserver} from '@angular/cdk/layout';
-import { FormGroup, FormArray, FormBuilder, Validators } from '@angular/forms';
+import { FormGroup, FormArray, FormBuilder, Validators, AbstractControl } from '@angular/forms';
 import { StepperOrientation } from '@angular/cdk/stepper';
 import * as data from '../../../mockdata.json'
 import { ToastrService } from 'ngx-toastr';
@@ -30,11 +30,13 @@ export class LabComponent implements OnInit, AfterViewInit {
   id = '';
   allData: any = (data as any).default;
   labinfo:any
-  experimentId: any
-  experimentActivities: any = []
-  experimentVideos:any=[]
   dataSource: MatTableDataSource<GuideData>;
   displayedColumns: string[] = ['title', 'link'];
+  selectedTabIndex: number = 0;
+
+  studentSession: FormGroup;
+  optionsList: any[] = []; 
+  duplicateExperimentMessage = ''; 
 
   @ViewChild(MatPaginator)
   paginator!: MatPaginator;
@@ -47,11 +49,20 @@ export class LabComponent implements OnInit, AfterViewInit {
     this.stepperOrientation = breakpointObserver
       .observe('(min-width: 800px)')
       .pipe(map(({matches}) => (matches ? 'horizontal' : 'vertical')));
-      this.loadLabInfo()
+
+    this.loadLabInfo()
+
     this.dataSource = new MatTableDataSource(this.labinfo.introduction.guides.map(function(guide:any) {return {
       title: guide.title,
       link: guide.link,
     }}));
+
+    this.studentSession = this.builder.group({
+      experiments: this.builder.array([]),
+      finalActivities: this.builder.array([])
+    });
+
+    this.optionsList = this.labinfo.parameters
   }
 
   ngAfterViewInit() {
@@ -60,9 +71,37 @@ export class LabComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit(): void {
+   
     this.breakpoint = Math.floor(window.innerWidth / 200);
     this.breakpointParameter =  Math.floor(window.innerWidth / 400);
-    this.syncSelectedOptionsWithVideos();
+    this.createActivitiesArray()
+    this.addExperiment(); 
+  }
+
+  addExperiment() {
+
+    const newTabIndex = this.experiments.controls.length;
+
+    const experimentArray = this.studentSession.get('experiments') as FormArray;
+
+    const optionsLength = this.optionsList.length || 3; // Assume we know the number of option dropdowns
+
+    const experimentGroup = this.builder.group({
+      optionsGroup: this.builder.group({
+        selectedOptions: this.createOptionsArray(optionsLength)
+      }),
+      experimentFound: [false],  // Experiment found flag
+      experimentNotFound: [false], // Experiment not found flag
+      experimentDetailsGroup: this.builder.group({
+        id: [''],
+        activities: this.builder.array([]),
+        videos: [[]],
+        dataFile: ['']
+      })
+    });
+
+    experimentArray.push(experimentGroup);
+    this.selectedTabIndex = newTabIndex
   }
 
   loadLabInfo():void{
@@ -74,7 +113,158 @@ export class LabComponent implements OnInit, AfterViewInit {
       this.toastr.error(`Incorrect Laboratory`);
       this.router.navigateByUrl('');
     }
+    
   }
+
+  onOptionChange(experiment: AbstractControl, experimentIndex: number) {
+    const selectedOptions = experiment.get('optionsGroup')?.get('selectedOptions')?.value;
+
+    // Check if all options have been selected (no empty values)
+    const allOptionsSelected = selectedOptions.every((option: any) => option !== '');
+
+    if (!allOptionsSelected) {
+      // If not all options are selected, reset the flags and don't show any message
+      experiment.get('experimentNotFound')?.setValue(false);
+      experiment.get('experimentFound')?.setValue(false);
+      this.duplicateExperimentMessage = '';
+      return; // Stop execution if not all options are selected
+    }
+
+
+    // Fetch the experiment based on selected options
+    if (this.isDuplicateOptions(selectedOptions, experimentIndex)) {
+      this.duplicateExperimentMessage = `This Configuration is duplicated in another Experiment. Please select other Configuration.`;
+      experiment.get('experimentNotFound')?.setValue(false);
+    } else {
+      this.duplicateExperimentMessage = '';
+    const experimentFound = this.getExperimentByOptions(selectedOptions)
+        if (experimentFound) {
+          // Experiment found
+          experiment.get('experimentFound')?.setValue(true);
+          experiment.get('experimentNotFound')?.setValue(false);
+          this.populateExperimentForm(experimentFound, experiment);
+        } else {
+          // No experiment found with these options
+          experiment.get('experimentFound')?.setValue(false);
+          experiment.get('experimentNotFound')?.setValue(true);
+        }
+      }
+  }
+
+
+  isDuplicateOptions(selectedOptions: any[], currentIndex: number): boolean {
+    const experimentArray = this.studentSession.get('experiments') as FormArray;
+
+    return experimentArray.controls.some((experiment, index) => {
+      if (index !== currentIndex) {
+        const options = (experiment.get('optionsGroup')?.get('selectedOptions') as FormArray).value;
+        return JSON.stringify(options) === JSON.stringify(selectedOptions);
+      }
+      return false;
+    });
+  }
+
+  deleteExperiment(index: number): void {
+    const experimentsArray = this.studentSession.get('experiments') as FormArray;
+    
+    if (experimentsArray.length > 1) {
+      experimentsArray.removeAt(index); // Elimina el experimento en la posición 'index'
+    } 
+  
+    // Si quieres que después de borrar seleccione otro tab
+    if (this.selectedTabIndex >= experimentsArray.length) {
+      this.selectedTabIndex = experimentsArray.length - 1; // Ajusta el índice si se elimina el último tab
+    }
+  }
+
+  populateExperimentForm(experimentData: any, experiment: AbstractControl) {
+    const experimentDetailsGroup = experiment.get('experimentDetailsGroup') as FormGroup;
+
+    experimentDetailsGroup.patchValue({
+      id: experimentData.id,
+      videos: experimentData.videos,
+      dataFile: experimentData.dataFile
+    });
+
+    const activityArray = experimentDetailsGroup.get('activities') as FormArray;
+    activityArray.clear(); // Clear existing activities
+
+    // Populate activities
+    const experimentActivities = this.getActivitiesByExperimentId(experimentData.id)
+
+      experimentActivities.forEach((activity: { id: any, statement: any }) => {
+        activityArray.push(this.builder.group({
+          id: [activity.id],
+          statement: [activity.statement],
+          result: [''],    // Student input
+          procedure: ['']  // Student input
+        }));
+      });
+
+  }
+
+  getActivitiesByExperimentId(id: any){
+    const foundExperiment = this.labinfo.experiments.find((experiment: {
+      activities: any; selectedOptions: any; videos: any, id: any;
+    }) => {
+
+      return experiment.id === id;
+    });
+  
+    // Return the activities if the experiment is found, or null if not
+    return foundExperiment ? foundExperiment.activities : null;
+  }
+
+  getExperimentByOptions(options :any){
+    const foundExperiment = this.labinfo.experiments.find((experiment: {
+      activities: any; selectedOptions: any; videos: any, id: any;
+    }) => {
+  
+      return experiment.selectedOptions.every((v: any) => options.includes(v));
+    });
+  
+    // Return the found experiment or null if none is found
+    return foundExperiment || null;
+  }
+
+  
+  createOptionsArray(length: number): FormArray {
+    const optionsArray = this.builder.array([]);
+    for (let i = 0; i < length; i++) {
+      optionsArray.push(this.builder.control('')); // You can also pre-fill with default values
+    }
+    return optionsArray;
+  }
+
+  createActivitiesArray(){
+    const activityArray = this.studentSession.get('finalActivities') as FormArray;
+    activityArray.clear(); // Clear existing activities
+    this.labinfo.activities.forEach((activity: { id: any, statement: any }) => {
+      activityArray.push(this.builder.group({
+        id: [activity.id],
+        statement: [activity.statement],
+        result: [''],
+        procedure: ['']
+      }));
+    })
+  }
+
+  get finalActivities():FormArray {
+      return this.studentSession.get('finalActivities') as FormArray
+  }
+
+  get experiments():FormArray {
+    return this.studentSession.get('experiments') as FormArray
+  }
+
+  getOptions(experiment: AbstractControl) {
+    return experiment.get('optionsGroup')?.get('selectedOptions') as FormArray;
+  }
+
+  getActivities(experiment: AbstractControl) {
+    return experiment.get('experimentDetailsGroup')?.get('activities') as FormArray;
+  }
+  
 
   onResize(event : any):void {
     this.breakpoint = Math.floor(event.target.innerWidth / 200);
@@ -89,59 +279,17 @@ export class LabComponent implements OnInit, AfterViewInit {
   }
 
 
-  studentExperiment = this.builder.group({
-    selectedOptions : new FormArray([]),
-    results: new FormArray([]),
-  })
-
-  getVideos(){
-    this.experimentVideos=[]
-    this.labinfo.experiments.forEach((experiment: {
-      activities: any; selectedOptions: any; videos: any, id:any; 
-    }) => {
-      if (experiment.selectedOptions.every( (v: any) => this.getSelectedOptions().value.includes(v)) ) {
-        this.experimentVideos = experiment.videos;
-        this.experimentId = experiment.id
-        this.experimentActivities = experiment.activities
-        //this.experimentActivities = this.labinfo.activities
-      }
-    });
-    this.syncActivities()
-  }
-
-
-  getSelectedOptions(){
-    return this.studentExperiment.get('selectedOptions') as FormArray
-  }
-
-  syncSelectedOptionsWithVideos() {
-    const parametersLength = this.labinfo.parameters.length;
-    this.labinfo.parameters.forEach(() => {
-      const selectedOptionsArray = this.studentExperiment.get('selectedOptions') as FormArray;
-  
-      // Añadir los controles que falten si hay más parámetros que opciones seleccionadas
-      while (selectedOptionsArray.length < parametersLength) {
-        selectedOptionsArray.push(this.builder.control(''));
-      }
-  
-      // Eliminar los controles extra si hay más opciones seleccionadas que parámetros
-      while (selectedOptionsArray.length > parametersLength) {
-        selectedOptionsArray.removeAt(selectedOptionsArray.length - 1);
-      }
-    });
-    this.getVideos()
-  }
-  syncActivities() {
-
-    const resultsArray = this.studentExperiment.get('results') as FormArray;
-
-    while (resultsArray.length < this.experimentActivities.length) {
-      resultsArray.push(this.builder.control(''));
-    }
-
-    // Eliminar los controles extra si hay más opciones seleccionadas que parámetros
-    while (resultsArray.length > this.experimentActivities.length) {
-      resultsArray.removeAt(resultsArray.length - 1);
+  onSubmit(): void {
+    if (this.studentSession.valid) {
+    this.toastr.success(
+      "Experiment Saved", "Success"
+    );
+    console.log(this.studentSession.value)
+    } else {
+      this.toastr.error(
+        'Please, complete the required Information',
+        'Invalid action'
+      );
     }
   }
 }

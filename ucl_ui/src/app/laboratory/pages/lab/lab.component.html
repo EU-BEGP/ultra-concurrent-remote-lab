@@ -11,168 +11,289 @@
                 </mat-grid-tile>
                 <mat-grid-tile>
                     <span
-                        class="header3 ">{{labinfo.info.institution}}</span>
+                        class="header3 ">by {{labinfo.info.institution}}</span>
                 </mat-grid-tile>
 
             </mat-grid-list>
             <mat-card-content>
+                <form [formGroup]="studentSession" (ngSubmit)="onSubmit()">
+                    <mat-stepper [linear]="false"
+                        [orientation]="(stepperOrientation | async)!"
+                        class="custom-stepper">
+                        <mat-step label="Introduction">
+                            <div class="mt-16">
+                                <span
+                                    class="body">{{labinfo.introduction.description}}</span>
+                            </div>
 
-                <mat-stepper [linear]="false"
-                    [orientation]="(stepperOrientation | async)!"
-                    [formGroup]="studentExperiment" hide-header>
-                    <mat-step label="Introduction">
+                            <div
+                                class="introduction-video-card center mt-16 mb-8">
+                                <vg-player
+                                    class="video-container">
+                                    <video [vgMedia]="$any(media)"
+                                        #media id="singleVideo"
+                                        preload="auto" controls
+                                        class="video-player"
+                                        [src]="labinfo.introduction.introVideo.video"></video>
+                                </vg-player>
 
-                        <span
-                            class="body">{{labinfo.introduction.description}}</span>
-                        <div
-                            class="introduction-video-card center mt-16 mb-8">
-                            <vg-player
-                                class="video-container">
-                                <video [vgMedia]="$any(media)"
-                                    #media id="singleVideo"
-                                    preload="auto" controls
-                                    class="video-player"
-                                    [src]="labinfo.introduction.introVideo.video"></video>
-                            </vg-player>
+                            </div>
 
+                            <span mat-caption
+                                class="input-label header3 mt-24 accent"> Guides
+                            </span>
+
+                            <table mat-table [dataSource]="dataSource"
+                                class="demo-table" matSort>
+                                <!-- Position Column -->
+                                <ng-container matColumnDef="title">
+                                    <th mat-header-cell *matHeaderCellDef
+                                        mat-sort-header
+                                        class="header3 table-header">
+                                        Title </th>
+                                    <td mat-cell *matCellDef="let element"
+                                        class="body">
+                                        {{element.title}} </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="link">
+                                    <th mat-header-cell *matHeaderCellDef
+                                        class="header3 table-header">
+                                    </th>
+                                    <td mat-cell *matCellDef="let element"
+                                        class="actions-column">
+                                        <button mat-menu-item
+                                            (click)="redirectTo(element.link)">
+                                            <span class="header3"> Open Guide
+                                            </span>
+                                            <mat-icon
+                                                class="accent bigger-icon ml-24">open_in_new</mat-icon>
+                                        </button>
+                                    </td>
+                                </ng-container>
+
+                                <tr mat-header-row
+                                    *matHeaderRowDef="displayedColumns"></tr>
+                                <tr mat-row
+                                    *matRowDef="let row; columns: displayedColumns;"></tr>
+
+                            </table>
+
+                            <mat-paginator
+                                [pageSizeOptions]="[5, 10]"></mat-paginator>
+                            <mat-card-actions>
+                                <button type="button" class="header2"
+                                    mat-raised-button
+                                    matStepperNext>Next</button>
+                            </mat-card-actions>
+                        </mat-step>
+
+                        <div formGroupName="experiments">
+                            <mat-step label="Experimentation"
+                                [stepControl]="experiments">
+                                <mat-tab-group
+                                    mat-stretch-tabs="false"
+                                    mat-align-tabs="center"
+                                    [(selectedIndex)]="selectedTabIndex">
+                                    <mat-tab
+                                        *ngFor="let experiment of experiments.controls; index as experimentIndex"
+                                        [formGroupName]="experimentIndex">
+
+                                        <ng-template mat-tab-label
+                                            class="tab-label">
+                                            <span
+                                                class="header3 label">Experiment
+                                                {{experimentIndex + 1}}
+                                                <span class="buttons-container">
+                                                    <button type="button"
+                                                        *ngIf="experimentIndex==0"
+                                                        mat-button
+                                                        class="center"
+                                                        (click)="addExperiment()">
+                                                        <mat-icon
+                                                            class="add-new"
+                                                            matTooltip="New Experiment">add_circle_outline</mat-icon>
+                                                    </button>
+
+                                                    <button type="button"
+                                                        mat-button
+                                                        class="center"
+                                                        (click)="deleteExperiment(experimentIndex)">
+                                                        <mat-icon
+                                                            class="add-new"
+                                                            matTooltip="Delete Experiment">delete</mat-icon>
+                                                    </button>
+                                                </span>
+
+                                            </span>
+
+                                        </ng-template>
+
+                                        <span mat-caption
+                                            class="input-label header3 mt-16 accent">
+                                            Configuration </span>
+                                        <div formGroupName=optionsGroup>
+                                            <mat-grid-list
+                                                [cols]="breakpointParameter"
+                                                [gutterSize]="'16px'"
+                                                rowHeight="72px"
+                                                (window:resize)="onResizeParameter($event)"
+                                                formArrayName="selectedOptions">
+                                                <mat-grid-tile
+                                                    *ngFor="let parameter of optionsList; index as j">
+                                                    <span mat-caption
+                                                        class="parameter-title input-label header3">
+                                                        {{parameter.name}}:
+                                                    </span>
+                                                    <mat-form-field
+                                                        appearance="outline"
+                                                        class="ml-8 input-field pb-0">
+                                                        <mat-select
+                                                            placeholder="Choose Option"
+                                                            required
+                                                            [formControlName]="j"
+                                                            (selectionChange)="onOptionChange(experiment,experimentIndex)">
+                                                            <mat-option
+                                                                *ngFor="let option of parameter.options"
+                                                                [value]="option.id">
+                                                                <mat-card
+                                                                    class="parameter-option">
+                                                                    <img
+                                                                        mat-card-image
+                                                                        [src]="option.photo">
+                                                                    <mat-card-content>
+                                                                        <mat-label
+                                                                            class="header3 center">{{option.value}}</mat-label>
+                                                                    </mat-card-content>
+                                                                </mat-card>
+                                                            </mat-option>
+                                                        </mat-select>
+                                                    </mat-form-field>
+                                                </mat-grid-tile>
+                                            </mat-grid-list>
+                                        </div>
+
+                                        <div *ngIf="duplicateExperimentMessage">
+                                            <p
+                                                class="header3 info center mt-24 mb-24">{{
+                                                duplicateExperimentMessage
+                                                }}</p>
+                                        </div>
+
+                                        <div
+                                            *ngIf="experiment.get('experimentNotFound')?.value">
+                                            <span
+                                                class="header3 info center mt-24 mb-24">There
+                                                is no
+                                                Experiment with this
+                                                Configuration,
+                                                change
+                                                it and try
+                                                again</span>
+                                        </div>
+
+                                        <div
+                                            div
+                                            *ngIf="experiment.get('experimentFound')?.value && experiment.get('experimentDetailsGroup') as detailsGroup"
+                                            [formGroup]="detailsGroup">
+
+                                            <span mat-caption
+                                                class="input-label header3 accent">
+                                                Visualization
+                                            </span>
+
+                                            <mat-tab-group mat-stretch-tabs
+                                                class="visualization-video-tabs mat-elevation-z4 center">
+                                                <mat-tab
+                                                    *ngFor="let video of detailsGroup.value.videos; index as videoIndex">
+                                                    <ng-template mat-tab-label>
+                                                        <span
+                                                            class="header3">{{video.name}}</span>
+                                                    </ng-template>
+                                                    <div
+                                                        class="visualization-video-card">
+                                                        <vg-player
+                                                            class="video-container">
+                                                            <video
+                                                                [vgMedia]="$any(media)"
+                                                                #media
+                                                                id="singleVideo"
+                                                                preload="auto"
+                                                                controls
+                                                                class="video-player"
+                                                                [src]="video.video"></video>
+                                                        </vg-player>
+
+                                                    </div>
+                                                </mat-tab>
+                                            </mat-tab-group>
+                                            <span mat-caption
+                                                class="center input-label header3 vertical-center header3 mt-16">
+                                                Download the Experiment data in
+                                                Excel or
+                                                CSV
+                                                File:
+                                                <button mat-button>
+                                                    <mat-icon
+                                                        class="bigger-icon accent"
+                                                        matTooltip="Download">save_alt</mat-icon>
+                                                </button>
+                                            </span>
+
+                                            <div formArrayName="activities">
+                                                <span mat-caption
+                                                    class="input-label header3 mt-16 accent">
+                                                    Activities
+                                                </span>
+                                                <div
+                                                    *ngFor="let activity of getActivities(experiment).controls; index as activityIndex"
+                                                    [formGroupName]="activityIndex">
+                                                    <span mat-caption
+                                                        class="input-label header3">
+                                                        {{activityIndex+1}}.{{' '+activity.value.statement}}
+                                                    </span>
+                                                    <mat-form-field
+                                                        class="input-field"
+                                                        appearance="outline">
+                                                        <input matInput
+                                                            placeholder="Answer"
+                                                            formControlName="result"
+                                                            required>
+                                                    </mat-form-field>
+
+                                                    <mat-form-field
+                                                        class="input-field"
+                                                        appearance="outline">
+                                                        <input matInput
+                                                            placeholder="Procedure"
+                                                            formControlName="procedure"
+                                                            required>
+                                                    </mat-form-field>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </mat-tab>
+                                </mat-tab-group>
+
+                                <mat-card-actions>
+                                    <button type="button" mat-raised-button
+                                        matStepperPrevious
+                                        class="secondary-button header2">Back</button>
+                                    <button type="button" class="header2"
+                                        mat-raised-button
+                                        matStepperNext>Next</button>
+                                </mat-card-actions>
+                            </mat-step>
                         </div>
+                        <div formGroupName="finalActivities">
 
-                        <span mat-caption
-                            class="input-label header3 mt-24 accent"> Guides
-                        </span>
-
-                        <table mat-table [dataSource]="dataSource"
-                            class="demo-table" matSort>
-                            <!-- Position Column -->
-                            <ng-container matColumnDef="title">
-                                <th mat-header-cell *matHeaderCellDef
-                                    mat-sort-header
-                                    class="header3 table-header">
-                                    Title </th>
-                                <td mat-cell *matCellDef="let element"
-                                    class="body">
-                                    {{element.title}} </td>
-                            </ng-container>
-
-                            <ng-container matColumnDef="link">
-                                <th mat-header-cell *matHeaderCellDef
-                                    class="header3 table-header">
-                                </th>
-                                <td mat-cell *matCellDef="let element"
-                                    class="actions-column">
-                                    <button mat-menu-item
-                                        (click)="redirectTo(element.link)">
-                                        <span class="header3"> Open Guide
-                                        </span>
-                                        <mat-icon
-                                            class="accent bigger-icon ml-24">open_in_new</mat-icon>
-                                    </button>
-                                </td>
-                            </ng-container>
-
-                            <tr mat-header-row
-                                *matHeaderRowDef="displayedColumns"></tr>
-                            <tr mat-row
-                                *matRowDef="let row; columns: displayedColumns;"></tr>
-
-                        </table>
-
-                        <mat-paginator
-                            [pageSizeOptions]="[5, 10]"></mat-paginator>
-                        <mat-card-actions>
-                            <button type="button" class="header2"
-                                mat-raised-button
-                                matStepperNext>Next</button>
-                        </mat-card-actions>
-                    </mat-step>
-                    <mat-step label="Experimentation">
-                        <span mat-caption
-                            class="input-label header3 mt-16 accent">
-                            Configuration </span>
-                        <mat-grid-list [cols]="breakpointParameter"
-                            [gutterSize]="'16px'"
-                            rowHeight="72px"
-                            (window:resize)="onResizeParameter($event)"
-                            formArrayName="selectedOptions">
-                            <mat-grid-tile
-                                *ngFor="let parameter of labinfo.parameters; index as j">
-                                <span mat-caption
-                                    class="parameter-title input-label header3">
-                                    {{parameter.name}}:
-                                </span>
-                                <mat-form-field
-                                    appearance="outline"
-                                    class="ml-8 input-field pb-0">
-                                    <mat-select
-                                        placeholder="Choose Option"
-                                        required
-                                        [formControlName]="j"
-                                        (selectionChange)="syncSelectedOptionsWithVideos()">
-                                        <mat-option
-                                            *ngFor="let option of parameter.options"
-                                            [value]="option.id">
-                                            <mat-card
-                                                class="parameter-option">
-                                                <img mat-card-image
-                                                    [src]="option.photo">
-                                                <mat-card-content>
-                                                    <mat-label
-                                                        class="header3 center">{{option.value}}</mat-label>
-                                                </mat-card-content>
-                                            </mat-card>
-
-                                        </mat-option>
-                                    </mat-select>
-
-                                </mat-form-field>
-                            </mat-grid-tile>
-
-                        </mat-grid-list>
-                        <div *ngIf="experimentVideos?.length; else noVideos">
-                            <span mat-caption
-                                class="input-label header3 accent">
-                                Visualization
-                            </span>
-
-                            <mat-tab-group mat-stretch-tabs
-                                class="visualization-video-tabs mat-elevation-z4 center">
-                                <mat-tab
-                                    *ngFor="let video of experimentVideos; index as videoIndex">
-                                    <ng-template mat-tab-label>
-                                        <span
-                                            class="header3">{{video.name}}</span>
-                                    </ng-template>
-                                    <div
-                                        class="visualization-video-card">
-                                        <vg-player
-                                            class="video-container">
-                                            <video [vgMedia]="$any(media)"
-                                                #media id="singleVideo"
-                                                preload="auto" controls
-                                                class="video-player"
-                                                [src]="video.video"></video>
-                                        </vg-player>
-
-                                    </div>
-                                </mat-tab>
-                            </mat-tab-group>
-                            <span mat-caption
-                                class="center input-label header3 vertical-center header3 mt-16">
-                                Download the Experiment data in Excel or CSV
-                                File:
-                                <button mat-button>
-                                    <mat-icon class="bigger-icon accent"
-                                        matTooltip="Download">save_alt</mat-icon>
-                                </button>
-                            </span>
-
-                            <div formArrayName="results">
-                                <span mat-caption
-                                    class="input-label header3 mt-16 accent">
-                                    Activities
-                                </span>
+                            <mat-step label="Final Activities"
+                                [stepControl]="finalActivities">
                                 <div
-                                    *ngFor="let activity of experimentActivities; index as activityIndex">
+                                    *ngFor="let activity of labinfo.activities; index as activityIndex"
+                                    [formGroupName]="activityIndex"
+                                    class="mt-16">
                                     <span mat-caption
                                         class="input-label header3">
                                         {{activityIndex+1}}.{{' '+activity.statement}}
@@ -180,55 +301,28 @@
                                     <mat-form-field class="input-field"
                                         appearance="outline">
                                         <input matInput placeholder="Answer"
-                                            [formControlName]="activityIndex"
+                                            required formControlName="result">
+                                    </mat-form-field>
+                                    <mat-form-field
+                                        class="input-field"
+                                        appearance="outline">
+                                        <input matInput
+                                            placeholder="Procedure"
+                                            formControlName="procedure"
                                             required>
                                     </mat-form-field>
                                 </div>
-                            </div>
-
+                                <mat-card-actions>
+                                    <button type="button" mat-raised-button
+                                        matStepperPrevious
+                                        class="secondary-button header2">Back</button>
+                                    <button type="submit" mat-raised-button
+                                        class="header2">Save Experiment</button>
+                                </mat-card-actions>
+                            </mat-step>
                         </div>
-
-                        <ng-template #noVideos>
-                            <mat-icon
-                                class="center bigger-icon mt-24 accent"
-                                style="display: block;">error_outline</mat-icon>
-                            <span
-                                class="header3 accent center mt-24">There is no
-                                experiment with the selected parameters, change
-                                it and try
-                                again</span>
-                        </ng-template>
-
-                        <mat-card-actions>
-                            <button type="button" mat-raised-button
-                                matStepperPrevious
-                                class="secondary-button header2">Back</button>
-                            <button type="button" class="header2"
-                                mat-raised-button
-                                matStepperNext>Next</button>
-                        </mat-card-actions>
-                    </mat-step>
-                    <mat-step label="Final Activities">
-                        <div
-                            *ngFor="let activity of labinfo.activities; index as activityIndex">
-                            <span mat-caption class="input-label header3">
-                                {{activityIndex+1}}.{{' '+activity.statement}}
-                            </span>
-                            <mat-form-field class="input-field"
-                                appearance="outline">
-                                <input matInput placeholder="Answer"
-                                    required>
-                            </mat-form-field>
-                        </div>
-                        <mat-card-actions>
-                            <button type="button" mat-raised-button
-                                matStepperPrevious
-                                class="secondary-button header2">Back</button>
-                            <button type="button" mat-raised-button
-                                class="header2">Save Experiment</button>
-                        </mat-card-actions>
-                    </mat-step>
-                </mat-stepper>
+                    </mat-stepper>
+                </form>
 
             </mat-card-content>
         </mat-card>
