@@ -47,6 +47,7 @@ class ActivateUserAccount(generics.UpdateAPIView):
         queryset = self.get_queryset().filter(is_active=False)
         user_id = request.data.get("id", None)
         entered_code = request.data.get("verification_code", None)
+        entered_code = str(entered_code)
         current_time = timezone.now()
 
         try:

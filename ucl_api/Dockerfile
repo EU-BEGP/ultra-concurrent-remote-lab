@@ -4,6 +4,8 @@ ENV PYTHONUNBUFFERED 1
 # Copy the requirements and packages files
 COPY ./requirements.txt /requirements.txt
 COPY ./packages.txt /tmp/packages.txt
+RUN [ -f /tmp/packages.txt ] && sed -i 's/\r$//' /tmp/packages.txt && \
+  [ -f /requirements.txt ] && sed -i 's/\r$//' /requirements.txt
 
 # Install system packages and Python dependencies
 RUN apt-get update && \
@@ -16,7 +18,7 @@ RUN apt-get update && \
 RUN mkdir /app /scripts
 COPY ./app/ /app
 COPY ./scripts/start.sh /scripts/start.sh
-RUN chmod +x /scripts/start.sh
+RUN sed -i 's/\r$//' /scripts/start.sh && chmod +x /scripts/start.sh
 
 WORKDIR /app
 
