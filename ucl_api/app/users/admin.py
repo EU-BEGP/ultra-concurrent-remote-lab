@@ -6,9 +6,22 @@ from users import models
 
 
 class UserAdmin(BaseUserAdmin):
-    search_fields = ("email", "name", "last_name")
+    search_fields = (
+        "email",
+        "name",
+        "last_name",
+    )
     ordering = ["id"]
-    list_display = ["id", "email", "name", "last_name", "is_active"]
+    list_display = [
+        "id",
+        "email",
+        "name",
+        "last_name",
+        "email_verification_code",
+        "email_expiration_time",
+        "is_active",
+        "is_superuser",
+    ]
     fieldsets = (
         (None, {"fields": ("email", "password")}),
         (_("Personal Info"), {"fields": ("name", "last_name")}),
