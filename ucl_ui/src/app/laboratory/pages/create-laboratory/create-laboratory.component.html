@@ -82,9 +82,41 @@
                                 formGroupName="introVideo">
                                 <vg-player
                                     class="video-container mb-16">
+
+                                    <vg-overlay-play></vg-overlay-play>
+                                    <vg-buffering></vg-buffering>
+
+                                    <vg-scrub-bar>
+                                        <vg-scrub-bar-current-time></vg-scrub-bar-current-time>
+                                        <vg-scrub-bar-buffering-time></vg-scrub-bar-buffering-time>
+                                    </vg-scrub-bar>
+
+                                    <vg-controls [vgAutohide]="true"
+                                        [vgAutohideTime]="3">
+                                        <vg-play-pause></vg-play-pause>
+                                        <vg-playback-button
+                                            [playbackValues]="[ '0.5', '1.0', '2.0', '5.0' ]"></vg-playback-button>
+
+                                        <vg-time-display vgProperty="current"
+                                            vgFormat="mm:ss"></vg-time-display>
+
+                                        <vg-scrub-bar
+                                            style="pointer-events: none;"></vg-scrub-bar>
+
+                                        <vg-time-display vgProperty="left"
+                                            vgFormat="mm:ss"></vg-time-display>
+                                        <vg-time-display vgProperty="total"
+                                            vgFormat="mm:ss"></vg-time-display>
+
+                                        <vg-mute></vg-mute>
+                                        <vg-volume></vg-volume>
+
+                                        <vg-fullscreen></vg-fullscreen>
+                                    </vg-controls>
+
                                     <video [vgMedia]="$any(media)"
                                         #media class="video-player"
-                                        preload="auto" controls
+                                        preload="auto"
                                         [src]="introVideo.value.video"></video>
                                 </vg-player>
                                 <mat-card-content>
@@ -388,12 +420,47 @@
 
                                                     <vg-player
                                                         class="video-container mb-16">
+
+                                                        <vg-overlay-play></vg-overlay-play>
+                                                        <vg-buffering></vg-buffering>
+
+                                                        <vg-scrub-bar>
+                                                            <vg-scrub-bar-current-time></vg-scrub-bar-current-time>
+                                                            <vg-scrub-bar-buffering-time></vg-scrub-bar-buffering-time>
+                                                        </vg-scrub-bar>
+
+                                                        <vg-controls
+                                                            [vgAutohide]="true"
+                                                            [vgAutohideTime]="3">
+                                                            <vg-play-pause></vg-play-pause>
+                                                            <vg-playback-button
+                                                                [playbackValues]="[ '0.5', '1.0', '2.0', '5.0' ]"></vg-playback-button>
+
+                                                            <vg-time-display
+                                                                vgProperty="current"
+                                                                vgFormat="mm:ss"></vg-time-display>
+
+                                                            <vg-scrub-bar
+                                                                style="pointer-events: none;"></vg-scrub-bar>
+
+                                                            <vg-time-display
+                                                                vgProperty="left"
+                                                                vgFormat="mm:ss"></vg-time-display>
+                                                            <vg-time-display
+                                                                vgProperty="total"
+                                                                vgFormat="mm:ss"></vg-time-display>
+
+                                                            <vg-mute></vg-mute>
+                                                            <vg-volume></vg-volume>
+
+                                                            <vg-fullscreen></vg-fullscreen>
+                                                        </vg-controls>
+
                                                         <video
                                                             [vgMedia]="$any(media)"
                                                             #media
                                                             class="video-player"
                                                             preload="auto"
-                                                            controls
                                                             [src]="video.value.video"></video>
                                                     </vg-player>
                                                     <mat-card-content>

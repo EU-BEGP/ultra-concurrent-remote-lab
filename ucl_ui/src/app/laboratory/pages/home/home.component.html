@@ -18,9 +18,8 @@
                             class="headerHome">Ultra-Concurrent Remote Labs
                         </span>
                     </mat-grid-tile>
-                    <mat-grid-tile>
+                    <mat-grid-tile *ngIf="labinfo">
                         <span
-                            *ngIf="labinfo"
                             class="header2">by
                             {{labinfo.info.institution}}
                         </span>

@@ -28,11 +28,44 @@
 
                             <div
                                 class="introduction-video-card center mt-16 mb-8">
+
                                 <vg-player
                                     class="video-container">
+
+                                    <vg-overlay-play></vg-overlay-play>
+                                    <vg-buffering></vg-buffering>
+
+                                    <vg-scrub-bar>
+                                        <vg-scrub-bar-current-time></vg-scrub-bar-current-time>
+                                        <vg-scrub-bar-buffering-time></vg-scrub-bar-buffering-time>
+                                    </vg-scrub-bar>
+
+                                    <vg-controls [vgAutohide]="true"
+                                        [vgAutohideTime]="3">
+                                        <vg-play-pause></vg-play-pause>
+                                        <vg-playback-button
+                                            [playbackValues]="[ '0.5', '1.0', '2.0', '5.0' ]"></vg-playback-button>
+
+                                        <vg-time-display vgProperty="current"
+                                            vgFormat="mm:ss"></vg-time-display>
+
+                                        <vg-scrub-bar
+                                            style="pointer-events: none;"></vg-scrub-bar>
+
+                                        <vg-time-display vgProperty="left"
+                                            vgFormat="mm:ss"></vg-time-display>
+                                        <vg-time-display vgProperty="total"
+                                            vgFormat="mm:ss"></vg-time-display>
+
+                                        <vg-mute></vg-mute>
+                                        <vg-volume></vg-volume>
+
+                                        <vg-fullscreen></vg-fullscreen>
+                                    </vg-controls>
+
                                     <video [vgMedia]="$any(media)"
                                         #media id="singleVideo"
-                                        preload="auto" controls
+                                        preload="auto"
                                         class="video-player"
                                         [src]="labinfo.introduction.introVideo.video"></video>
                                 </vg-player>
@@ -214,12 +247,47 @@
                                                         class="visualization-video-card">
                                                         <vg-player
                                                             class="video-container">
+
+                                                            <vg-overlay-play></vg-overlay-play>
+                                                            <vg-buffering></vg-buffering>
+
+                                                            <vg-scrub-bar>
+                                                                <vg-scrub-bar-current-time></vg-scrub-bar-current-time>
+                                                                <vg-scrub-bar-buffering-time></vg-scrub-bar-buffering-time>
+                                                            </vg-scrub-bar>
+
+                                                            <vg-controls
+                                                                [vgAutohide]="true"
+                                                                [vgAutohideTime]="3">
+                                                                <vg-play-pause></vg-play-pause>
+                                                                <vg-playback-button
+                                                                    [playbackValues]="[ '0.5', '1.0', '2.0', '5.0' ]"></vg-playback-button>
+
+                                                                <vg-time-display
+                                                                    vgProperty="current"
+                                                                    vgFormat="mm:ss"></vg-time-display>
+
+                                                                <vg-scrub-bar
+                                                                    style="pointer-events: none;"></vg-scrub-bar>
+
+                                                                <vg-time-display
+                                                                    vgProperty="left"
+                                                                    vgFormat="mm:ss"></vg-time-display>
+                                                                <vg-time-display
+                                                                    vgProperty="total"
+                                                                    vgFormat="mm:ss"></vg-time-display>
+
+                                                                <vg-mute></vg-mute>
+                                                                <vg-volume></vg-volume>
+
+                                                                <vg-fullscreen></vg-fullscreen>
+                                                            </vg-controls>
+
                                                             <video
                                                                 [vgMedia]="$any(media)"
                                                                 #media
                                                                 id="singleVideo"
                                                                 preload="auto"
-                                                                controls
                                                                 class="video-player"
                                                                 [src]="video.video"></video>
                                                         </vg-player>
