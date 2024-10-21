@@ -7,6 +7,7 @@ import { FormArray, FormBuilder,FormControl,FormGroup,Validators } from '@angula
 import { ToastrService } from 'ngx-toastr';
 import { v4 as uuidv4 } from 'uuid'; 
 import { Router } from '@angular/router';
+import { units } from 'src/app/laboratory/store/units-data-store';
 
 @Component({
   selector: 'app-create-laboratory',
@@ -30,18 +31,19 @@ export class CreateLaboratoryComponent implements OnInit {
     {name: 'Hydraulic Energy'},
     {name: 'Other'},
   ];
+  unit_groups : any= []
 
   constructor( private builder:FormBuilder, private toastr: ToastrService, private router: Router) {
       const breakpointObserver = inject(BreakpointObserver);
       this.stepperOrientation = breakpointObserver
         .observe('(min-width: 800px)')
         .pipe(map(({matches}) => (matches ? 'horizontal' : 'vertical')));
-
+    this.unit_groups = units
   }
 
   ngOnInit():void {
     this.videoRowHeight = window.innerWidth <= 600 ? 340 : 380
-    this.breakpoint = Math.floor(window.innerWidth / 200);
+    this.breakpoint = Math.floor(window.innerWidth / 260);
     this.breakpointVideo =  Math.floor((window.innerWidth  / 400) / 2);
     this.breakpointOption = Math.floor(window.innerWidth  / 400);
     this.parameters.valueChanges.subscribe(() => {
@@ -50,7 +52,7 @@ export class CreateLaboratoryComponent implements OnInit {
   }
 
   onResize(event : any):void {
-    this.breakpoint = Math.floor(event.target.innerWidth / 200);
+    this.breakpoint = Math.floor(event.target.innerWidth / 260);
   }
 
   onResizeParameter(event : any):void {
@@ -84,6 +86,7 @@ export class CreateLaboratoryComponent implements OnInit {
           options: new FormArray([this.builder.group({
             id: [uuidv4()], 
             value: [''], 
+            unit: [''],
             photo: [this.defaultImg]
           }
         )])
@@ -99,7 +102,8 @@ export class CreateLaboratoryComponent implements OnInit {
         this.builder.group({
           id: [uuidv4()], 
           statement: [''],
-          result: ['']
+          result: [''],
+          unit: ['']
         })
       ]),
       dataFile: this.builder.control("")
@@ -108,7 +112,8 @@ export class CreateLaboratoryComponent implements OnInit {
       this.builder.group({
         id: [uuidv4()], 
         statement: [''],
-        result: ['']
+        result: [''],
+        unit: ['']
       })
     ])
   })
@@ -150,6 +155,7 @@ export class CreateLaboratoryComponent implements OnInit {
       options: new FormArray([this.builder.group({
         id: [uuidv4()],
         value: [''], 
+        unit: [''],
         photo: [this.defaultImg]
       }
     )])
@@ -165,6 +171,7 @@ export class CreateLaboratoryComponent implements OnInit {
     const optionFormGroup = this.builder.group({
           id: [uuidv4()],
           value: [''], 
+          unit: [''],
           photo: [this.defaultImg]
       })
     this.getOptions(index).push(optionFormGroup)
@@ -202,7 +209,8 @@ export class CreateLaboratoryComponent implements OnInit {
       activities:  new FormArray([
         this.builder.group({
           statement: [''],
-          result: ['']
+          result: [''],
+          unit: ['']
         })
       ]),
       dataFile:this.builder.control('')
@@ -255,7 +263,8 @@ export class CreateLaboratoryComponent implements OnInit {
   addExperimentActivity(index:number):void{
     const activityFormGroup = this.builder.group({
       statement: [''],
-      result: ['']
+      result: [''],
+      unit: ['']
     })
     this.getExperimentActivites(index).push(activityFormGroup)
   }
@@ -275,7 +284,8 @@ export class CreateLaboratoryComponent implements OnInit {
     addActivity():void{
       const activityFormGroup = this.builder.group({
         statement: [''],
-        result: ['']
+        result: [''],
+        unit: ['']
     })
       this.activities.push(activityFormGroup)
     }

@@ -107,6 +107,10 @@ th.mat-header-cell:first-of-type, td.mat-cell:first-of-type, td.mat-footer-cell:
  padding-bottom: 0px;
 }
 
+.pr-8{
+  padding-right: 8px;
+ }
+
 .p-8{
   padding: 8px;
 }
@@ -217,6 +221,10 @@ form {
 
 .input-field {
   width: 100%;
+}
+
+.pair-input-field {
+  width: 50%;
 }
 
 .input-label{

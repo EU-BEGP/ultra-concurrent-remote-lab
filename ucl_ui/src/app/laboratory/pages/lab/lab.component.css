@@ -38,11 +38,11 @@ img{
     height: 140px; 
 }
 
-mat-option {
-  height: 224px !important;  
-  .mat-option-text{
-    width: 100%;
-  }
+.parameter{
+    height: 224px !important;  
+    .mat-option-text{
+      width: 100%;
+    }
 }
 
 .mat-card-image {

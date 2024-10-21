@@ -11,6 +11,7 @@ import { ToastrService } from 'ngx-toastr';
 import { MatSort} from '@angular/material/sort';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
+import { units } from 'src/app/laboratory/store/units-data-store';
 
 export interface GuideData {
   title: string,
@@ -33,6 +34,7 @@ export class LabComponent implements OnInit, AfterViewInit {
   dataSource: MatTableDataSource<GuideData>;
   displayedColumns: string[] = ['title', 'link'];
   selectedTabIndex: number = 0;
+  unit_groups : any= []
 
   studentSession: FormGroup;
   optionsList: any[] = []; 
@@ -61,6 +63,8 @@ export class LabComponent implements OnInit, AfterViewInit {
       experiments: this.builder.array([]),
       finalActivities: this.builder.array([])
     });
+
+    this.unit_groups = units
 
     this.optionsList = this.labinfo.parameters
   }
@@ -196,8 +200,9 @@ export class LabComponent implements OnInit, AfterViewInit {
         activityArray.push(this.builder.group({
           id: [activity.id],
           statement: [activity.statement],
-          result: [''],    // Student input
-          procedure: ['']  // Student input
+          result: [''],  
+          procedure: [''],
+          unit: ['']
         }));
       });
 
@@ -244,7 +249,8 @@ export class LabComponent implements OnInit, AfterViewInit {
         id: [activity.id],
         statement: [activity.statement],
         result: [''],
-        procedure: ['']
+        procedure: [''],
+        unit: ['']
       }));
     })
   }

@@ -44,7 +44,7 @@
                                         [vgAutohideTime]="3">
                                         <vg-play-pause></vg-play-pause>
                                         <vg-playback-button
-                                            [playbackValues]="[ '0.5', '1.0', '2.0', '5.0' ]"></vg-playback-button>
+                                            [playbackValues]="[ '0.5', '1.0', '2.0', '5.0', '10.0' ]"></vg-playback-button>
 
                                         <vg-time-display vgProperty="current"
                                             vgFormat="mm:ss"></vg-time-display>
@@ -187,6 +187,7 @@
                                                             [formControlName]="j"
                                                             (selectionChange)="onOptionChange(experiment,experimentIndex)">
                                                             <mat-option
+                                                                class="parameter"
                                                                 *ngFor="let option of parameter.options"
                                                                 [value]="option.id">
                                                                 <mat-card
@@ -261,7 +262,7 @@
                                                                 [vgAutohideTime]="3">
                                                                 <vg-play-pause></vg-play-pause>
                                                                 <vg-playback-button
-                                                                    [playbackValues]="[ '0.5', '1.0', '2.0', '5.0' ]"></vg-playback-button>
+                                                                    [playbackValues]="[ '0.5', '1.0', '2.0', '5.0' , '10.0' ]"></vg-playback-button>
 
                                                                 <vg-time-display
                                                                     vgProperty="current"
@@ -321,12 +322,34 @@
                                                         {{activityIndex+1}}.{{' '+activity.value.statement}}
                                                     </span>
                                                     <mat-form-field
-                                                        class="input-field"
+                                                        style="width: 75%"
+                                                        class="input-field pr-8"
                                                         appearance="outline">
                                                         <input matInput
                                                             placeholder="Answer"
                                                             formControlName="result"
                                                             required>
+                                                    </mat-form-field>
+
+                                                    <mat-form-field
+                                                        style="width: 25%"
+                                                        appearance="outline">
+                                                        <mat-select
+                                                            placeholder="Unit"
+                                                            formControlName="unit">
+                                                            <mat-optgroup
+                                                                class="accent"
+                                                                *ngFor="let group of unit_groups">
+                                                                <span
+                                                                    class="primary header3">{{group.name}}</span>
+                                                                <mat-option
+                                                                    *ngFor="let unit of group.units"
+                                                                    [value]="unit.value">
+                                                                    <span
+                                                                        class="body1">{{unit.value}}</span>
+                                                                </mat-option>
+                                                            </mat-optgroup>
+                                                        </mat-select>
                                                     </mat-form-field>
 
                                                     <mat-form-field
@@ -366,10 +389,31 @@
                                         class="input-label header3">
                                         {{activityIndex+1}}.{{' '+activity.statement}}
                                     </span>
-                                    <mat-form-field class="input-field"
+                                    <mat-form-field style="width: 75%"
+                                        class="input-field pr-8"
                                         appearance="outline">
                                         <input matInput placeholder="Answer"
                                             required formControlName="result">
+                                    </mat-form-field>
+                                    <mat-form-field
+                                        style="width: 25%"
+                                        appearance="outline">
+                                        <mat-select
+                                            placeholder="Unit"
+                                            formControlName="unit">
+                                            <mat-optgroup
+                                                class="accent"
+                                                *ngFor="let group of unit_groups">
+                                                <span
+                                                    class="primary header3">{{group.name}}</span>
+                                                <mat-option
+                                                    *ngFor="let unit of group.units"
+                                                    [value]="unit.value">
+                                                    <span
+                                                        class="body1">{{unit.value}}</span>
+                                                </mat-option>
+                                            </mat-optgroup>
+                                        </mat-select>
                                     </mat-form-field>
                                     <mat-form-field
                                         class="input-field"

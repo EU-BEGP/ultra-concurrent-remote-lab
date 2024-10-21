@@ -9,6 +9,12 @@ mat-card-actions{
     margin: 0px 0px
 }
 
+.parameter-actions{
+    justify-content: center;
+    display: flex;
+    margin: 0px 0px
+}
+
 .mat-raised-button{
     padding: 4px 24px;
   }
@@ -37,7 +43,7 @@ mat-divider{
 
 .parameter-option {
     height: 296px;
-    min-width: 160px;
+    min-width: 200px;
     .mat-form-field-wrapper{
         padding-bottom: 0px;
     }
