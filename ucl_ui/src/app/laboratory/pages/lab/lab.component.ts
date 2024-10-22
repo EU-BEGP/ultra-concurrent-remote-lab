@@ -12,6 +12,7 @@ import { MatSort} from '@angular/material/sort';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { units } from 'src/app/laboratory/store/units-data-store';
+import { VideoPlayerComponent } from '../../components/video-player/video-player.component';
 
 export interface GuideData {
   title: string,

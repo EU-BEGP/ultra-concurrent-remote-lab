@@ -39,6 +39,7 @@ import { VgOverlayPlayModule } from '@videogular/ngx-videogular/overlay-play';
 import { VgBufferingModule } from '@videogular/ngx-videogular/buffering';
 import { LaboratoriesDialogComponent } from './laboratory/components/laboratories-dialog/laboratories-dialog.component';
 import { NgxMatFileInputModule } from '@angular-material-components/file-input';
+import { VideoPlayerComponent } from './laboratory/components/video-player/video-player.component';
 
 @NgModule({
   declarations: [
@@ -58,6 +59,7 @@ import { NgxMatFileInputModule } from '@angular-material-components/file-input';
     LabComponent,
     CreateLaboratoryComponent,
     LaboratoriesDialogComponent,
+    VideoPlayerComponent,
   ],
   imports: [
     BrowserModule,

@@ -80,45 +80,8 @@
                             <mat-card
                                 class="intro-video-card mat-elevation-z4 center mb-16"
                                 formGroupName="introVideo">
-                                <vg-player
-                                    class="video-container mb-16">
-
-                                    <vg-overlay-play></vg-overlay-play>
-                                    <vg-buffering></vg-buffering>
-
-                                    <vg-scrub-bar>
-                                        <vg-scrub-bar-current-time></vg-scrub-bar-current-time>
-                                        <vg-scrub-bar-buffering-time></vg-scrub-bar-buffering-time>
-                                    </vg-scrub-bar>
-
-                                    <vg-controls [vgAutohide]="true"
-                                        [vgAutohideTime]="3">
-                                        <vg-play-pause></vg-play-pause>
-                                        <vg-playback-button
-                                            [playbackValues]="[ '0.5', '1.0', '2.0', '5.0', '10.0' ]"></vg-playback-button>
-
-                                        <vg-time-display vgProperty="current"
-                                            vgFormat="mm:ss"></vg-time-display>
-
-                                        <vg-scrub-bar
-                                            style="pointer-events: none;"></vg-scrub-bar>
-
-                                        <vg-time-display vgProperty="left"
-                                            vgFormat="mm:ss"></vg-time-display>
-                                        <vg-time-display vgProperty="total"
-                                            vgFormat="mm:ss"></vg-time-display>
-
-                                        <vg-mute></vg-mute>
-                                        <vg-volume></vg-volume>
-
-                                        <vg-fullscreen></vg-fullscreen>
-                                    </vg-controls>
-
-                                    <video [vgMedia]="$any(media)"
-                                        #media class="video-player"
-                                        preload="auto"
-                                        [src]="introVideo.value.video"></video>
-                                </vg-player>
+                                <app-video-player
+                                    [videoSrc]="introVideo.value.video"></app-video-player>
                                 <mat-card-content>
                                     <mat-card-actions
                                         class="video-actions">
@@ -441,44 +404,8 @@
                                                     class="video-card mat-elevation-z4"
                                                     [formGroupName]="videoIndex">
 
-                                                    <vg-player
-                                                        class="video-container mb-16">
-
-                                                        <vg-overlay-play></vg-overlay-play>
-                                                        <vg-buffering></vg-buffering>
-
-                                                        <vg-scrub-bar>
-                                                            <vg-scrub-bar-current-time></vg-scrub-bar-current-time>
-                                                            <vg-scrub-bar-buffering-time></vg-scrub-bar-buffering-time>
-                                                        </vg-scrub-bar>
-
-                                                        <vg-controls
-                                                            [vgAutohide]="true"
-                                                            [vgAutohideTime]="3">
-                                                            <vg-play-pause></vg-play-pause>
-                                                            <vg-playback-button
-                                                                [playbackValues]="[ '0.5', '1.0', '2.0', '5.0', '10.0' ]"></vg-playback-button>
-
-                                                            <vg-time-display
-                                                                vgProperty="current"
-                                                                vgFormat="mm:ss"></vg-time-display>
-
-                                                            <vg-scrub-bar
-                                                                style="pointer-events: none;"></vg-scrub-bar>
-
-                                                            <vg-mute></vg-mute>
-                                                            <vg-volume></vg-volume>
-
-                                                            <vg-fullscreen></vg-fullscreen>
-                                                        </vg-controls>
-
-                                                        <video
-                                                            [vgMedia]="$any(media)"
-                                                            #media
-                                                            class="video-player"
-                                                            preload="auto"
-                                                            [src]="video.value.video"></video>
-                                                    </vg-player>
+                                                    <app-video-player
+                                                        [videoSrc]="video.value.video"></app-video-player>
                                                     <mat-card-content>
                                                         <mat-label
                                                             class="body">Video
