@@ -41,6 +41,9 @@ import { LaboratoriesDialogComponent } from './laboratory/components/laboratorie
 import { NgxMatFileInputModule } from '@angular-material-components/file-input';
 import { VideoPlayerComponent } from './laboratory/components/video-player/video-player.component';
 
+import { HotTableModule } from '@handsontable/angular';
+import { DynamicTableComponent } from './laboratory/components/dynamic-table/dynamic-table.component';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -60,6 +63,7 @@ import { VideoPlayerComponent } from './laboratory/components/video-player/video
     CreateLaboratoryComponent,
     LaboratoriesDialogComponent,
     VideoPlayerComponent,
+    DynamicTableComponent,
   ],
   imports: [
     BrowserModule,
@@ -84,7 +88,8 @@ import { VideoPlayerComponent } from './laboratory/components/video-player/video
     VgControlsModule,
     VgOverlayPlayModule,
     VgBufferingModule,
-    NgxMatFileInputModule
+    NgxMatFileInputModule,
+    HotTableModule
   ],
   providers: [
     CookieService,

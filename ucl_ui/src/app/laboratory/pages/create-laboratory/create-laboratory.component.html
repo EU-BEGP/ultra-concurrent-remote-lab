@@ -379,8 +379,7 @@
                                 </mat-grid-list>
 
                                 <div class="row">
-                                    <div class="column">
-
+                                    <div class="column first-column">
                                         <span mat-caption
                                             class="input-label header3 vertical-center">
                                             Add
@@ -390,7 +389,8 @@
                                                 (click)="addVideo(i)">
                                                 <mat-icon class="add-new"
                                                     matTooltip="New Video">library_add</mat-icon>
-                                            </button></span>
+                                            </button>
+                                        </span>
                                         <mat-grid-list
                                             [cols]="breakpointVideo"
                                             [gutterSize]="'16px'"
@@ -406,7 +406,8 @@
 
                                                     <app-video-player
                                                         [videoSrc]="video.value.video"></app-video-player>
-                                                    <mat-card-content>
+                                                    <mat-card-content
+                                                        class="mt-8">
                                                         <mat-label
                                                             class="body">Video
                                                             Name</mat-label>

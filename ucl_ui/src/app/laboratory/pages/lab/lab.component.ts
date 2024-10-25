@@ -12,7 +12,7 @@ import { MatSort} from '@angular/material/sort';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { units } from 'src/app/laboratory/store/units-data-store';
-import { VideoPlayerComponent } from '../../components/video-player/video-player.component';
+import Handsontable from 'handsontable';
 
 export interface GuideData {
   title: string,
@@ -46,7 +46,6 @@ export class LabComponent implements OnInit, AfterViewInit {
   @ViewChild(MatSort)
   sort!: MatSort;
 
-
   constructor(private route: ActivatedRoute, private http: HttpClient, private builder:FormBuilder, private toastr: ToastrService, private router: Router) 
   { const breakpointObserver = inject(BreakpointObserver);
     this.stepperOrientation = breakpointObserver
@@ -68,6 +67,7 @@ export class LabComponent implements OnInit, AfterViewInit {
     this.unit_groups = units
 
     this.optionsList = this.labinfo.parameters
+    
   }
 
   ngAfterViewInit() {
@@ -202,7 +202,9 @@ export class LabComponent implements OnInit, AfterViewInit {
           id: [activity.id],
           statement: [activity.statement],
           result: [''],  
-          procedure: [''],
+          procedure: this.builder.array([this.builder.group({
+            data: [Handsontable.helper.createSpreadsheetData(5, 2)], // Initial data for the new table
+          })]),
           unit: ['']
         }));
       });
@@ -250,7 +252,9 @@ export class LabComponent implements OnInit, AfterViewInit {
         id: [activity.id],
         statement: [activity.statement],
         result: [''],
-        procedure: [''],
+        procedure: this.builder.array([this.builder.group({
+          data: [Handsontable.helper.createSpreadsheetData(5, 2)], // Initial data for the new table
+        })]),
         unit: ['']
       }));
     })
@@ -270,6 +274,10 @@ export class LabComponent implements OnInit, AfterViewInit {
 
   getActivities(experiment: AbstractControl) {
     return experiment.get('experimentDetailsGroup')?.get('activities') as FormArray;
+  }
+
+  getFinalActivityProcedures(activityIndex: number) {
+    return this.finalActivities.at(activityIndex).get('procedure') as FormArray;
   }
   
 
@@ -293,10 +301,40 @@ export class LabComponent implements OnInit, AfterViewInit {
     );
     console.log(this.studentSession.value)
     } else {
+      console.log(this.studentSession.value)
       this.toastr.error(
         'Please, complete the required Information',
         'Invalid action'
       );
     }
   }
+
+  addProcedureTable(activityIndex: number) {
+    const procedureArray = this.finalActivities.at(activityIndex).get('procedure') as FormArray;
+    
+    procedureArray.push(this.builder.group({
+      data: [Handsontable.helper.createSpreadsheetData(5, 2)], // Initial data for the new table
+    }));
+  }
+
+  onTableDataChange(activityIndex: number, procedureIndex: number, newData: any) {
+    this.getFinalActivityProcedures(activityIndex).at(procedureIndex).get('data')?.setValue(newData); // Update table data in procedure
+  }
+
+  addExperimentProcedureTable(experiment: AbstractControl, activityIndex: number) {
+    const procedureArray = this.getActivities(experiment).at(activityIndex).get('procedure') as FormArray;
+    
+    procedureArray.push(this.builder.group({
+      data: [Handsontable.helper.createSpreadsheetData(5, 2)], // Initial data for the new table
+    }));
+  }
+
+  onExperimentTableDataChange(experiment: AbstractControl, activityIndex: number, procedureIndex: number, newData: any) {
+    this.getExperimentActivityProcedures(experiment, activityIndex).at(procedureIndex).get('data')?.setValue(newData); // Update table data in procedure
+  }
+
+  getExperimentActivityProcedures(experiment: AbstractControl,activityIndex: number) {
+    return this.getActivities(experiment).at(activityIndex).get('procedure') as FormArray;
+  }
+  
 }

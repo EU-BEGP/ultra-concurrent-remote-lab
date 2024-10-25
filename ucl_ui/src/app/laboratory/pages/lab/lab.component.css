@@ -152,3 +152,9 @@ mat-card-actions{
 }
 
 
+.column-header {
+  color: #FF5733;
+  background-color: #f1f1f1;
+  text-align: center;
+  vertical-align: middle;
+}

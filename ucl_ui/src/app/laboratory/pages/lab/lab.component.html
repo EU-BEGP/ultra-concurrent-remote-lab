@@ -16,7 +16,8 @@
 
             </mat-grid-list>
             <mat-card-content>
-                <form [formGroup]="studentSession" (ngSubmit)="onSubmit()">
+                <form [formGroup]="studentSession" (ngSubmit)="onSubmit()"
+                    style="padding: 0px;">
                     <mat-stepper [linear]="false"
                         [orientation]="(stepperOrientation | async)!"
                         class="custom-stepper">
@@ -239,6 +240,36 @@
                                                         class="input-label header3">
                                                         {{activityIndex+1}}.{{' '+activity.value.statement}}
                                                     </span>
+
+                                                    <div
+                                                        formArrayName="procedure">
+                                                        <span mat-caption
+                                                            class="input-label header3 vertical-center accent">
+                                                            Procedure
+                                                            <button
+                                                                type="button"
+                                                                mat-button
+                                                                (click)="addProcedureTable(activityIndex)">
+                                                                <mat-icon
+                                                                    class="add-new"
+                                                                    matTooltip="Add Table">library_add</mat-icon>
+                                                            </button>
+                                                        </span>
+                                                        <div
+                                                            *ngFor="let procedureStep of getExperimentActivityProcedures(experiment,activityIndex).controls; let procedureIndex = index"
+                                                            [formGroupName]="procedureIndex">
+                                                            <app-dynamic-table
+                                                                [data]="procedureStep.get('data')?.value"
+                                                                (dataChange)="onExperimentTableDataChange(experiment,activityIndex, procedureIndex, $event)">
+                                                            </app-dynamic-table>
+                                                        </div>
+                                                    </div>
+
+                                                    <span mat-caption
+                                                        class="input-label header3 vertical-center accent">
+                                                        Answer
+                                                    </span>
+
                                                     <mat-form-field
                                                         style="width: 75%"
                                                         class="input-field pr-8"
@@ -269,15 +300,6 @@
                                                             </mat-optgroup>
                                                         </mat-select>
                                                     </mat-form-field>
-
-                                                    <mat-form-field
-                                                        class="input-field"
-                                                        appearance="outline">
-                                                        <input matInput
-                                                            placeholder="Procedure"
-                                                            formControlName="procedure"
-                                                            required>
-                                                    </mat-form-field>
                                                 </div>
                                             </div>
                                         </div>
@@ -307,6 +329,29 @@
                                         class="input-label header3">
                                         {{activityIndex+1}}.{{' '+activity.statement}}
                                     </span>
+                                    <div formArrayName="procedure">
+                                        <span mat-caption
+                                            class="input-label header3 vertical-center accent">
+                                            Procedure
+                                            <button type="button" mat-button
+                                                (click)="addProcedureTable(activityIndex)">
+                                                <mat-icon class="add-new"
+                                                    matTooltip="Add Table">library_add</mat-icon>
+                                            </button>
+                                        </span>
+                                        <div
+                                            *ngFor="let procedureStep of getFinalActivityProcedures(activityIndex).controls; let procedureIndex = index"
+                                            [formGroupName]="procedureIndex">
+                                            <app-dynamic-table
+                                                [data]="procedureStep.get('data')?.value"
+                                                (dataChange)="onTableDataChange(activityIndex, procedureIndex, $event)">
+                                            </app-dynamic-table>
+                                        </div>
+                                    </div>
+                                    <span mat-caption
+                                        class="input-label header3 vertical-center accent">
+                                        Answer
+                                    </span>
                                     <mat-form-field style="width: 75%"
                                         class="input-field pr-8"
                                         appearance="outline">
@@ -333,21 +378,15 @@
                                             </mat-optgroup>
                                         </mat-select>
                                     </mat-form-field>
-                                    <mat-form-field
-                                        class="input-field"
-                                        appearance="outline">
-                                        <input matInput
-                                            placeholder="Procedure"
-                                            formControlName="procedure"
-                                            required>
-                                    </mat-form-field>
+
                                 </div>
                                 <mat-card-actions>
                                     <button type="button" mat-raised-button
                                         matStepperPrevious
                                         class="secondary-button header2">Back</button>
                                     <button type="submit" mat-raised-button
-                                        class="header2">Save Experiment</button>
+                                        class="header2">Save
+                                        Experiment</button>
                                 </mat-card-actions>
                             </mat-step>
                         </div>

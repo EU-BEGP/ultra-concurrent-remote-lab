@@ -1,0 +1,21 @@
+<div class="mb-16">
+    <hot-table
+        [colWidths]="[140, 126]"
+        height="auto"
+        rowHeights="40px"
+        [columnHeaderHeight]="40"
+        class="mb-16"
+        tableClassName="custom-table"
+        className="body1"
+        [data]="data"
+        [colHeaders]="true"
+        [rowHeaders]="true"
+        licenseKey="non-commercial-and-evaluation"
+        [dropdownMenu]="['col_left', 'col_right', 'clear_column', 'remove_col']"
+        [contextMenu]="['row_above', 'row_below', 'remove_row']"
+        [manualRowMove]="true"
+        [settings]="tableConfig"
+        [formulas]="{ engine: hyperformulaInstance }"
+        (afterChange)="emitDataChange()">
+    </hot-table>
+</div>
