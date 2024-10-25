@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     "rest_framework.authtoken",
     "corsheaders",
     "eav",
+    "drf_spectacular",
 ]
 
 MIDDLEWARE = [
@@ -128,6 +129,21 @@ STATIC_URL = os.environ.get("STATIC_URL")
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 EAV2_PRIMARY_KEY_FIELD = "django.db.models.BigAutoField"
 AUTH_USER_MODEL = "users.User"
+
+
+# SPECTACULAR_SETTINGS
+
+REST_FRAMEWORK = {
+    "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
+}
+
+SPECTACULAR_SETTINGS = {
+    "TITLE": "UCL Platform",
+    "DESCRIPTION": "Ultra Concurrent Remote Laboratories Platform",
+    "VERSION": "1.0.0",
+    "SERVE_INCLUDE_SCHEMA": False,
+    "SERVE_PERMISSIONS": ["rest_framework.permissions.IsAdminUser"],
+}
 
 # Email configuration
 
