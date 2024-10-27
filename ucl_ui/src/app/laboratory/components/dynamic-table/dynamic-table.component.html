@@ -1,12 +1,12 @@
-<div class="mb-16">
+<div class="table-container mb-16">
     <hot-table
-        [colWidths]="[140, 126]"
+        className="body1"
         height="auto"
         rowHeights="40px"
         [columnHeaderHeight]="40"
-        class="mb-16"
-        tableClassName="custom-table"
-        className="body1"
+        width="100%"
+        stretchH='all'
+        [manualColumnResize]="true"
         [data]="data"
         [colHeaders]="true"
         [rowHeaders]="true"
@@ -18,4 +18,12 @@
         [formulas]="{ engine: hyperformulaInstance }"
         (afterChange)="emitDataChange()">
     </hot-table>
+    <button type="button"
+        class="delete-btn"
+        mat-button
+        (click)="onDeleteTable()">
+        <mat-icon
+            class="accent"
+            matTooltip="Delete Procedure">delete</mat-icon>
+    </button>
 </div>

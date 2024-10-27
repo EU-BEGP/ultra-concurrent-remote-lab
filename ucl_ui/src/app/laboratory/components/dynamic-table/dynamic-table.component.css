@@ -1,0 +1,23 @@
+::ng-deep .handsontable .htAutocompleteArrow {
+    display: none !important;
+}
+
+
+.table-container {
+    position: relative;
+    width: 100%;
+    z-index: 0;
+    padding-right: 40px;
+}
+
+hot-table {
+    vertical-align: top;
+}
+
+.delete-btn {
+    position: absolute;
+    top: 0;
+    right: -20px; /* Ajusta el espacio para que quede a la derecha de la tabla */
+    cursor: pointer;
+    line-height: 24px;
+}

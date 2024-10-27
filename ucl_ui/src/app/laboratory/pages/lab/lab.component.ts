@@ -203,7 +203,7 @@ export class LabComponent implements OnInit, AfterViewInit {
           statement: [activity.statement],
           result: [''],  
           procedure: this.builder.array([this.builder.group({
-            data: [Handsontable.helper.createSpreadsheetData(5, 2)], // Initial data for the new table
+            data: [Handsontable.helper.createSpreadsheetData(2, 3)], // Initial data for the new table
           })]),
           unit: ['']
         }));
@@ -253,7 +253,7 @@ export class LabComponent implements OnInit, AfterViewInit {
         statement: [activity.statement],
         result: [''],
         procedure: this.builder.array([this.builder.group({
-          data: [Handsontable.helper.createSpreadsheetData(5, 2)], // Initial data for the new table
+          data: [Handsontable.helper.createSpreadsheetData(2, 3)], // Initial data for the new table
         })]),
         unit: ['']
       }));
@@ -313,7 +313,7 @@ export class LabComponent implements OnInit, AfterViewInit {
     const procedureArray = this.finalActivities.at(activityIndex).get('procedure') as FormArray;
     
     procedureArray.push(this.builder.group({
-      data: [Handsontable.helper.createSpreadsheetData(5, 2)], // Initial data for the new table
+      data: [Handsontable.helper.createSpreadsheetData(2, 3)], // Initial data for the new table
     }));
   }
 
@@ -325,7 +325,7 @@ export class LabComponent implements OnInit, AfterViewInit {
     const procedureArray = this.getActivities(experiment).at(activityIndex).get('procedure') as FormArray;
     
     procedureArray.push(this.builder.group({
-      data: [Handsontable.helper.createSpreadsheetData(5, 2)], // Initial data for the new table
+      data: [Handsontable.helper.createSpreadsheetData(2, 3)], // Initial data for the new table
     }));
   }
 
@@ -336,5 +336,16 @@ export class LabComponent implements OnInit, AfterViewInit {
   getExperimentActivityProcedures(experiment: AbstractControl,activityIndex: number) {
     return this.getActivities(experiment).at(activityIndex).get('procedure') as FormArray;
   }
+
+  removeProcedure(activityIndex: number, procedureIndex: number) {
+    const procedure = this.finalActivities.at(activityIndex).get('procedure') as FormArray;
+    procedure.removeAt(procedureIndex);
+  }
+
+  removeExperimentActivityProcedure(experiment: AbstractControl, activityIndex: number, procedureIndex: number) {
+    const procedure = this.getActivities(experiment).at(activityIndex).get('procedure') as FormArray;
+    procedure.removeAt(procedureIndex);
+  }
+  
   
 }

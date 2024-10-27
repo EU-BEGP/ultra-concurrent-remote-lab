@@ -1,5 +1,6 @@
 import { Component, OnInit, Input, Output, EventEmitter  } from '@angular/core';
 import HyperFormula from 'hyperformula';
+import Handsontable from 'handsontable';
 
 
 
@@ -15,13 +16,42 @@ export class DynamicTableComponent implements OnInit {
   @Output() dataChange = new EventEmitter<any>(); // Emit data changes
   @Input() data: any;
 
+  availableFunctions = [
+    '=SUM',
+    '=AVERAGE',
+    '=COUNT',
+    '=MAX',
+    '=MIN',
+    '=IF',
+  ];
+
+ 
+  ngOnInit(): void {
+   
+  }
+
+  @Output() deleteProcedure = new EventEmitter<void>();  // Evento para notificar al componente principal
+
+  onDeleteTable() {
+    this.deleteProcedure.emit();  // Emite el evento al componente principal
+  }
+
 
   hyperformulaInstance = HyperFormula.buildEmpty({
     licenseKey: 'internal-use-in-handsontable',
   });
   
   tableConfig = {
-   
+    /*columns: (col: number) => {
+      return {
+        type: 'autocomplete',
+        source: this.availableFunctions,
+        strict: false,
+        visibleRows: 4,
+        trimDropdown: false,
+      };
+    },
+   */
     afterGetColHeader: (col: any, TH: {
       style: any; classList: { add: (arg0: string) => void; }; 
 }) => {
@@ -43,11 +73,6 @@ export class DynamicTableComponent implements OnInit {
   };
 
   constructor() { }
-  
-
-  ngOnInit(): void {
-  }
-
 
   emitDataChange() {
     this.dataChange.emit(this.data);

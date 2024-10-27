@@ -58,7 +58,7 @@
                                     </th>
                                     <td mat-cell *matCellDef="let element"
                                         class="actions-column">
-                                        <button mat-menu-item
+                                        <button mat-menu-item type="button"
                                             (click)="redirectTo(element.link)">
                                             <span class="header3"> Open Guide
                                             </span>
@@ -249,20 +249,25 @@
                                                             <button
                                                                 type="button"
                                                                 mat-button
-                                                                (click)="addProcedureTable(activityIndex)">
+                                                                (click)="addExperimentProcedureTable(experiment,activityIndex)">
                                                                 <mat-icon
                                                                     class="add-new"
                                                                     matTooltip="Add Table">library_add</mat-icon>
                                                             </button>
                                                         </span>
                                                         <div
-                                                            *ngFor="let procedureStep of getExperimentActivityProcedures(experiment,activityIndex).controls; let procedureIndex = index"
-                                                            [formGroupName]="procedureIndex">
-                                                            <app-dynamic-table
-                                                                [data]="procedureStep.get('data')?.value"
-                                                                (dataChange)="onExperimentTableDataChange(experiment,activityIndex, procedureIndex, $event)">
-                                                            </app-dynamic-table>
+                                                            class="procedure-grid">
+                                                            <div
+                                                                *ngFor="let procedureStep of getExperimentActivityProcedures(experiment,activityIndex).controls; let procedureIndex = index"
+                                                                [formGroupName]="procedureIndex">
+                                                                <app-dynamic-table
+                                                                    [data]="procedureStep.get('data')?.value"
+                                                                    (dataChange)="onExperimentTableDataChange(experiment,activityIndex, procedureIndex, $event)"
+                                                                    (deleteProcedure)="removeExperimentActivityProcedure(experiment,activityIndex, procedureIndex)">
+                                                                </app-dynamic-table>
+                                                            </div>
                                                         </div>
+
                                                     </div>
 
                                                     <span mat-caption
@@ -321,6 +326,7 @@
 
                             <mat-step label="Final Activities"
                                 [stepControl]="finalActivities">
+
                                 <div
                                     *ngFor="let activity of labinfo.activities; index as activityIndex"
                                     [formGroupName]="activityIndex"
@@ -339,13 +345,16 @@
                                                     matTooltip="Add Table">library_add</mat-icon>
                                             </button>
                                         </span>
-                                        <div
-                                            *ngFor="let procedureStep of getFinalActivityProcedures(activityIndex).controls; let procedureIndex = index"
-                                            [formGroupName]="procedureIndex">
-                                            <app-dynamic-table
-                                                [data]="procedureStep.get('data')?.value"
-                                                (dataChange)="onTableDataChange(activityIndex, procedureIndex, $event)">
-                                            </app-dynamic-table>
+                                        <div class="procedure-grid">
+                                            <div
+                                                *ngFor="let procedureStep of getFinalActivityProcedures(activityIndex).controls; let procedureIndex = index"
+                                                [formGroupName]="procedureIndex">
+                                                <app-dynamic-table
+                                                    [data]="procedureStep.get('data')?.value"
+                                                    (dataChange)="onTableDataChange(activityIndex, procedureIndex, $event)"
+                                                    (deleteProcedure)="removeProcedure(activityIndex, procedureIndex)">
+                                                </app-dynamic-table>
+                                            </div>
                                         </div>
                                     </div>
                                     <span mat-caption
@@ -356,7 +365,8 @@
                                         class="input-field pr-8"
                                         appearance="outline">
                                         <input matInput placeholder="Answer"
-                                            required formControlName="result">
+                                            required
+                                            formControlName="result">
                                     </mat-form-field>
                                     <mat-form-field
                                         style="width: 25%"
