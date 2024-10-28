@@ -10,8 +10,28 @@
     padding-right: 40px;
 }
 
-hot-table {
-    vertical-align: top;
+::ng-deep .handsontable td {
+    border-right: 0px !important;
+}
+
+::ng-deep .handsontable tr td:last-child {
+    border-right: 1px solid #ccc !important; 
+  }
+
+::ng-deep  .handsontable .changeType {
+    color: #203587;
+    background-color: white;
+    border: 0px;
+    font-size: 16px;
+    position: absolute;
+    right: 16px;
+}
+
+::ng-deep .handsontable .changeType:hover {
+    color: #f3ae20;
+    background-color: white;
+    border: 0px;
+    font-size: 16px;
 }
 
 .delete-btn {

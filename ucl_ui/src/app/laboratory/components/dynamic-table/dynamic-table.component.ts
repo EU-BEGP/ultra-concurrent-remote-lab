@@ -17,12 +17,13 @@ export class DynamicTableComponent implements OnInit {
   @Input() data: any;
 
   availableFunctions = [
-    '=SUM',
-    '=AVERAGE',
-    '=COUNT',
-    '=MAX',
-    '=MIN',
-    '=IF',
+    '=SUM(A1:An)',
+    '=AVERAGE(A1:An)',
+    '=COUNT(A1:An)',
+    '=MAX(A1:An)',
+    '=MIN(A1:An)',
+    '=IF(Condition,"TRUE","FALSE")',
+    '=RAND()'
   ];
 
  
@@ -42,7 +43,7 @@ export class DynamicTableComponent implements OnInit {
   });
   
   tableConfig = {
-    /*columns: (col: number) => {
+    columns: (col: number) => {
       return {
         type: 'autocomplete',
         source: this.availableFunctions,
@@ -51,14 +52,17 @@ export class DynamicTableComponent implements OnInit {
         trimDropdown: false,
       };
     },
-   */
     afterGetColHeader: (col: any, TH: {
       style: any; classList: { add: (arg0: string) => void; }; 
 }) => {
       if (TH) {
         TH.classList.add('header3');
-        TH.classList.add('column-header');
         TH.style.backgroundColor = '#ffffff'
+        TH.classList.add('htMiddle');
+        TH.style.fontWeight = "bold"
+        
+        TH.style.border= "0px"
+        TH.style.borderBottom= "3px solid currentColor"
       }
     },
     afterGetRowHeader: (row: any, TH: {
@@ -66,8 +70,12 @@ export class DynamicTableComponent implements OnInit {
 }) => {
       if (TH) {
         TH.classList.add('header3');
-        TH.classList.add('row-header');
         TH.style.backgroundColor = '#ffffff'
+        TH.classList.add('htMiddle');
+        
+        TH.style.fontWeight = "bold"
+        TH.style.border= "0px"
+        TH.style.borderRight= "3px solid currentColor"
       }
     },
   };

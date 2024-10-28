@@ -34,7 +34,7 @@ export class LabComponent implements OnInit, AfterViewInit {
   labinfo:any
   dataSource: MatTableDataSource<GuideData>;
   displayedColumns: string[] = ['title', 'link'];
-  selectedTabIndex: number = 0;
+  selectedTabIndex!: number ;
   unit_groups : any= []
 
   studentSession: FormGroup;
@@ -106,7 +106,9 @@ export class LabComponent implements OnInit, AfterViewInit {
     });
 
     experimentArray.push(experimentGroup);
-    this.selectedTabIndex = newTabIndex
+    setTimeout(() => {
+      this.selectedTabIndex = newTabIndex // Move to the new tab
+    });
   }
 
   loadLabInfo():void{
@@ -203,7 +205,7 @@ export class LabComponent implements OnInit, AfterViewInit {
           statement: [activity.statement],
           result: [''],  
           procedure: this.builder.array([this.builder.group({
-            data: [Handsontable.helper.createSpreadsheetData(2, 3)], // Initial data for the new table
+            data: [Handsontable.helper.createSpreadsheetData(3, 3)], // Initial data for the new table
           })]),
           unit: ['']
         }));
@@ -253,7 +255,7 @@ export class LabComponent implements OnInit, AfterViewInit {
         statement: [activity.statement],
         result: [''],
         procedure: this.builder.array([this.builder.group({
-          data: [Handsontable.helper.createSpreadsheetData(2, 3)], // Initial data for the new table
+          data: [Handsontable.helper.createSpreadsheetData(3, 3)], // Initial data for the new table
         })]),
         unit: ['']
       }));
@@ -313,7 +315,7 @@ export class LabComponent implements OnInit, AfterViewInit {
     const procedureArray = this.finalActivities.at(activityIndex).get('procedure') as FormArray;
     
     procedureArray.push(this.builder.group({
-      data: [Handsontable.helper.createSpreadsheetData(2, 3)], // Initial data for the new table
+      data: [Handsontable.helper.createSpreadsheetData(3, 3)], // Initial data for the new table
     }));
   }
 
@@ -325,7 +327,7 @@ export class LabComponent implements OnInit, AfterViewInit {
     const procedureArray = this.getActivities(experiment).at(activityIndex).get('procedure') as FormArray;
     
     procedureArray.push(this.builder.group({
-      data: [Handsontable.helper.createSpreadsheetData(2, 3)], // Initial data for the new table
+      data: [Handsontable.helper.createSpreadsheetData(3, 3)], // Initial data for the new table
     }));
   }
 
