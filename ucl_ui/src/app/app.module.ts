@@ -43,6 +43,7 @@ import { VideoPlayerComponent } from './laboratory/components/video-player/video
 
 import { HotTableModule } from '@handsontable/angular';
 import { DynamicTableComponent } from './laboratory/components/dynamic-table/dynamic-table.component';
+import { ProcedureToolsDialogComponent } from './laboratory/components/procedure-tools-dialog/procedure-tools-dialog.component';
 
 @NgModule({
   declarations: [
@@ -64,6 +65,7 @@ import { DynamicTableComponent } from './laboratory/components/dynamic-table/dyn
     LaboratoriesDialogComponent,
     VideoPlayerComponent,
     DynamicTableComponent,
+    ProcedureToolsDialogComponent,
   ],
   imports: [
     BrowserModule,

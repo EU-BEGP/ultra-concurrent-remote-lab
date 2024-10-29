@@ -19,7 +19,7 @@
   }
 
 ::ng-deep  .handsontable .changeType {
-    color: #203587;
+    color: #f3ae20;
     background-color: white;
     border: 0px;
     font-size: 16px;
@@ -28,7 +28,7 @@
 }
 
 ::ng-deep .handsontable .changeType:hover {
-    color: #f3ae20;
+    color: #203587;
     background-color: white;
     border: 0px;
     font-size: 16px;

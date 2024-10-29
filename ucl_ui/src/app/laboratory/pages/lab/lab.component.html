@@ -249,10 +249,10 @@
                                                             <button
                                                                 type="button"
                                                                 mat-button
-                                                                (click)="addExperimentProcedureTable(experiment,activityIndex)">
+                                                                (click)="openProcedures({'experiment':experiment,'activityIndex':activityIndex})">
                                                                 <mat-icon
-                                                                    class="add-new"
-                                                                    matTooltip="Add Table">library_add</mat-icon>
+                                                                    class="add-new bigger-icon"
+                                                                    matTooltip="Add Prcedure">add_circle</mat-icon>
                                                             </button>
                                                         </span>
                                                         <div
@@ -340,9 +340,10 @@
                                             class="input-label header3 vertical-center accent">
                                             Procedure
                                             <button type="button" mat-button
-                                                (click)="addProcedureTable(activityIndex)">
-                                                <mat-icon class="add-new"
-                                                    matTooltip="Add Table">library_add</mat-icon>
+                                                (click)="openProcedures({'activityIndex':activityIndex})">
+                                                <mat-icon
+                                                    class="add-new bigger-icon"
+                                                    matTooltip="Add Procedure">add_circle</mat-icon>
                                             </button>
                                         </span>
                                         <div class="procedure-grid">

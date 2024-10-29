@@ -1,0 +1,45 @@
+<mat-card-title class="dialog-title">
+    <span class="first-title header2">Available</span>
+    <span class="second-title header2">Tools</span>
+</mat-card-title>
+
+<mat-dialog-content>
+
+    <mat-grid-list
+        class="mt-16 centered-grid"
+        [gutterSize]="'16px'"
+        [cols]="breakpoint"
+        rowHeight="256px"
+        (window:resize)="onResize($event)">
+        <mat-grid-tile class="tile">
+            <mat-card
+                (click)="onAddProcedure('Dynamic Tables')"
+                class="parameter-option">
+                <img mat-card-image
+                    src="assets/dynamicTables.png">
+                <mat-card-content>
+                    <mat-label
+                        class="header3 center">Dynamic Tables</mat-label>
+                </mat-card-content>
+            </mat-card>
+        </mat-grid-tile>
+
+        <mat-grid-tile class="tile">
+            <mat-card
+                (click)="onAddProcedure('Time-Series')"
+                class="parameter-option">
+                <img mat-card-image
+                    src="assets/line-chart.png">
+                <mat-card-content>
+                    <mat-label
+                        class="header3 center">Time-Series Charts</mat-label>
+                </mat-card-content>
+            </mat-card>
+        </mat-grid-tile>
+    </mat-grid-list>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+    <button mat-dialog-close type="button" mat-raised-button
+        class="header2">Close</button>
+</mat-dialog-actions>

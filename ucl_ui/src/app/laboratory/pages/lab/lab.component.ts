@@ -13,6 +13,8 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { units } from 'src/app/laboratory/store/units-data-store';
 import Handsontable from 'handsontable';
+import { MatDialog } from '@angular/material/dialog';
+import { ProcedureToolsDialogComponent } from '../../components/procedure-tools-dialog/procedure-tools-dialog.component';
 
 export interface GuideData {
   title: string,
@@ -46,7 +48,7 @@ export class LabComponent implements OnInit, AfterViewInit {
   @ViewChild(MatSort)
   sort!: MatSort;
 
-  constructor(private route: ActivatedRoute, private http: HttpClient, private builder:FormBuilder, private toastr: ToastrService, private router: Router) 
+  constructor(private route: ActivatedRoute, private http: HttpClient, private builder:FormBuilder, private toastr: ToastrService, private router: Router,  private dialogRef: MatDialog,) 
   { const breakpointObserver = inject(BreakpointObserver);
     this.stepperOrientation = breakpointObserver
       .observe('(min-width: 800px)')
@@ -348,6 +350,32 @@ export class LabComponent implements OnInit, AfterViewInit {
     const procedure = this.getActivities(experiment).at(activityIndex).get('procedure') as FormArray;
     procedure.removeAt(procedureIndex);
   }
+
+  openProcedures(data : any){
+    const dialogRef = this.dialogRef.open(ProcedureToolsDialogComponent, {
+      width: '50vw'
+     })    
+     dialogRef.componentInstance.selectedOption.subscribe((selectedType:string) => {
+      this.addSelectedProcedure(data, selectedType)
+    });
   
-  
+  }
+
+  addSelectedProcedure (data:any, selectedProcedureType:String) {
+    console.log(selectedProcedureType)
+    if(data.experiment){ //if its a Experiment Activity
+      if(selectedProcedureType == "Time-Series"){
+        this.toastr.info("Not Implemented yet")
+      }
+      else if(selectedProcedureType == "Dynamic Tables"){
+        this.addExperimentProcedureTable(data.experiment,data.activityIndex)
+      }
+    }else{ //if its a Final Activity
+      if(selectedProcedureType == "Time-Series"){
+        this.toastr.info("Not Implemented yet")
+      } else if(selectedProcedureType == "Dynamic Tables"){
+        this.addProcedureTable(data.activityIndex)
+      }
+    }
+  }
 }
