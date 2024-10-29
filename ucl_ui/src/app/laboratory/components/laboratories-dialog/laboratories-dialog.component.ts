@@ -1,11 +1,12 @@
-import { AfterViewInit, Component, ViewChild, OnInit } from '@angular/core';
-import * as data from '../../../mockdata.json'
-import { ActivatedRoute, Router } from '@angular/router';
+import { Component, ViewChild, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { ToastrService } from 'ngx-toastr';
 import { MatSort} from '@angular/material/sort';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
+import { LaboratoryService } from 'src/app/laboratory/services/laboratory.service';
+import { Laboratory } from '../../interfaces/laboratory';
 
 export interface LaboratoryData {
   id: string,
@@ -21,10 +22,9 @@ export interface LaboratoryData {
   templateUrl: './laboratories-dialog.component.html',
   styleUrls: ['./laboratories-dialog.component.css']
 })
-export class LaboratoriesDialogComponent implements AfterViewInit, OnInit {
+export class LaboratoriesDialogComponent implements OnInit {
 
-  allData: any = (data as any).default;
-  dataSource: MatTableDataSource<LaboratoryData>;
+  dataSource!: MatTableDataSource<Laboratory>;
   id = '';
   labinfo:any
   displayedColumns: string[] = ['name', 'institution', 'category', 'actions'];
@@ -36,22 +36,21 @@ export class LaboratoriesDialogComponent implements AfterViewInit, OnInit {
   @ViewChild(MatSort)
   sort!: MatSort;
 
-  constructor(private http: HttpClient, private toastr: ToastrService, private router: Router) {
-    this.dataSource = new MatTableDataSource(this.allData.map(function(laboratory:any) {return {
-      id: laboratory.id,
-      institution: laboratory.info.institution,
-      name: laboratory.info.name,
-      category: laboratory.info.category,
-    }}));
+  constructor(private http: HttpClient, private toastr: ToastrService, private router: Router,  private laboratoryService: LaboratoryService,) {
+    this.getLaboratories()
    }
   ngOnInit(): void {
     this.breakpoint = (window.innerWidth <= 1100) ? 1 : 2;
   }
 
-  ngAfterViewInit() {
-    this.dataSource.paginator = this.paginator;
-    this.dataSource.sort = this.sort;
+  getLaboratories(): void {
+    this.laboratoryService.getLabs().subscribe((response) => {
+      this.dataSource = new MatTableDataSource(response);
+      this.dataSource.paginator = this.paginator;
+      this.dataSource.sort = this.sort;
+    });
   }
+
 
   redirectTo(id: string) {
     this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
