@@ -22,11 +22,11 @@ mat-card-actions{
 .mat-button{
     margin: 0px 0px !important;
 }
-  
+
 
 @media screen and (min-width:750px) {
     .page-container{
-        padding: 64px; ; 
+        padding: 64px 32px 0px;
     }
     .page-title{
         padding: 0px 16px 16px 24px;

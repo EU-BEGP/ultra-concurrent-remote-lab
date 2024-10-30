@@ -1,15 +1,9 @@
 
 .vg-controls {
-    position: relative;
+    position: absolute;
     bottom: 0;
     width: 100%;
     display: flex;
     justify-content: flex-start; /* Alinea los controles a la izquierda */
     transform-origin: bottom left; /* Escala desde la esquina inferior izquierda */
-  }
-  
-  @media (max-width: 480px) {
-    .vg-controls {
-      transform: scale(0.8); /* Escala los controles a un 80% */
-    }
   }
