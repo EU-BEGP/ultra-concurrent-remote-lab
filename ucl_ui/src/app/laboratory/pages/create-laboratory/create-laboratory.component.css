@@ -105,7 +105,7 @@ img{
 }
 
 .intro-video-card {
-    width: 40vw;
+    width: 30vw;
     .mat-form-field-wrapper{
         padding-bottom: 0px;
     }
@@ -136,7 +136,7 @@ img{
 
 @media screen and (max-width:900px) {
     .intro-video-card {
-        width: 60vw;
+        width: 45vw;
     }
     .column {
         width: 100%;
@@ -145,7 +145,7 @@ img{
 
 @media screen and (min-width:900px) {
     .video-card {
-        width: 32vw;
+        width: 28vw;
     }
 }
 
@@ -161,7 +161,7 @@ img{
 @media screen and (min-width:1600px) {
 
     .video-card {
-        width: 35vw;
+        width: 20vw;
     }
 }
 

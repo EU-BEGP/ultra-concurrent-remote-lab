@@ -266,12 +266,16 @@ input[type="password"]::-ms-clear {
 
 .video-container {
   width: 100%;
-  height: auto   !important;
+  position: relative;
+  padding-top: 56.25%; /* 16:9 aspect ratio */
+  overflow: hidden;
 }
 .video-player {
-  position: relative;
+  position: absolute;
+  top: 0;
+  left: 0;
   width: 100%;
-  height: auto   !important;
+  height: 100%;
   object-fit: cover;
 }
 /* ---------------------------------------------- */
