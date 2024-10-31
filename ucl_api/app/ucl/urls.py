@@ -1,37 +1,72 @@
 from django.urls import path
-from ucl.views import laboratory_views, guide_views, experiment_views
+from ucl.views import laboratory_views, guide_views, parameter_views, experiment_views
 
 app_name = "ucl"
 
 urlpatterns = [
     path(
-        "laboratories/",
-        laboratory_views.LaboratoryListCreateView.as_view(),
-        name="laboratory-list-create",
+        "laboratories/all/",
+        laboratory_views.ListAllLaboratoryView.as_view(),
+        name="laboratory_list_all",
     ),
     path(
-        "laboratories/<int:pk>/",
-        laboratory_views.LaboratoryDetailView.as_view(),
-        name="laboratory-detail",
+        "laboratories/",
+        laboratory_views.ListCreateLaboratoryView.as_view(),
+        name="laboratory_list_create",
+    ),
+    path(
+        "laboratories/<uuid:pk>/",
+        laboratory_views.RetrieveUpdateDestroyLaboratoryView.as_view(),
+        name="laboratory_detail",
+    ),
+    path(
+        "laboratories/<uuid:pk>/guides/",
+        laboratory_views.ListLaboratoryGuidesView.as_view(),
+        name="laboratory_guides",
+    ),
+    path(
+        "laboratories/<uuid:pk>/parameters/",
+        laboratory_views.ListLaboratoryParametersView.as_view(),
+        name="laboratory_parameters",
+    ),
+    path(
+        "laboratories/<uuid:pk>/experiments/",
+        laboratory_views.ListLaboratoryExperimentsView.as_view(),
+        name="laboratory_experiments",
     ),
     path(
         "guides/",
-        guide_views.GuideListCreateView.as_view(),
-        name="guide-list-create",
+        guide_views.CreateGuideView.as_view(),
+        name="guide_create",
     ),
     path(
-        "guides/<int:pk>/",
-        guide_views.GuideDetailView.as_view(),
-        name="guide-detail",
+        "guides/<uuid:pk>/",
+        guide_views.RetrieveUpdateDestroyGuideView.as_view(),
+        name="guide_detail",
+    ),
+    path(
+        "parameters/",
+        parameter_views.CreateParameterView.as_view(),
+        name="parameter_create",
+    ),
+    path(
+        "parameters/<uuid:pk>/",
+        parameter_views.RetrieveUpdateDestroyParameterView.as_view(),
+        name="parameter_detail",
     ),
     path(
         "experiments/",
         experiment_views.ExperimentListCreateView.as_view(),
-        name="experiment-list-create",
+        name="experiment_list_create",
     ),
     path(
-        "experiments/<int:pk>/",
+        "experiments/<uuid:pk>/",
         experiment_views.ExperimentDetailView.as_view(),
-        name="experiment-detail",
+        name="experiment_detail",
+    ),
+    path(
+        "experiments/filter/",
+        experiment_views.ExperimentRetrieveByParameterValuesIdsView.as_view(),
+        name="experiment_by_values",
     ),
 ]

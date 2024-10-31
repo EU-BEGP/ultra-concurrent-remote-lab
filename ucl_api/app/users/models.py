@@ -7,6 +7,7 @@ from django.db import models
 from django.utils import timezone
 from utils.tools import send_custom_email
 import random
+import uuid
 
 
 class UserManager(BaseUserManager):
@@ -58,6 +59,7 @@ def default_expiration_time():
 class User(AbstractBaseUser, PermissionsMixin):
     """Custom user model that suppors using email instead of username"""
 
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     email = models.EmailField(max_length=255, unique=True)
     email_verification_code = models.CharField(
         max_length=6, unique=True, default=None, null=True

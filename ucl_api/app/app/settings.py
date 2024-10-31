@@ -42,7 +42,6 @@ INSTALLED_APPS = [
     "rest_framework",
     "rest_framework.authtoken",
     "corsheaders",
-    "eav",
     "drf_spectacular",
 ]
 
@@ -127,7 +126,6 @@ STATIC_URL = os.environ.get("STATIC_URL")
 # Default primary key field type
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
-EAV2_PRIMARY_KEY_FIELD = "django.db.models.BigAutoField"
 AUTH_USER_MODEL = "users.User"
 
 

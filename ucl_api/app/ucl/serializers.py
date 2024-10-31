@@ -1,15 +1,18 @@
+from typing_extensions import ReadOnly
 from rest_framework import serializers
 from ucl.models import (
     Activity,
     Laboratory,
     Guide,
+    Parameter,
+    ParameterValue,
     Experiment,
     Procedure,
     Session,
     SolvedActivity,
     VideoExperiment,
 )
-from eav.models import Value
+from ucl.views.common import validate_uuid
 
 
 class LaboratorySerializer(serializers.ModelSerializer):
@@ -33,12 +36,32 @@ class GuideSerializer(serializers.ModelSerializer):
         fields = ["id", "title", "url", "file", "laboratory"]
 
 
+class ParameterValueSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ParameterValue
+        fields = ["id", "value", "image"]
+
+
+class ParameterSerializer(serializers.ModelSerializer):
+    parameter_values = ParameterValueSerializer(many=True)
+
+    class Meta:
+        model = Parameter
+        fields = ["id", "laboratory", "name", "unit", "parameter_values"]
+
+
 class ExperimentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Experiment
-        fields = ("id", "name", "description", "laboratory")
+        fields = ("id", "name", "description", "laboratory", "parameter_values")
 
-    # TODO: Add attributes and value (eav) information in serializer fields
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        representation["parameter_values"] = [
+            ParameterValueSerializer(param_value).data
+            for param_value in instance.parameter_values.all()
+        ]
+        return representation
 
 
 class VideoExperimentSerializer(serializers.ModelSerializer):

@@ -1,52 +1,82 @@
 from django.utils.html import format_html
 from django.conf import settings
 from django.db import models
-from eav.decorators import register_eav
+import uuid
 
 
 class Laboratory(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     name = models.CharField(max_length=50)
     description = models.CharField(max_length=200)
     category = models.CharField(max_length=100)
     institution = models.CharField(max_length=100)
     video = models.FileField(default=None, null=True, blank=True)
     image = models.ImageField(default=None, null=True, blank=True)
+    registration_date = models.DateTimeField(auto_now_add=True)
     instructor = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         related_name="instructor_laboratories",
         on_delete=models.CASCADE,
     )
-    registration_date = models.DateTimeField(auto_now_add=True)
 
     class Meta:
         verbose_name_plural = "Laboratories"
 
 
 class Guide(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     title = models.CharField(max_length=50)
     url = models.URLField(default=None)
     file = models.FileField(default=None)
+    registration_date = models.DateTimeField(auto_now_add=True)
     laboratory = models.ForeignKey(
         Laboratory, related_name="laboratory_guides", on_delete=models.CASCADE
     )
-    registration_date = models.DateTimeField(auto_now_add=True)
 
     def URL(self):
         url = self.url
         return format_html("<a href='%s'>%s</a>" % (url, url))
 
 
-@register_eav()
+class Parameter(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    name = models.CharField(max_length=100)
+    unit = models.CharField(max_length=20, null=True, default=None)
+    laboratory = models.ForeignKey(
+        Laboratory, related_name="laboratory_parameters", on_delete=models.CASCADE
+    )
+
+
+class ParameterValue(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    value = models.CharField(max_length=255)
+    image = models.ImageField(default=None, null=True, blank=True)
+    parameter = models.ForeignKey(
+        Parameter, on_delete=models.CASCADE, related_name="parameter_values"
+    )
+
+
 class Experiment(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     name = models.CharField(max_length=100)
     description = models.CharField(max_length=200)
+    registration_date = models.DateTimeField(auto_now_add=True)
     laboratory = models.ForeignKey(
         Laboratory, related_name="laboratory_experiments", on_delete=models.CASCADE
     )
-    registration_date = models.DateTimeField(auto_now_add=True)
+    parameter_values = models.ManyToManyField(
+        ParameterValue, related_name="parameters_values_experiments"
+    )
+
+    def parameters(self):
+        return ", ".join(pv.parameter.name for pv in self.parameter_values.all())
+
+    def param_values(self):
+        return ", ".join(pv.value for pv in self.parameter_values.all())
 
 
 class VideoExperiment(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     name = models.CharField(max_length=100)
     video = models.FileField()
     experiment = models.ForeignKey(
@@ -59,6 +89,7 @@ class VideoExperiment(models.Model):
 
 
 class Session(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     student = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         related_name="student_sessions",
@@ -74,6 +105,7 @@ class Session(models.Model):
 
 
 class Activity(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     statement = models.CharField(max_length=500)
     expected_result = models.CharField(max_length=500)
     experiment = models.ForeignKey(
@@ -95,6 +127,7 @@ class Activity(models.Model):
 
 
 class SolvedActivity(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     result = models.CharField(max_length=500)
     activity = models.ForeignKey(
         Activity, related_name="activity_solved_activities", on_delete=models.CASCADE
@@ -123,6 +156,7 @@ class SolvedActivity(models.Model):
 
 
 class Procedure(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     name = models.CharField(max_length=200)
     type = models.CharField(max_length=100)
     data = models.JSONField()
