@@ -39,8 +39,13 @@ class ListCreateLaboratoryView(generics.ListCreateAPIView):
             validate_uuid(laboratory_id, Laboratory)
             serializer.save(id=laboratory_id)
         except ValidationError as e:
+            # Extract and format the error details
+            error_details = {
+                field: [str(error) for error in errors]
+                for field, errors in e.detail.items()
+            }
             return Response(
-                {"error": str(e.detail[0])}, status=status.HTTP_400_BAD_REQUEST
+                {"error": error_details}, status=status.HTTP_400_BAD_REQUEST
             )
 
 

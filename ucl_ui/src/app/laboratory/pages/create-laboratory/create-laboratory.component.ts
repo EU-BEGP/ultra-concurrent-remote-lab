@@ -1,20 +1,20 @@
-import { Component, OnInit, Inject, inject, ViewChild, ElementRef} from '@angular/core';
-import { StepperOrientation } from '@angular/cdk/stepper';
-import {Observable} from 'rxjs';
-import {BreakpointObserver} from '@angular/cdk/layout';
-import {map} from 'rxjs/operators';
-import { FormArray, FormBuilder,FormControl,FormGroup,Validators } from '@angular/forms';
-import { ToastrService } from 'ngx-toastr';
-import { v4 as uuidv4 } from 'uuid'; 
-import { Router } from '@angular/router';
-import { units } from 'src/app/laboratory/store/units-data-store';
-import { UserService } from 'src/app/core/auth/services/user.service';
-import { User } from 'src/app/core/auth/interfaces/user';
-import { LaboratoryService } from '../../services/laboratory.service';
-import { Laboratory } from '../../interfaces/laboratory';
+import { BreakpointObserver } from '@angular/cdk/layout';
+import { Component, OnInit, Inject, inject, ViewChild, ElementRef } from '@angular/core';
+import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Guide } from '../../interfaces/guide';
-import { Parameter } from '../../interfaces/parameter';
+import { Laboratory } from '../../interfaces/laboratory';
+import { LaboratoryService } from '../../services/laboratory.service';
+import { Observable } from 'rxjs';
 import { Option } from '../../interfaces/option';
+import { Parameter } from '../../interfaces/parameter';
+import { Router } from '@angular/router';
+import { StepperOrientation } from '@angular/cdk/stepper';
+import { ToastrService } from 'ngx-toastr';
+import { User } from 'src/app/core/auth/interfaces/user';
+import { UserService } from 'src/app/core/auth/services/user.service';
+import { map } from 'rxjs/operators';
+import { units } from 'src/app/laboratory/store/units-data-store';
+import { v4 as uuidv4 } from 'uuid';
 
 @Component({
   selector: 'app-create-laboratory',
@@ -22,7 +22,6 @@ import { Option } from '../../interfaces/option';
   styleUrls: ['./create-laboratory.component.css']
 })
 export class CreateLaboratoryComponent implements OnInit {
-
   @ViewChild('videoPlayer') videoplayer!: ElementRef;
   stepperOrientation: Observable<StepperOrientation>
   breakpoint: any
@@ -31,71 +30,71 @@ export class CreateLaboratoryComponent implements OnInit {
   videoRowHeight: any
   defaultImg = '../../../../assets/emptyimage.jpeg';
   categories = [
-    {name: 'Photovoltaic Energy'},
-    {name: 'Thermal Energy'},
-    {name: 'Spectometry'},
-    {name: 'Wind Energy'},
-    {name: 'Hydraulic Energy'},
-    {name: 'Other'},
+    { name: 'Photovoltaic Energy' },
+    { name: 'Thermal Energy' },
+    { name: 'Spectometry' },
+    { name: 'Wind Energy' },
+    { name: 'Hydraulic Energy' },
+    { name: 'Other' },
   ];
-  unit_groups : any= []
-  currentUserId :any = 0 ;
+  unit_groups: any = []
+  currentUserId: any = 0;
 
-  constructor( private builder:FormBuilder, private toastr: ToastrService, private router: Router, private userService: UserService, private labService: LaboratoryService) {
-      const breakpointObserver = inject(BreakpointObserver);
-      this.stepperOrientation = breakpointObserver
-        .observe('(min-width: 800px)')
-        .pipe(map(({matches}) => (matches ? 'horizontal' : 'vertical')));
+  constructor(private builder: FormBuilder, private toastr: ToastrService, private router: Router, private userService: UserService, private labService: LaboratoryService) {
+    const breakpointObserver = inject(BreakpointObserver);
+    this.stepperOrientation = breakpointObserver
+      .observe('(min-width: 800px)')
+      .pipe(map(({ matches }) => (matches ? 'horizontal' : 'vertical')));
     this.unit_groups = units
   }
 
-  ngOnInit():void {
+  ngOnInit(): void {
 
     this.videoRowHeight = window.innerWidth <= 600 ? 340 : 380
     this.breakpoint = Math.floor(window.innerWidth / 260);
-    this.breakpointVideo =  Math.floor((window.innerWidth  / 400) / 2);
-    this.breakpointOption = Math.floor(window.innerWidth  / 400);
+    this.breakpointVideo = Math.floor((window.innerWidth / 400) / 2);
+    this.breakpointOption = Math.floor(window.innerWidth / 400);
     this.parameters.valueChanges.subscribe(() => {
       this.syncSelectedOptionsWithParameters();
     });
     this.getCurrentUserId();
   }
 
-  getCurrentUserId(){
+  getCurrentUserId() {
     this.userService.getUserData().subscribe((response: User) => {
       this.newLaboratory.get('info')?.get('instructor')?.setValue(response.id!);
-    }); 
+    });
   }
 
-  onResize(event : any):void {
+  onResize(event: any): void {
     this.breakpoint = Math.floor(event.target.innerWidth / 260);
   }
 
-  onResizeParameter(event : any):void {
+  onResizeParameter(event: any): void {
     this.videoRowHeight = window.innerWidth <= 600 ? 340 : 380
-    this.breakpointOption = Math.floor(window.innerWidth  / 400);
-    this.breakpointVideo =  Math.floor((event.target.innerWidth / 400) / 2);
+    this.breakpointOption = Math.floor(window.innerWidth / 400);
+    this.breakpointVideo = Math.floor((event.target.innerWidth / 400) / 2);
   }
 
-  newLaboratory=this.builder.group({
+  newLaboratory = this.builder.group({
     id: [uuidv4()],
     info: this.builder.group({
       instructor: 0,
-      institution: this.builder.control("",Validators.required),
-      name: this.builder.control("",Validators.required),
-      category: this.builder.control("",Validators.required),
+      institution: this.builder.control('', Validators.required),
+      name: this.builder.control('', Validators.required),
+      category: this.builder.control('', Validators.required),
     }),
     introduction: this.builder.group({
-      description: this.builder.control("",Validators.required),
+      description: this.builder.control('', Validators.required),
       introPhoto: this.builder.group({
         image: [this.defaultImg],
-        file:['']
+        file: ['']
       }),
-      introVideo:this.builder.group({
+      introVideo: this.builder.group({
         video: [''],
-        file:['']
+        file: ['']
       }),
-      guides:new FormArray([
+      guides: new FormArray([
         this.builder.group({
           title: [''],
           url: ['']
@@ -104,36 +103,36 @@ export class CreateLaboratoryComponent implements OnInit {
     }),
     parameters: this.builder.array([
       this.builder.group({
-          name: [''], 
-          unit: [''],
-          parameter_options: new FormArray([this.builder.group({
-            id: [uuidv4()], 
-            value: [''], 
-            image: [this.defaultImg],
-            file:['']
-          }
+        name: [''],
+        unit: [''],
+        parameter_options: new FormArray([this.builder.group({
+          id: [uuidv4()],
+          value: [''],
+          image: [this.defaultImg],
+          file: ['']
+        }
         )])
       })
     ]),
     experiments: this.builder.array([this.builder.group({
       selectedOptions: new FormArray([this.builder.control('', Validators.required)]),
       videos: new FormArray([this.builder.group({
-        name: [''], 
+        name: [''],
         video: ['']
       })]),
       activities: new FormArray([
         this.builder.group({
-          id: [uuidv4()], 
+          id: [uuidv4()],
           statement: [''],
           result: [''],
           unit: ['']
         })
       ]),
-      dataFile: this.builder.control("")
+      dataFile: this.builder.control('')
     })]),
     activities: this.builder.array([
       this.builder.group({
-        id: [uuidv4()], 
+        id: [uuidv4()],
         statement: [''],
         result: [''],
         unit: ['']
@@ -145,84 +144,84 @@ export class CreateLaboratoryComponent implements OnInit {
     return this.newLaboratory.get('introduction')?.get('introPhoto') as FormGroup
   }
 
-  get introVideo():FormGroup {
+  get introVideo(): FormGroup {
     return this.newLaboratory.get('introduction')?.get('introVideo') as FormGroup
   }
 
-  get info():FormGroup {
+  get info(): FormGroup {
     return this.newLaboratory.get('info') as FormGroup
   }
 
-  get introduction():FormGroup {
+  get introduction(): FormGroup {
     return this.newLaboratory.get('introduction') as FormGroup
   }
-  get guides():FormArray {
-    return this.newLaboratory.get("introduction")?.get('guides') as FormArray
-    }
-  
-    deleteGuide(index:any):void{
-    this.guides.removeAt(index)
-    }
-  
-    addGuide():void{
-      const guideFormGroup = this.builder.group({
-        title: [''],
-        url: ['']
-      })
-      this.guides.push(guideFormGroup)
-    }
+  get guides(): FormArray {
+    return this.newLaboratory.get('introduction')?.get('guides') as FormArray
+  }
 
-  get parameters():FormArray {
+  deleteGuide(index: any): void {
+    this.guides.removeAt(index)
+  }
+
+  addGuide(): void {
+    const guideFormGroup = this.builder.group({
+      title: [''],
+      url: ['']
+    })
+    this.guides.push(guideFormGroup)
+  }
+
+  get parameters(): FormArray {
     return this.newLaboratory.get('parameters') as FormArray
   }
 
-  addParameter():void{
+  addParameter(): void {
     const parametersFormGroup = this.builder.group({
-      name: [''], 
+      name: [''],
       unit: [''],
       parameter_options: new FormArray([this.builder.group({
         id: [uuidv4()],
         value: [''],
         image: [this.defaultImg],
-        file:['']
+        file: ['']
       }
-    )])
-  })
+      )])
+    })
     this.parameters.push(parametersFormGroup)
   }
 
-  getOptions(index:number){
+  getOptions(index: number) {
     return this.parameters.at(index).get('parameter_options') as FormArray
   }
 
-  addOption(index:number):void{
+  addOption(index: number): void {
     const optionFormGroup = this.builder.group({
-          id: [uuidv4()],
-          value: [''],
-          image: [this.defaultImg],
-          file:['']
-      })
+      id: [uuidv4()],
+      value: [''],
+      image: [this.defaultImg],
+      file: ['']
+    })
     this.getOptions(index).push(optionFormGroup)
   }
 
-  deleteOption(index:number, optionIndex:number):void{
-   this.getOptions(index).removeAt(optionIndex)
+  deleteOption(index: number, optionIndex: number): void {
+    this.getOptions(index).removeAt(optionIndex)
   }
 
-  deleteParameter(index:any):void{
-  this.parameters.removeAt(index)
+  deleteParameter(index: any): void {
+    this.parameters.removeAt(index)
   }
 
-  get experiments():FormArray {
-  return this.newLaboratory.get('experiments') as FormArray
+  get experiments(): FormArray {
+    return this.newLaboratory.get('experiments') as FormArray
   }
 
-  deleteExperiment(index:any):void{
-  this.experiments.removeAt(index)
+  deleteExperiment(index: any): void {
+    this.experiments.removeAt(index)
   }
 
-  addExperiment():void{
-    
+  addExperiment(): void {
+
     const selectedOptionsArray = this.builder.array([]);
     this.parameters.controls.forEach(() => {
       selectedOptionsArray.push(this.builder.control('', Validators.required));
@@ -231,17 +230,17 @@ export class CreateLaboratoryComponent implements OnInit {
     this.experiments.push(this.builder.group({
       selectedOptions: selectedOptionsArray,
       videos: new FormArray([this.builder.group({
-        name: [''], 
+        name: [''],
         video: ['']
       })]),
-      activities:  new FormArray([
+      activities: new FormArray([
         this.builder.group({
           statement: [''],
           result: [''],
           unit: ['']
         })
       ]),
-      dataFile:this.builder.control('')
+      dataFile: this.builder.control('')
     }));
   }
 
@@ -252,15 +251,15 @@ export class CreateLaboratoryComponent implements OnInit {
 
   syncSelectedOptionsWithParameters() {
     const parametersLength = this.parameters.length;
-  
+
     this.experiments.controls.forEach((experiment) => {
       const selectedOptionsArray = experiment.get('selectedOptions') as FormArray;
-  
+
       // Añadir los controles que falten si hay más parámetros que opciones seleccionadas
       while (selectedOptionsArray.length < parametersLength) {
         selectedOptionsArray.push(this.builder.control(''));
       }
-  
+
       // Eliminar los controles extra si hay más opciones seleccionadas que parámetros
       while (selectedOptionsArray.length > parametersLength) {
         selectedOptionsArray.removeAt(selectedOptionsArray.length - 1);
@@ -268,27 +267,27 @@ export class CreateLaboratoryComponent implements OnInit {
     });
   }
 
-  getVideos(index:number){
+  getVideos(index: number) {
     return this.experiments.at(index).get('videos') as FormArray
   }
 
-  addVideo(index:number):void{
+  addVideo(index: number): void {
     const videoFormGroup = this.builder.group({
-          name: [''], 
-          video: ['']
-      })
+      name: [''],
+      video: ['']
+    })
     this.getVideos(index).push(videoFormGroup)
   }
-  deleteVideo(index:number, videoIndex:number):void{
-   this.getVideos(index).removeAt(videoIndex)
+  deleteVideo(index: number, videoIndex: number): void {
+    this.getVideos(index).removeAt(videoIndex)
   }
 
-  getExperimentActivites(index:number){
+  getExperimentActivites(index: number) {
     return this.experiments.at(index).get('activities') as FormArray
   }
 
 
-  addExperimentActivity(index:number):void{
+  addExperimentActivity(index: number): void {
     const activityFormGroup = this.builder.group({
       statement: [''],
       result: [''],
@@ -297,52 +296,52 @@ export class CreateLaboratoryComponent implements OnInit {
     this.getExperimentActivites(index).push(activityFormGroup)
   }
 
-  deleteExperimentActivity(index:number, activityIndex:number):void{
+  deleteExperimentActivity(index: number, activityIndex: number): void {
     this.getExperimentActivites(index).removeAt(activityIndex)
-   }
+  }
 
-  get activities():FormArray {
+  get activities(): FormArray {
     return this.newLaboratory.get('activities') as FormArray
-    }
-  
-    deleteActivity(index:any):void{
+  }
+
+  deleteActivity(index: any): void {
     this.activities.removeAt(index)
-    }
-  
-    addActivity():void{
-      const activityFormGroup = this.builder.group({
-        statement: [''],
-        result: [''],
-        unit: ['']
+  }
+
+  addActivity(): void {
+    const activityFormGroup = this.builder.group({
+      statement: [''],
+      result: [''],
+      unit: ['']
     })
-      this.activities.push(activityFormGroup)
-    }
+    this.activities.push(activityFormGroup)
+  }
 
-    getDataFile(index:number){
-      return this.experiments.at(index).get('dataFile') as FormControl
-    }
-  
-  
+  getDataFile(index: number) {
+    return this.experiments.at(index).get('dataFile') as FormControl
+  }
 
-    onUpload(event: any, field?: string, parameterIndex?: number, index?: number): void {
-      if (event.target.files.length > 0) {
-        const file = event.target.files[0] as File;
-        const file_size = file.size;
-        if (file_size <= 50000000) {
-          this.getUrl(file, parameterIndex, index, field);
-        } else {
-          this.toastr.error("File size must be 50MB or smaller.");
-        }
+
+
+  onUpload(event: any, field?: string, parameterIndex?: number, index?: number): void {
+    if (event.target.files.length > 0) {
+      const file = event.target.files[0] as File;
+      const file_size = file.size;
+      if (file_size <= 50000000) {
+        this.getUrl(file, parameterIndex, index, field);
+      } else {
+        this.toastr.error('File size must be 50MB or smaller.');
       }
     }
-  
-  
+  }
+
+
 
   async getUrl(file: File, parameterIndex?: number, index?: number, field?: string) {
     const reader = new FileReader();
     reader.onload = (event: any) => {
       const result = event.target.result;
-  
+
       if (field === 'image' && parameterIndex !== undefined && index !== undefined) {
         this.getOptions(parameterIndex).at(index).patchValue({
           image: result,
@@ -373,7 +372,7 @@ export class CreateLaboratoryComponent implements OnInit {
         this.introPhoto.get('image')?.updateValueAndValidity();
       }
     };
-  
+
     reader.onerror = (event: any) => {
       console.log('File could not be read: ' + event.target.error.code);
     };
@@ -394,16 +393,16 @@ export class CreateLaboratoryComponent implements OnInit {
     }*/
   }
 
-  createLab(): void{
+  createLab(): void {
     const labFields = {
-      "id": this.newLaboratory.value.id,
-      "name": this.newLaboratory.value.info?.name,
-      "institution":this.newLaboratory.value.info?.institution,
-      "category":this.newLaboratory.value.info?.category,
-      "instructor":this.newLaboratory.value.info?.instructor,
-      "description":this.newLaboratory.value.introduction?.description,
-      "video": this.newLaboratory.value.introduction?.introVideo?.file,
-      "image": this.newLaboratory.value.introduction?.introPhoto?.file
+      'id': this.newLaboratory.value.id,
+      'name': this.newLaboratory.value.info?.name,
+      'institution': this.newLaboratory.value.info?.institution,
+      'category': this.newLaboratory.value.info?.category,
+      'instructor': this.newLaboratory.value.info?.instructor,
+      'description': this.newLaboratory.value.introduction?.description,
+      'video': this.newLaboratory.value.introduction?.introVideo?.file,
+      'image': this.newLaboratory.value.introduction?.introPhoto?.file
     }
     this.labService.addLab(labFields as Laboratory).subscribe({
       next: (_: any) => {
@@ -411,7 +410,7 @@ export class CreateLaboratoryComponent implements OnInit {
         this.createLabParameters()
         this.toastr.success(
           'Now you will be redirected to your new Laboratory!',
-          this.newLaboratory.value.info?.name + " Successfully Created!"
+          this.newLaboratory.value.info?.name + ' Successfully Created!'
         );
         //this.router.navigate(['/ultra-concurrent-rl', this.newLaboratory.value.id])
       },
@@ -424,16 +423,16 @@ export class CreateLaboratoryComponent implements OnInit {
     });
   }
 
-  createLabGuides(): void{
-    this.guides.value.forEach((guide: Guide)  => {
+  createLabGuides(): void {
+    this.guides.value.forEach((guide: Guide) => {
       const guideFields = {
-        "title": guide.title,
-        "url": guide.url,
-        "laboratory": this.newLaboratory.value.id
+        'title': guide.title,
+        'url': guide.url,
+        'laboratory': this.newLaboratory.value.id
       }
       this.labService.addLabGuide(guideFields as Guide).subscribe({
         next: (_: any) => {
-         //Added Guide
+          //Added Guide
         },
         error: (e: any) => {
           console.log(e)
@@ -442,31 +441,29 @@ export class CreateLaboratoryComponent implements OnInit {
           );
         },
       });
-    });    
+    });
   }
 
-  createLabParameters(): void{
-    //console.log(this.parameters.value)
-    this.parameters.value.forEach((parameter: Parameter)  => {
-      var options_array: { id: string; value: string; image: any; }[] = [] 
+  createLabParameters(): void {
+    this.parameters.value.forEach((parameter: Parameter) => {
+      var options_array: { id: string; value: string; image: any; }[] = []
       parameter.parameter_options.forEach((option: Option) => {
-        const option_fields ={
-          "id": option.id,
-          "value": option.value,
-          "image": null,
+        const option_fields = {
+          'id': option.id,
+          'value': option.value,
+          'image': option.file,
         }
         options_array.push(option_fields)
       })
       const parameterFiels = {
-        "name": parameter.name,
-        "unit": parameter.unit,
-        "laboratory": this.newLaboratory.value.id,
-        "parameter_options": options_array
+        'name': parameter.name,
+        'unit': parameter.unit,
+        'laboratory': this.newLaboratory.value.id,
+        'parameter_options': options_array
       }
-      console.log(parameterFiels)
       this.labService.addLabParameter(parameterFiels).subscribe({
         next: (_: any) => {
-         //Added Parameter
+          //Added Parameter
         },
         error: (e: any) => {
           console.log(e)
@@ -477,7 +474,5 @@ export class CreateLaboratoryComponent implements OnInit {
       });
     });
   }
-
-  
 }
 
