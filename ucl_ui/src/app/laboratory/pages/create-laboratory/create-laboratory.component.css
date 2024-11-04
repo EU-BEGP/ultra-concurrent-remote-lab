@@ -106,9 +106,19 @@ img{
 
 .intro-video-card {
     width: 30vw;
-    .mat-form-field-wrapper{
-        padding-bottom: 0px;
-    }
+    padding: 0px;
+}
+.introduction-photo{
+    height: 17vw;
+}
+.intro-photo-card {
+    width: 19vw;
+    padding: 0px;
+}
+
+.intro-photo-card .mat-card-image{
+    margin: 0px;
+    width: 100%;
 }
 
 .row:after {
@@ -138,8 +148,15 @@ img{
     .intro-video-card {
         width: 45vw;
     }
+    .intro-photo-card {
+        width: 35vw;
+    }
+    .introduction-photo{
+        height: 32vw;
+    }
     .column {
         width: 100%;
+        padding-right: 0px;
     }
 }
 

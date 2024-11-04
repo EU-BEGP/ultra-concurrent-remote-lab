@@ -8,6 +8,13 @@ import { ToastrService } from 'ngx-toastr';
 import { v4 as uuidv4 } from 'uuid'; 
 import { Router } from '@angular/router';
 import { units } from 'src/app/laboratory/store/units-data-store';
+import { UserService } from 'src/app/core/auth/services/user.service';
+import { User } from 'src/app/core/auth/interfaces/user';
+import { LaboratoryService } from '../../services/laboratory.service';
+import { Laboratory } from '../../interfaces/laboratory';
+import { Guide } from '../../interfaces/guide';
+import { Parameter } from '../../interfaces/parameter';
+import { Option } from '../../interfaces/option';
 
 @Component({
   selector: 'app-create-laboratory',
@@ -32,8 +39,9 @@ export class CreateLaboratoryComponent implements OnInit {
     {name: 'Other'},
   ];
   unit_groups : any= []
+  currentUserId :any = 0 ;
 
-  constructor( private builder:FormBuilder, private toastr: ToastrService, private router: Router) {
+  constructor( private builder:FormBuilder, private toastr: ToastrService, private router: Router, private userService: UserService, private labService: LaboratoryService) {
       const breakpointObserver = inject(BreakpointObserver);
       this.stepperOrientation = breakpointObserver
         .observe('(min-width: 800px)')
@@ -42,6 +50,7 @@ export class CreateLaboratoryComponent implements OnInit {
   }
 
   ngOnInit():void {
+
     this.videoRowHeight = window.innerWidth <= 600 ? 340 : 380
     this.breakpoint = Math.floor(window.innerWidth / 260);
     this.breakpointVideo =  Math.floor((window.innerWidth  / 400) / 2);
@@ -49,6 +58,13 @@ export class CreateLaboratoryComponent implements OnInit {
     this.parameters.valueChanges.subscribe(() => {
       this.syncSelectedOptionsWithParameters();
     });
+    this.getCurrentUserId();
+  }
+
+  getCurrentUserId(){
+    this.userService.getUserData().subscribe((response: User) => {
+      this.newLaboratory.get('info')?.get('instructor')?.setValue(response.id!);
+    }); 
   }
 
   onResize(event : any):void {
@@ -64,30 +80,37 @@ export class CreateLaboratoryComponent implements OnInit {
   newLaboratory=this.builder.group({
     id: [uuidv4()],
     info: this.builder.group({
+      instructor: 0,
       institution: this.builder.control("",Validators.required),
       name: this.builder.control("",Validators.required),
       category: this.builder.control("",Validators.required),
     }),
     introduction: this.builder.group({
       description: this.builder.control("",Validators.required),
+      introPhoto: this.builder.group({
+        image: [this.defaultImg],
+        file:['']
+      }),
       introVideo:this.builder.group({
         video: [''],
+        file:['']
       }),
       guides:new FormArray([
         this.builder.group({
           title: [''],
-          link: ['']
+          url: ['']
         })
       ]),
     }),
     parameters: this.builder.array([
       this.builder.group({
           name: [''], 
-          options: new FormArray([this.builder.group({
+          unit: [''],
+          parameter_options: new FormArray([this.builder.group({
             id: [uuidv4()], 
             value: [''], 
-            unit: [''],
-            photo: [this.defaultImg]
+            image: [this.defaultImg],
+            file:['']
           }
         )])
       })
@@ -118,6 +141,10 @@ export class CreateLaboratoryComponent implements OnInit {
     ])
   })
 
+  get introPhoto() {
+    return this.newLaboratory.get('introduction')?.get('introPhoto') as FormGroup
+  }
+
   get introVideo():FormGroup {
     return this.newLaboratory.get('introduction')?.get('introVideo') as FormGroup
   }
@@ -140,7 +167,7 @@ export class CreateLaboratoryComponent implements OnInit {
     addGuide():void{
       const guideFormGroup = this.builder.group({
         title: [''],
-        link: ['']
+        url: ['']
       })
       this.guides.push(guideFormGroup)
     }
@@ -152,11 +179,12 @@ export class CreateLaboratoryComponent implements OnInit {
   addParameter():void{
     const parametersFormGroup = this.builder.group({
       name: [''], 
-      options: new FormArray([this.builder.group({
+      unit: [''],
+      parameter_options: new FormArray([this.builder.group({
         id: [uuidv4()],
-        value: [''], 
-        unit: [''],
-        photo: [this.defaultImg]
+        value: [''],
+        image: [this.defaultImg],
+        file:['']
       }
     )])
   })
@@ -164,15 +192,15 @@ export class CreateLaboratoryComponent implements OnInit {
   }
 
   getOptions(index:number){
-    return this.parameters.at(index).get('options') as FormArray
+    return this.parameters.at(index).get('parameter_options') as FormArray
   }
 
   addOption(index:number):void{
     const optionFormGroup = this.builder.group({
           id: [uuidv4()],
-          value: [''], 
-          unit: [''],
-          photo: [this.defaultImg]
+          value: [''],
+          image: [this.defaultImg],
+          file:['']
       })
     this.getOptions(index).push(optionFormGroup)
   }
@@ -218,7 +246,7 @@ export class CreateLaboratoryComponent implements OnInit {
   }
 
   getAvailableOptions(parameterIndex: number) {
-    const optionsArray = this.parameters.at(parameterIndex).get('options') as FormArray;
+    const optionsArray = this.parameters.at(parameterIndex).get('parameter_options') as FormArray;
     return optionsArray.controls.map((option) => option);
   }
 
@@ -296,89 +324,160 @@ export class CreateLaboratoryComponent implements OnInit {
   
   
 
-  onUploadFile(event: any,parameterIndex:number, index: number, field: string): void {
-    if (event.target.files.length > 0) {
-      const file = event.target.files[0] as File;
-      const file_size = file.size;
-      if (file_size <= 50000000) {
-        this.getUrlFile(file,parameterIndex, index, field);
-      }
-      else {
-        this.toastr.error("File size must be 50MB or smaller.");
-      }
-    }
-    
-  }
-
-  onUploadIntro(event: any): void {
-    if (event.target.files.length > 0) {
-      const file = event.target.files[0] as File;
-      const file_size = file.size;
-      if (file_size <= 50000000) {
-        this.getUrlIntro(file);
-      }
-      else {
-        this.toastr.error("File size must be 50MB or smaller.");
+    onUpload(event: any, field?: string, parameterIndex?: number, index?: number): void {
+      if (event.target.files.length > 0) {
+        const file = event.target.files[0] as File;
+        const file_size = file.size;
+        if (file_size <= 50000000) {
+          this.getUrl(file, parameterIndex, index, field);
+        } else {
+          this.toastr.error("File size must be 50MB or smaller.");
+        }
       }
     }
-  }
+  
+  
 
-  async getUrlIntro(file: any) {
-    var reader = new FileReader();
+  async getUrl(file: File, parameterIndex?: number, index?: number, field?: string) {
+    const reader = new FileReader();
     reader.onload = (event: any) => {
-        this.introVideo.patchValue({
-          video:event.target.result
-        })
-        this.introVideo.get('video')?.updateValueAndValidity();
-    };
-    reader.onerror = (event: any) => {
-      console.log('File could not be read: ' + event.target.error.code);
-    };
-    reader.readAsDataURL(file);
-  }
-
-  async getUrlFile(file: any,parameterIndex:number, index: number, field: string) {
-    var reader = new FileReader();
-    reader.onload = (event: any) => {
-      if(field == 'image'){
+      const result = event.target.result;
+  
+      if (field === 'image' && parameterIndex !== undefined && index !== undefined) {
         this.getOptions(parameterIndex).at(index).patchValue({
-          photo:event.target.result
-        })
-        this.getOptions(parameterIndex).at(index).get('photo')?.updateValueAndValidity();
-      }
-      else if(field == 'video'){
+          image: result,
+          file: file
+        });
+        this.getOptions(parameterIndex).at(index).get('image')?.updateValueAndValidity();
+      } else if (field === 'video' && parameterIndex !== undefined && index !== undefined) {
         this.getVideos(parameterIndex).at(index).patchValue({
-          video:event.target.result
-        })
+          video: result,
+          file: file
+        });
         this.getVideos(parameterIndex).at(index).get('video')?.updateValueAndValidity();
-      }
-      else if(field == 'file'){
-        this.experiments.at(index).get('dataFile')?.patchValue({dataFile:event.target.result})
+      } else if (field === 'file' && index !== undefined) { //dataFile
+        this.experiments.at(index).get('dataFile')?.patchValue({ dataFile: result });
         this.experiments.at(index).get('dataFile')?.updateValueAndValidity();
+      } else if (field === 'video' && parameterIndex === undefined && index === undefined) { //introVideo
+        this.introVideo.patchValue({
+          video: result,
+          file: file
+        });
+        this.introVideo.get('video')?.updateValueAndValidity();
+      }
+      else if (field === 'image' && parameterIndex === undefined && index === undefined) { //introPhoto
+        this.introPhoto.patchValue({
+          image: result,
+          file: file
+        });
+        this.introPhoto.get('image')?.updateValueAndValidity();
       }
     };
+  
     reader.onerror = (event: any) => {
       console.log('File could not be read: ' + event.target.error.code);
     };
     reader.readAsDataURL(file);
   }
-  toggleVideo(event: any) {
-    this.videoplayer.nativeElement.play();
-  }
+
 
   onSubmit(): void {
-    if (this.newLaboratory.valid) {
-    this.toastr.success(
-      'Now you will be redirected to your new Laboratory!',
-      this.newLaboratory.value.info?.name + " Successfully Created!"
-    );
-    console.log(this.newLaboratory.value)
-    this.router.navigate(['/ultra-concurrent-rl', this.newLaboratory.value.id])
+
+    this.createLab()
+    /*if (this.newLaboratory.valid) {
+    this.createLab()
     } else {
       this.toastr.error(
         'Please, complete the required Information',
         'Invalid action'
       );
-    }
+    }*/
   }
+
+  createLab(): void{
+    const labFields = {
+      "id": this.newLaboratory.value.id,
+      "name": this.newLaboratory.value.info?.name,
+      "institution":this.newLaboratory.value.info?.institution,
+      "category":this.newLaboratory.value.info?.category,
+      "instructor":this.newLaboratory.value.info?.instructor,
+      "description":this.newLaboratory.value.introduction?.description,
+      "video": this.newLaboratory.value.introduction?.introVideo?.file,
+      "image": this.newLaboratory.value.introduction?.introPhoto?.file
+    }
+    this.labService.addLab(labFields as Laboratory).subscribe({
+      next: (_: any) => {
+        this.createLabGuides()
+        this.createLabParameters()
+        this.toastr.success(
+          'Now you will be redirected to your new Laboratory!',
+          this.newLaboratory.value.info?.name + " Successfully Created!"
+        );
+        //this.router.navigate(['/ultra-concurrent-rl', this.newLaboratory.value.id])
+      },
+      error: (e: any) => {
+        console.log(e)
+        this.toastr.error(
+          'There was an error creating the lab. Please try later.'
+        );
+      },
+    });
+  }
+
+  createLabGuides(): void{
+    this.guides.value.forEach((guide: Guide)  => {
+      const guideFields = {
+        "title": guide.title,
+        "url": guide.url,
+        "laboratory": this.newLaboratory.value.id
+      }
+      this.labService.addLabGuide(guideFields as Guide).subscribe({
+        next: (_: any) => {
+         //Added Guide
+        },
+        error: (e: any) => {
+          console.log(e)
+          this.toastr.error(
+            'There was an error creating the Lab Guides. Please try later.'
+          );
+        },
+      });
+    });    
+  }
+
+  createLabParameters(): void{
+    //console.log(this.parameters.value)
+    this.parameters.value.forEach((parameter: Parameter)  => {
+      var options_array: { id: string; value: string; image: any; }[] = [] 
+      parameter.parameter_options.forEach((option: Option) => {
+        const option_fields ={
+          "id": option.id,
+          "value": option.value,
+          "image": null,
+        }
+        options_array.push(option_fields)
+      })
+      const parameterFiels = {
+        "name": parameter.name,
+        "unit": parameter.unit,
+        "laboratory": this.newLaboratory.value.id,
+        "parameter_options": options_array
+      }
+      console.log(parameterFiels)
+      this.labService.addLabParameter(parameterFiels).subscribe({
+        next: (_: any) => {
+         //Added Parameter
+        },
+        error: (e: any) => {
+          console.log(e)
+          this.toastr.error(
+            'There was an error creating the Lab Parameters. Please try later.'
+          );
+        },
+      });
+    });
+  }
+
+  
 }
+

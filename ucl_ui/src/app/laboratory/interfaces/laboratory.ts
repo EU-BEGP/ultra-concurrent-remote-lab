@@ -4,6 +4,7 @@ export interface Laboratory {
     institution?: string;
     category?: string;
     description?: string;
+    instructor: number;
     video?: any;
     image?:any;
   }
