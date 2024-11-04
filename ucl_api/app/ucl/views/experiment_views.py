@@ -2,17 +2,55 @@ from rest_framework import generics, status
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
-from ucl.models import Experiment
+from ucl.models import Experiment, VideoExperiment
 from ucl.serializers import ExperimentSerializer
 from ucl.permissions import IsInstructor
 import uuid
 
 
 ## Create Experiment
-class ExperimentListCreateView(generics.ListCreateAPIView):
+class ExperimentListCreateView(generics.CreateAPIView):
     serializer_class = ExperimentSerializer
     authentication_classes = (TokenAuthentication,)
     permission_classes = (IsAuthenticated, IsInstructor)
+
+    def create(self, request, *args, **kwargs):
+        created_entities = []
+        cleaned_data = {
+            "name": request.data.get("name"),
+            "description": request.data.get("description"),
+            "laboratory": request.data.get("laboratory"),
+            "parameter_options": request.data.getlist("parameter_options"),
+        }
+        # Create experiment
+        serializer = self.get_serializer(data=cleaned_data, partial=True)
+        serializer.is_valid(raise_exception=True)
+        experiment = serializer.save()
+
+        created_entities.append(experiment)
+
+        # Handle video experiments
+        index = 0
+        while True:
+            video_name = request.data.get(f"experiment_videos[{index}][name]")
+            video_file = request.FILES.get(f"experiment_videos[{index}][video]")
+
+            if not video_name or not video_file:
+                break
+
+            # Create experiment option
+            video_experiment_instance = VideoExperiment(
+                name=video_name,
+                video=video_file,
+                experiment=experiment,
+            )
+            video_experiment_instance.save()
+
+            created_entities.append(video_experiment_instance)
+
+            index += 1
+
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 
 ## Retrieve, Update or Destroy Specific Experiment

@@ -5,6 +5,7 @@ from ucl.views import (
     parameter_views,
     option_views,
     experiment_views,
+    video_experiment_views,
 )
 
 app_name = "ucl"
@@ -78,6 +79,11 @@ urlpatterns = [
     path(
         "options/<uuid:pk>/",
         option_views.RetrieveUpdateDestroyOptionView.as_view(),
+        name="option_detail",
+    ),
+    path(
+        "experiments/videos/<uuid:pk>/",
+        video_experiment_views.RetrieveUpdateDestroyVideoExperimentView.as_view(),
         name="option_detail",
     ),
 ]

@@ -48,10 +48,24 @@ class ParameterSerializer(serializers.ModelSerializer):
         fields = ["id", "laboratory", "name", "unit", "parameter_options"]
 
 
+class VideoExperimentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = VideoExperiment
+        fields = ["id", "name", "video", "experiment"]
+
+
 class ExperimentSerializer(serializers.ModelSerializer):
+    experiment_videos = VideoExperimentSerializer(many=True)
+
     class Meta:
         model = Experiment
-        fields = ("id", "name", "description", "laboratory", "parameter_options")
+        fields = (
+            "id",
+            "name",
+            "laboratory",
+            "parameter_options",
+            "experiment_videos",
+        )
 
     def to_representation(self, instance):
         representation = super().to_representation(instance)
@@ -59,12 +73,6 @@ class ExperimentSerializer(serializers.ModelSerializer):
             OptionSerializer(option).data for option in instance.parameter_options.all()
         ]
         return representation
-
-
-class VideoExperimentSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = VideoExperiment
-        fields = ["id", "name", "video", "experiment"]
 
 
 class SessionSerializer(serializers.ModelSerializer):

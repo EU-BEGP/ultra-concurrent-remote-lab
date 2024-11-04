@@ -47,7 +47,6 @@ class ExperimentAdmin(admin.ModelAdmin):
     list_display = [
         "id",
         "name",
-        "description",
         "laboratory",
         "parameters",
         "param_options",

@@ -34,13 +34,11 @@ class CreateParameterView(generics.CreateAPIView):
             # Handle parameter options
             index = 0
             while True:
-                option_id = self.request.data.get(f"parameter_options[{index}][id]")
+                option_id = request.data.get(f"parameter_options[{index}][id]")
                 if not option_id:
                     break  # No more options
 
-                option_value = self.request.data.get(
-                    f"parameter_options[{index}][value]"
-                )
+                option_value = request.data.get(f"parameter_options[{index}][value]")
                 image_file = request.FILES.get(f"parameter_options[{index}][image]")
 
                 # Validate option uuid
