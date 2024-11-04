@@ -4,7 +4,7 @@ from ucl.models import (
     Laboratory,
     Guide,
     Parameter,
-    ParameterValue,
+    Option,
     Experiment,
     Procedure,
     Session,
@@ -37,7 +37,7 @@ class ParameterAdmin(admin.ModelAdmin):
     list_display = ["id", "name", "unit", "laboratory"]
 
 
-class ParameterValueAdmin(admin.ModelAdmin):
+class OptionAdmin(admin.ModelAdmin):
     ordering = ["id"]
     list_display = ["id", "value", "image", "parameter"]
 
@@ -50,7 +50,7 @@ class ExperimentAdmin(admin.ModelAdmin):
         "description",
         "laboratory",
         "parameters",
-        "param_values",
+        "param_options",
     ]
 
 
@@ -82,7 +82,7 @@ class ProcedureAdmin(admin.ModelAdmin):
 admin.site.register(Laboratory, LaboratoryAdmin)
 admin.site.register(Guide, GuideAdmin)
 admin.site.register(Parameter, ParameterAdmin)
-admin.site.register(ParameterValue, ParameterValueAdmin)
+admin.site.register(Option, OptionAdmin)
 admin.site.register(Experiment, ExperimentAdmin)
 admin.site.register(VideoExperiment, VideoExperimentAdmin)
 admin.site.register(Session, SessionAdmin)

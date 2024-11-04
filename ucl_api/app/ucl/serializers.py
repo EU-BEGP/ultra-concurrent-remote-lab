@@ -1,18 +1,16 @@
-from typing_extensions import ReadOnly
 from rest_framework import serializers
 from ucl.models import (
     Activity,
     Laboratory,
     Guide,
     Parameter,
-    ParameterValue,
+    Option,
     Experiment,
     Procedure,
     Session,
     SolvedActivity,
     VideoExperiment,
 )
-from ucl.views.common import validate_uuid
 
 
 class LaboratorySerializer(serializers.ModelSerializer):
@@ -36,30 +34,29 @@ class GuideSerializer(serializers.ModelSerializer):
         fields = ["id", "title", "url", "file", "laboratory"]
 
 
-class ParameterValueSerializer(serializers.ModelSerializer):
+class OptionSerializer(serializers.ModelSerializer):
     class Meta:
-        model = ParameterValue
+        model = Option
         fields = ["id", "value", "image"]
 
 
 class ParameterSerializer(serializers.ModelSerializer):
-    parameter_values = ParameterValueSerializer(many=True)
+    parameter_options = OptionSerializer(many=True)
 
     class Meta:
         model = Parameter
-        fields = ["id", "laboratory", "name", "unit", "parameter_values"]
+        fields = ["id", "laboratory", "name", "unit", "parameter_options"]
 
 
 class ExperimentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Experiment
-        fields = ("id", "name", "description", "laboratory", "parameter_values")
+        fields = ("id", "name", "description", "laboratory", "parameter_options")
 
     def to_representation(self, instance):
         representation = super().to_representation(instance)
-        representation["parameter_values"] = [
-            ParameterValueSerializer(param_value).data
-            for param_value in instance.parameter_values.all()
+        representation["parameter_options"] = [
+            OptionSerializer(option).data for option in instance.parameter_options.all()
         ]
         return representation
 

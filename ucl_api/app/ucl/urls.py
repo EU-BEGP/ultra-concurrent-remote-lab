@@ -1,5 +1,11 @@
 from django.urls import path
-from ucl.views import laboratory_views, guide_views, parameter_views, experiment_views
+from ucl.views import (
+    laboratory_views,
+    guide_views,
+    parameter_views,
+    option_views,
+    experiment_views,
+)
 
 app_name = "ucl"
 
@@ -66,7 +72,12 @@ urlpatterns = [
     ),
     path(
         "experiments/filter/",
-        experiment_views.ExperimentRetrieveByParameterValuesIdsView.as_view(),
-        name="experiment_by_values",
+        experiment_views.ExperimentRetrieveByOptionIdsView.as_view(),
+        name="experiment_by_option_ids",
+    ),
+    path(
+        "options/<uuid:pk>/",
+        option_views.RetrieveUpdateDestroyOptionView.as_view(),
+        name="option_detail",
     ),
 ]

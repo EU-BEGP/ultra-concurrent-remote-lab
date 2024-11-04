@@ -3,7 +3,7 @@ from rest_framework.authentication import TokenAuthentication
 from rest_framework.exceptions import ValidationError
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
-from ucl.models import Parameter, ParameterValue
+from ucl.models import Option, Parameter
 from ucl.permissions import IsInstructor
 from ucl.serializers import ParameterSerializer
 from ucl.views.common import validate_uuid
@@ -19,24 +19,20 @@ class CreateParameterView(generics.CreateAPIView):
         created_entities = []
         try:
             # Validate and save Parameter instance
-            parameter_id = self.request.data.get("id")
-            validate_uuid(parameter_id, Parameter)
-            values = self.request.data.pop("parameter_values", [])
+            options = self.request.data.pop("parameter_options", [])
 
             serializer = self.get_serializer(data=self.request.data, partial=True)
             serializer.is_valid(raise_exception=True)
-            parameter = serializer.save(id=parameter_id)
+            parameter = serializer.save()
 
             created_entities.append(parameter)
 
-            for value in values:
-                parameter_value_id = value.get("id")
-                validate_uuid(parameter_value_id, ParameterValue)
-                parameter_value = ParameterValue.objects.create(
-                    parameter=parameter, **value
-                )
+            for option in options:
+                option_id = option.get("id")
+                validate_uuid(option_id, Option)
+                option = Option.objects.create(parameter=parameter, **option)
 
-                created_entities.append(parameter_value)
+                created_entities.append(option)
 
             return Response(serializer.data, status=status.HTTP_201_CREATED)
 

@@ -47,12 +47,12 @@ class Parameter(models.Model):
     )
 
 
-class ParameterValue(models.Model):
+class Option(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     value = models.CharField(max_length=255)
     image = models.ImageField(default=None, null=True, blank=True)
     parameter = models.ForeignKey(
-        Parameter, on_delete=models.CASCADE, related_name="parameter_values"
+        Parameter, on_delete=models.CASCADE, related_name="parameter_options"
     )
 
 
@@ -64,15 +64,15 @@ class Experiment(models.Model):
     laboratory = models.ForeignKey(
         Laboratory, related_name="laboratory_experiments", on_delete=models.CASCADE
     )
-    parameter_values = models.ManyToManyField(
-        ParameterValue, related_name="parameters_values_experiments"
+    parameter_options = models.ManyToManyField(
+        Option, related_name="options_experiments"
     )
 
     def parameters(self):
-        return ", ".join(pv.parameter.name for pv in self.parameter_values.all())
+        return ", ".join(po.parameter.name for po in self.parameter_options.all())
 
-    def param_values(self):
-        return ", ".join(pv.value for pv in self.parameter_values.all())
+    def param_options(self):
+        return ", ".join(po.value for po in self.parameter_options.all())
 
 
 class VideoExperiment(models.Model):

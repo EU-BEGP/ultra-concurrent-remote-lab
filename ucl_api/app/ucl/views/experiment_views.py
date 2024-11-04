@@ -27,8 +27,8 @@ class ExperimentDetailView(generics.RetrieveUpdateDestroyAPIView):
         return experiments
 
 
-# Retrieve experiment based on the combination of parameter values
-class ExperimentRetrieveByParameterValuesIdsView(generics.RetrieveAPIView):
+# Retrieve experiment based on the combination of options ids
+class ExperimentRetrieveByOptionIdsView(generics.RetrieveAPIView):
     serializer_class = ExperimentSerializer
     authentication_classes = (TokenAuthentication,)
     permission_classes = (IsAuthenticated, IsInstructor)
@@ -42,23 +42,21 @@ class ExperimentRetrieveByParameterValuesIdsView(generics.RetrieveAPIView):
         ids = self.request.query_params.getlist("id")
 
         if not ids:
-            raise ValueError("No parameter value IDs provided.")
+            raise ValueError("No option IDs provided.")
 
         id_set = {uuid.UUID(id) for id in ids}
         filtered_experiment = None
 
         for experiment in experiments:
             experiment_ids = set(
-                experiment.parameter_values.values_list("id", flat=True)
+                experiment.parameter_options.values_list("id", flat=True)
             )
             if experiment_ids == id_set:
                 filtered_experiment = experiment
                 break
 
         if filtered_experiment is None:
-            raise ValueError(
-                "No experiments found for the provided parameter value IDs."
-            )
+            raise ValueError("No experiments found for the provided option IDs.")
 
         return filtered_experiment
 
