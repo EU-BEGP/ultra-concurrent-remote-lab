@@ -3,9 +3,10 @@ from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.exceptions import ValidationError
 from rest_framework.response import Response
-from ucl.models import Experiment, Laboratory, Guide, Parameter
+from ucl.models import Activity, Experiment, Laboratory, Guide, Parameter
 from ucl.permissions import IsInstructor
 from ucl.serializers import (
+    ActivitySerializer,
     ExperimentSerializer,
     GuideSerializer,
     LaboratorySerializer,
@@ -104,3 +105,18 @@ class ListLaboratoryExperimentsView(generics.ListAPIView):
             laboratory__instructor=laboratory_instructor, laboratory=laboratory_id
         )
         return experiments
+
+
+# List all activities that belongs to a laboratory
+class ListLaboratoryActivitiesView(generics.ListAPIView):
+    serializer_class = ActivitySerializer
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = (IsAuthenticated, IsInstructor)
+
+    def get_queryset(self):
+        laboratory_instructor = self.request.user.id
+        laboratory_id = self.kwargs.get("pk")
+        activities = Activity.objects.filter(
+            laboratory__instructor=laboratory_instructor, laboratory=laboratory_id
+        )
+        return activities

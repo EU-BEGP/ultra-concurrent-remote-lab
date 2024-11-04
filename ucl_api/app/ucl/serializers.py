@@ -62,6 +62,7 @@ class ExperimentSerializer(serializers.ModelSerializer):
         fields = (
             "id",
             "name",
+            "data_file",
             "laboratory",
             "parameter_options",
             "experiment_videos",
@@ -96,4 +97,4 @@ class SolvedActivitySerializer(serializers.ModelSerializer):
 class ProcedureSerializer(serializers.ModelSerializer):
     class Meta:
         model = Procedure
-        fields = ["id", "name", "type", "data", "activity", "solved_activity"]
+        fields = ["id", "name", "type", "data", "solved_activity"]

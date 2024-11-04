@@ -2,8 +2,8 @@ from rest_framework import generics, status
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
-from ucl.models import Experiment, VideoExperiment
-from ucl.serializers import ExperimentSerializer
+from ucl.models import Activity, Experiment, VideoExperiment
+from ucl.serializers import ActivitySerializer, ExperimentSerializer
 from ucl.permissions import IsInstructor
 import uuid
 
@@ -18,7 +18,7 @@ class ExperimentListCreateView(generics.CreateAPIView):
         created_entities = []
         cleaned_data = {
             "name": request.data.get("name"),
-            "description": request.data.get("description"),
+            "data_file": request.data.get("data_file"),
             "laboratory": request.data.get("laboratory"),
             "parameter_options": request.data.getlist("parameter_options"),
         }
@@ -105,3 +105,19 @@ class ExperimentRetrieveByOptionIdsView(generics.RetrieveAPIView):
             return Response(serializer.data, status=status.HTTP_200_OK)
         except ValueError as e:
             return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
+
+# List all activities that belongs to an experiment
+class ListExperimentActivitiesView(generics.ListAPIView):
+    serializer_class = ActivitySerializer
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = (IsAuthenticated, IsInstructor)
+
+    def get_queryset(self):
+        laboratory_instructor = self.request.user.id
+        experiment_id = self.kwargs.get("pk")
+        activities = Activity.objects.filter(
+            experiment__laboratory__instructor=laboratory_instructor,
+            experiment=experiment_id,
+        )
+        return activities

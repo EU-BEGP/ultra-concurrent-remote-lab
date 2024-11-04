@@ -59,6 +59,7 @@ class Option(models.Model):
 class Experiment(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     name = models.CharField(max_length=100)
+    data_file = models.FileField(null=True, default=None)
     registration_date = models.DateTimeField(auto_now_add=True)
     laboratory = models.ForeignKey(
         Laboratory, related_name="laboratory_experiments", on_delete=models.CASCADE
@@ -111,12 +112,14 @@ class Activity(models.Model):
         Experiment,
         related_name="experiment_activities",
         on_delete=models.CASCADE,
+        null=True,
         default=None,
     )
     laboratory = models.ForeignKey(
         Laboratory,
         related_name="laboratory_activities",
         on_delete=models.CASCADE,
+        null=True,
         default=None,
     )
     registration_date = models.DateTimeField(auto_now_add=True)
@@ -159,12 +162,6 @@ class Procedure(models.Model):
     name = models.CharField(max_length=200)
     type = models.CharField(max_length=100)
     data = models.JSONField()
-    activity = models.ForeignKey(
-        Activity,
-        related_name="activity_procedures",
-        on_delete=models.CASCADE,
-        default=None,
-    )
     solved_activity = models.ForeignKey(
         Activity,
         related_name="solved_activity_procedures",

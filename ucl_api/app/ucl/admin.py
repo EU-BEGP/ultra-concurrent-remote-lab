@@ -47,6 +47,7 @@ class ExperimentAdmin(admin.ModelAdmin):
     list_display = [
         "id",
         "name",
+        "data_file",
         "laboratory",
         "parameters",
         "param_options",
@@ -75,7 +76,7 @@ class SolvedActivityAdmin(admin.ModelAdmin):
 
 class ProcedureAdmin(admin.ModelAdmin):
     ordering = ["id"]
-    list_display = ["id", "name", "type", "data", "activity", "solved_activity"]
+    list_display = ["id", "name", "type", "data", "solved_activity"]
 
 
 admin.site.register(Laboratory, LaboratoryAdmin)
