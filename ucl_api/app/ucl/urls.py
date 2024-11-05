@@ -1,12 +1,12 @@
 from django.urls import path
 from ucl.views import (
-    laboratory_views,
-    guide_views,
-    parameter_views,
-    option_views,
-    experiment_views,
-    video_experiment_views,
     activity_views,
+    experiment_views,
+    guide_views,
+    laboratory_views,
+    option_views,
+    parameter_views,
+    video_experiment_views,
 )
 
 app_name = "ucl"
@@ -69,8 +69,8 @@ urlpatterns = [
     ),
     path(
         "experiments/",
-        experiment_views.ExperimentListCreateView.as_view(),
-        name="experiment_list_create",
+        experiment_views.ExperimentCreateView.as_view(),
+        name="experiment_create",
     ),
     path(
         "experiments/<uuid:pk>/",
