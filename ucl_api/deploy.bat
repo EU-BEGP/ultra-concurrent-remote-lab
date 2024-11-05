@@ -1,53 +1,49 @@
 @echo off
+
+:: Exit immediately if a command fails
 setlocal enabledelayedexpansion
+set EXIT_CODE=0
 
 echo.
 echo Building docker image...
-docker-compose build
-if errorlevel 1 exit /b %errorlevel%
+docker-compose build || set EXIT_CODE=1
+
+if !EXIT_CODE! NEQ 0 exit /b %EXIT_CODE%
 
 echo.
 echo Running database migrations...
-docker-compose run --rm app python manage.py makemigrations
-if errorlevel 1 exit /b %errorlevel%
+docker-compose run --rm app python manage.py makemigrations || set EXIT_CODE=1
+docker-compose run --rm app python manage.py migrate || set EXIT_CODE=1
 
-docker-compose run --rm app python manage.py migrate
-if errorlevel 1 exit /b %errorlevel%
+if !EXIT_CODE! NEQ 0 exit /b %EXIT_CODE%
 
-echo.
-echo Create superuser?:
-echo 1) Yes
-echo 2) No
-set /p superuser="Choose (1 or 2): "
-if "!superuser!"=="1" (
-    echo Creating superuser...
-    docker-compose run --rm app python manage.py createsuperuser
-    if errorlevel 1 exit /b %errorlevel%
-) else if "!superuser!"=="2" (
-    rem Do nothing
-) else (
-    echo Invalid choice. Defaulting to 'No'.
+set STATICFILES_DIR=.\app\staticfiles\
+
+:: Check if the static files directory exists
+if not exist "!STATICFILES_DIR!" (
+    echo.
+    echo Static files directory does not exist.
+    echo Creating...
+    docker-compose run --rm app python manage.py collectstatic || set EXIT_CODE=1
 )
 
-echo.
-echo Collect static files for Django admin panel?:
-echo 1) Yes
-echo 2) No
-set /p collect_static="Choose (1 or 2): "
-if "!collect_static!"=="1" (
-    echo Collecting static files...
-    docker-compose run --rm app python manage.py collectstatic --noinput
-    if errorlevel 1 exit /b %errorlevel%
-) else if "!collect_static!"=="2" (
-    rem Do nothing
+if !EXIT_CODE! NEQ 0 exit /b %EXIT_CODE%
+
+:: Ask user if they want to create a superuser
+:ask_superuser
+set /p superuser="Do you want to create a superuser? (yes/no) [default: no]: "
+if "%superuser%"=="" set superuser=no
+
+:: Handle user input for superuser creation
+if "%superuser%"=="yes" (
+    docker-compose run --rm app python manage.py createsuperuser
+) else if "%superuser%"=="no" (
+    echo Skipping superuser creation...
 ) else (
-    echo Invalid choice. Defaulting to 'No'.
+    echo Invalid choice. Please literally enter 'yes' or 'no'.
+    goto ask_superuser
 )
 
 echo.
 echo Running the application...
 docker-compose up
-if errorlevel 1 exit /b %errorlevel%
-
-echo.
-echo Script finished successfully.

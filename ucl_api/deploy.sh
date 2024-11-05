@@ -10,25 +10,31 @@ echo -e "\nRunning database migrations...\n"
 docker-compose run --rm app python manage.py makemigrations
 docker-compose run --rm app python manage.py migrate
 
-echo -e "\nCreate superuser?:"
-echo "1) Yes"
-echo "2) No"
-read -p "Choose (1 or 2): " superuser
-case $superuser in
-1) docker-compose run --rm app python manage.py createsuperuser ;;
-2) : ;;
-*) echo "Invalid choice. Defaulting to 'No'." && : ;;
-esac
+STATICFILES_DIR="./app/staticfiles/"
+if [ ! -d "$STATICFILES_DIR" ]; then
+  echo -e "\nStatic files directory does not exist."
+  echo -e "Creating...\n"
+  docker-compose run --rm app python manage.py collectstatic
+fi
 
-echo -e "\nCollect static files for django admin panel?:"
-echo "1) Yes"
-echo "2) No"
-read -p "Choose (1 or 2): " collect_static
-case $collect_static in
-1) docker-compose run --rm app python manage.py collectstatic ;;
-2) : ;;
-*) echo "Invalid choice. Defaulting to 'No'." && : ;;
-esac
+while true; do
+  read -p $'\n[?] Do you want to create a superuser? (yes/no) [default: no]: ' superuser
+  superuser=${superuser:-no}                                  # Default to 'no'
+  superuser=$(echo "$superuser" | tr '[:upper:]' '[:lower:]') # Convert the options to lowercase
+
+  case "$superuser" in
+  yes)
+    docker-compose run --rm app python manage.py createsuperuser
+    break
+    ;;
+  no)
+    break
+    ;;
+  *)
+    echo "Invalid choice. Please enter 'yes' or 'no'."
+    ;;
+  esac
+done
 
 echo -e "\nRunning the application...\n"
 docker-compose up
