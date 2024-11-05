@@ -96,15 +96,25 @@ class SessionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Session
         fields = ["id", "student", "laboratory", "registration_date"]
-
-
-class SolvedActivitySerializer(serializers.ModelSerializer):
-    class Meta:
-        model = SolvedActivity
-        fields = ["id", "result", "activity", "session", "registration_date"]
+        read_only_fields = ["student"]
 
 
 class ProcedureSerializer(serializers.ModelSerializer):
     class Meta:
         model = Procedure
-        fields = ["id", "name", "type", "data", "solved_activity"]
+        fields = ["id", "name", "data_type", "data", "solved_activity"]
+
+
+class SolvedActivitySerializer(serializers.ModelSerializer):
+    procedures = ProcedureSerializer(many=True)
+
+    class Meta:
+        model = SolvedActivity
+        fields = [
+            "id",
+            "result",
+            "activity",
+            "session",
+            "registration_date",
+            "procedures",
+        ]

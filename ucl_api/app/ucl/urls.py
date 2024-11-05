@@ -6,7 +6,10 @@ from ucl.views import (
     laboratory_views,
     option_views,
     parameter_views,
+    session_views,
+    solved_activity_views,
     video_experiment_views,
+    procedure_views,
 )
 
 app_name = "ucl"
@@ -106,5 +109,30 @@ urlpatterns = [
         "activities/<uuid:pk>/",
         activity_views.RetrieveUpdateDestroyActivityView.as_view(),
         name="activity_detail",
+    ),
+    path(
+        "sessions/",
+        session_views.ListCreateSessionView.as_view(),
+        name="guide_list_create",
+    ),
+    path(
+        "sessions/<uuid:pk>/",
+        session_views.RetrieveUpdateDestroySessionView.as_view(),
+        name="session_detail",
+    ),
+    path(
+        "solved-activities/",
+        solved_activity_views.ListCreateSolvedActivityView.as_view(),
+        name="guide_list_create",
+    ),
+    path(
+        "solved-activities/<uuid:pk>/",
+        solved_activity_views.RetrieveUpdateDestroySolvedActivityView.as_view(),
+        name="solved_activity_detail",
+    ),
+    path(
+        "procedures/<uuid:pk>/",
+        procedure_views.RetrieveUpdateDestroyProcedureView.as_view(),
+        name="procedure_detail",
     ),
 ]

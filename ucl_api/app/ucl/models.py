@@ -124,6 +124,7 @@ class Session(models.Model):
         Laboratory,
         related_name="laboratory_sessions",
         on_delete=models.CASCADE,
+        null=True,
         default=None,
     )
     registration_date = models.DateTimeField(auto_now_add=True)
@@ -132,7 +133,7 @@ class Session(models.Model):
 class SolvedActivity(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     result = models.CharField(max_length=500)
-    activity = models.OneToOneField(
+    activity = models.ForeignKey(
         Activity,
         related_name="activity_solved_activity",
         on_delete=models.CASCADE,
@@ -151,12 +152,13 @@ class SolvedActivity(models.Model):
 class Procedure(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     name = models.CharField(max_length=200)
-    type = models.CharField(max_length=100)
-    data = models.JSONField()
+    data_type = models.CharField(max_length=100)
+    data = models.FileField()
     solved_activity = models.ForeignKey(
-        Activity,
-        related_name="solved_activity_procedures",
+        SolvedActivity,
+        related_name="procedures",
         on_delete=models.CASCADE,
+        null=True,
         default=None,
     )
     registration_date = models.DateTimeField(auto_now_add=True)
