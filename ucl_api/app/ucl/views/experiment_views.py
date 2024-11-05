@@ -1,10 +1,12 @@
+from django.shortcuts import get_object_or_404
 from rest_framework import generics, status
 from rest_framework.authentication import TokenAuthentication
+from rest_framework.exceptions import NotFound, ValidationError
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from ucl.models import Activity, Experiment, VideoExperiment
-from ucl.serializers import ActivitySerializer, ExperimentSerializer
 from ucl.permissions import IsInstructor
+from ucl.serializers import ActivitySerializer, ExperimentSerializer
 import uuid
 
 
@@ -29,24 +31,50 @@ class ExperimentListCreateView(generics.CreateAPIView):
 
         created_entities.append(experiment)
 
-        # Handle video experiments
+        # Handle experiments
         index = 0
         while True:
             video_name = request.data.get(f"experiment_videos[{index}][name]")
             video_file = request.FILES.get(f"experiment_videos[{index}][video]")
 
             if not video_name or not video_file:
+                index = 0
                 break
 
-            # Create experiment option
+            # Create video
             video_experiment_instance = VideoExperiment(
                 name=video_name,
                 video=video_file,
                 experiment=experiment,
             )
             video_experiment_instance.save()
-
             created_entities.append(video_experiment_instance)
+
+            index += 1
+
+        # Handle activities
+        while True:
+            activity_statement = request.data.get(
+                f"experiment_activities[{index}][statement]"
+            )
+            activity_expected_result = request.data.get(
+                f"experiment_activities[{index}][expected_result]"
+            )
+            activity_unit = request.data.get(f"experiment_activities[{index}][unit]")
+
+            if not activity_statement:
+                index = 0
+                break
+
+            # Create activity
+            activity_instance = Activity(
+                statement=activity_statement,
+                expected_result=activity_expected_result,
+                unit=activity_unit,
+                experiment=experiment,
+            )
+            activity_instance.save()
+            created_entities.append(activity_instance)
 
             index += 1
 
@@ -61,8 +89,11 @@ class ExperimentDetailView(generics.RetrieveUpdateDestroyAPIView):
 
     def get_queryset(self):
         instructor = self.request.user.id
-        experiments = Experiment.objects.filter(laboratory__instructor=instructor)
-        return experiments
+        return (
+            Experiment.objects.filter(laboratory__instructor=instructor)
+            .select_related("laboratory")
+            .prefetch_related("experiment_videos", "experiment_activities")
+        )
 
 
 # Retrieve experiment based on the combination of options ids
@@ -76,34 +107,37 @@ class ExperimentRetrieveByOptionIdsView(generics.RetrieveAPIView):
         return Experiment.objects.filter(laboratory__instructor=instructor_id)
 
     def get_object(self):
-        experiments = self.get_queryset()
         ids = self.request.query_params.getlist("id")
-
         if not ids:
-            raise ValueError("No option IDs provided.")
+            raise ValidationError("No option IDs provided.")
 
-        id_set = {uuid.UUID(id) for id in ids}
-        filtered_experiment = None
+        try:
+            id_set = {uuid.UUID(id) for id in ids}
+        except ValueError:
+            raise ValidationError("One or more provided option IDs are invalid.")
+
+        experiments = self.get_queryset()
+        matching_experiment = None
 
         for experiment in experiments:
             experiment_ids = set(
                 experiment.parameter_options.values_list("id", flat=True)
             )
             if experiment_ids == id_set:
-                filtered_experiment = experiment
+                matching_experiment = experiment
                 break
 
-        if filtered_experiment is None:
-            raise ValueError("No experiments found for the provided option IDs.")
+        if matching_experiment is None:
+            raise NotFound("No experiments found for the provided option IDs.")
 
-        return filtered_experiment
+        return matching_experiment
 
     def get(self, request, *args, **kwargs):
         try:
             experiment = self.get_object()
             serializer = self.get_serializer(experiment)
             return Response(serializer.data, status=status.HTTP_200_OK)
-        except ValueError as e:
+        except (ValidationError, NotFound) as e:
             return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
 
@@ -116,8 +150,10 @@ class ListExperimentActivitiesView(generics.ListAPIView):
     def get_queryset(self):
         laboratory_instructor = self.request.user.id
         experiment_id = self.kwargs.get("pk")
-        activities = Activity.objects.filter(
-            experiment__laboratory__instructor=laboratory_instructor,
-            experiment=experiment_id,
+
+        experiment = get_object_or_404(
+            Experiment, id=experiment_id, laboratory__instructor=laboratory_instructor
         )
-        return activities
+        activities = Activity.objects.filter(experiment=experiment)
+
+        return activities.select_related("experiment__laboratory")

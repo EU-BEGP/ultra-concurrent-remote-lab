@@ -66,12 +66,20 @@ class SessionAdmin(admin.ModelAdmin):
 
 class ActivityAdmin(admin.ModelAdmin):
     ordering = ["id"]
-    list_display = ["id", "statement", "expected_result", "experiment", "laboratory"]
+    list_display = [
+        "id",
+        "statement",
+        "expected_result",
+        "unit",
+        "experiment",
+        "laboratory",
+        "registration_date",
+    ]
 
 
 class SolvedActivityAdmin(admin.ModelAdmin):
     ordering = ["id"]
-    list_display = ["id", "result", "activity", "experiment", "laboratory", "session"]
+    list_display = ["id", "result", "activity", "session", "registration_date"]
 
 
 class ProcedureAdmin(admin.ModelAdmin):

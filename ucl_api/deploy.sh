@@ -1,11 +1,14 @@
 #!/bin/bash
 
+# Exit immediately if a command exits with a non-zero status
+set -e
+
 echo -e "\nBuilding docker image...\n"
 docker-compose build
 
 echo -e "\nRunning database migrations...\n"
-docker-compose run --rm app python manage.py makemigrations &&
-  docker-compose run --rm app python manage.py migrate
+docker-compose run --rm app python manage.py makemigrations
+docker-compose run --rm app python manage.py migrate
 
 echo -e "\nCreate superuser?:"
 echo "1) Yes"

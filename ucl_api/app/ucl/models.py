@@ -88,26 +88,11 @@ class VideoExperiment(models.Model):
         verbose_name_plural = "VideoExperiments"
 
 
-class Session(models.Model):
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    student = models.ForeignKey(
-        settings.AUTH_USER_MODEL,
-        related_name="student_sessions",
-        on_delete=models.CASCADE,
-    )
-    laboratory = models.ForeignKey(
-        Laboratory,
-        related_name="laboratory_sessions",
-        on_delete=models.CASCADE,
-        default=None,
-    )
-    registration_date = models.DateTimeField(auto_now_add=True)
-
-
 class Activity(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     statement = models.CharField(max_length=500)
-    expected_result = models.CharField(max_length=500)
+    expected_result = models.CharField(max_length=500, null=True, default=None)
+    unit = models.CharField(max_length=20, null=True, default=None)
     experiment = models.ForeignKey(
         Experiment,
         related_name="experiment_activities",
@@ -128,23 +113,29 @@ class Activity(models.Model):
         verbose_name_plural = "Activities"
 
 
-class SolvedActivity(models.Model):
+class Session(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    result = models.CharField(max_length=500)
-    activity = models.ForeignKey(
-        Activity, related_name="activity_solved_activities", on_delete=models.CASCADE
-    )
-    experiment = models.ForeignKey(
-        Experiment,
-        related_name="experiment_solved_activities",
+    student = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        related_name="student_sessions",
         on_delete=models.CASCADE,
-        default=None,
     )
     laboratory = models.ForeignKey(
         Laboratory,
-        related_name="laboratory_solved_activities",
+        related_name="laboratory_sessions",
         on_delete=models.CASCADE,
         default=None,
+    )
+    registration_date = models.DateTimeField(auto_now_add=True)
+
+
+class SolvedActivity(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    result = models.CharField(max_length=500)
+    activity = models.OneToOneField(
+        Activity,
+        related_name="activity_solved_activity",
+        on_delete=models.CASCADE,
     )
     session = models.ForeignKey(
         Session,

@@ -19,6 +19,6 @@ elif [ "$ENVIRONMENT" = "development" ]; then
   python manage.py wait_for_db
 
   # Start Gunicorn with reload configuration
-  gunicorn --bind 0.0.0.0:8000 --workers=2 --reload app.wsgi:application
+  gunicorn --bind 0.0.0.0:8000 --reload app.wsgi:application
 
 fi
