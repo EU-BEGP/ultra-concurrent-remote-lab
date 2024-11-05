@@ -6,6 +6,8 @@ import { Laboratory } from '../interfaces/laboratory';
 import { Parameter } from '../interfaces/parameter';
 import { ToastrService } from 'ngx-toastr';
 import { catchError } from 'rxjs/operators';
+import { Activity } from '../interfaces/activity';
+import { Experiment } from '../interfaces/experiment';
 
 @Injectable({
   providedIn: 'root',
@@ -66,6 +68,53 @@ export class LaboratoryService {
         formData.append(`parameter_options[${index}][image]`, option.image); // Ensure this is the actual file object
       }
     });
-    return this.http.post<Guide>(`${config.api.baseUrl}ucl/parameters/`, formData);
+    return this.http.post<Parameter>(`${config.api.baseUrl}ucl/parameters/`, formData);
+  }
+
+  addLabExperiment(experiment: any): Observable<any> {
+    const formData = new FormData();
+    formData.append('name', experiment.name!);
+    console.log(experiment.parameter_options)
+    formData.append('laboratory', experiment.laboratory!);
+  
+    experiment.parameter_options!.forEach( (optionId : string, index:number) => {
+      formData.append(`parameter_options[${index}]`, optionId);
+    });
+
+    experiment.experiment_videos!.forEach((video: any, index: number) => {
+      formData.append(`experiment_videos[${index}][name]`, video.name);
+      if (video.video) {
+        formData.append(`experiment_videos[${index}][video]`, video.file); 
+      }
+    });
+
+    console.log(experiment.experiment_activities)
+
+    experiment.experiment_activities!.forEach((activity: any, index: number) => {
+      formData.append(`experiment_activities[${index}][statement]`, activity.statement);
+      if (activity.result) {
+        formData.append(`experiment_activities[${index}][expected_result]`, activity.result); 
+        formData.append(`experiment_activities[${index}][unit]`, activity.unit); 
+      }
+    });
+
+    return this.http.post<Experiment>(`${config.api.baseUrl}ucl/experiments/`, formData);
+  }
+
+  addActivities(activity: any): Observable<any> {
+    const formData = new FormData();
+    formData.append('statement', activity.statement!);
+    formData.append('expected_result', activity.expected_result!);
+    formData.append('unit', activity.unit!);
+    
+    if(activity.laboratory){
+      formData.append('laboratory', activity.laboratory!);
+    }
+
+    if(activity.experiment){
+      formData.append('experiment', activity.experiment!);
+    }
+
+    return this.http.post<Activity>(`${config.api.baseUrl}ucl/activities/`, formData);
   }
 }  

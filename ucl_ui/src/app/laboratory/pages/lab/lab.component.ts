@@ -91,14 +91,14 @@ export class LabComponent implements OnInit, AfterViewInit {
 
     const experimentArray = this.studentSession.get('experiments') as FormArray;
 
-    const optionsLength = this.optionsList.length || 3; // Assume we know the number of option dropdowns
+    const optionsLength = this.optionsList.length || 3; 
 
     const experimentGroup = this.builder.group({
       optionsGroup: this.builder.group({
         selectedOptions: this.createOptionsArray(optionsLength)
       }),
-      experimentFound: [false],  // Experiment found flag
-      experimentNotFound: [false], // Experiment not found flag
+      experimentFound: [false], 
+      experimentNotFound: [false], 
       experimentDetailsGroup: this.builder.group({
         id: [''],
         activities: this.builder.array([]),
@@ -109,7 +109,7 @@ export class LabComponent implements OnInit, AfterViewInit {
 
     experimentArray.push(experimentGroup);
     setTimeout(() => {
-      this.selectedTabIndex = newTabIndex // Move to the new tab
+      this.selectedTabIndex = newTabIndex 
     });
   }
 
@@ -128,7 +128,6 @@ export class LabComponent implements OnInit, AfterViewInit {
   onOptionChange(experiment: AbstractControl, experimentIndex: number) {
     const selectedOptions = experiment.get('optionsGroup')?.get('selectedOptions')?.value;
 
-    // Check if all options have been selected (no empty values)
     const allOptionsSelected = selectedOptions.every((option: any) => option !== '');
 
     if (!allOptionsSelected) {
@@ -136,7 +135,7 @@ export class LabComponent implements OnInit, AfterViewInit {
       experiment.get('experimentNotFound')?.setValue(false);
       experiment.get('experimentFound')?.setValue(false);
       this.duplicateExperimentMessage = '';
-      return; // Stop execution if not all options are selected
+      return; 
     }
 
 
@@ -177,12 +176,11 @@ export class LabComponent implements OnInit, AfterViewInit {
     const experimentsArray = this.studentSession.get('experiments') as FormArray;
     
     if (experimentsArray.length > 1) {
-      experimentsArray.removeAt(index); // Elimina el experimento en la posición 'index'
+      experimentsArray.removeAt(index);
     } 
-  
-    // Si quieres que después de borrar seleccione otro tab
+
     if (this.selectedTabIndex >= experimentsArray.length) {
-      this.selectedTabIndex = experimentsArray.length - 1; // Ajusta el índice si se elimina el último tab
+      this.selectedTabIndex = experimentsArray.length - 1;
     }
   }
 
@@ -207,7 +205,7 @@ export class LabComponent implements OnInit, AfterViewInit {
           statement: [activity.statement],
           result: [''],  
           procedure: this.builder.array([this.builder.group({
-            data: [Handsontable.helper.createSpreadsheetData(3, 3)], // Initial data for the new table
+            data: [Handsontable.helper.createSpreadsheetData(3, 3)],
           })]),
           unit: ['']
         }));
@@ -223,7 +221,6 @@ export class LabComponent implements OnInit, AfterViewInit {
       return experiment.id === id;
     });
   
-    // Return the activities if the experiment is found, or null if not
     return foundExperiment ? foundExperiment.activities : null;
   }
 
@@ -235,7 +232,6 @@ export class LabComponent implements OnInit, AfterViewInit {
       return experiment.selectedOptions.every((v: any) => options.includes(v));
     });
   
-    // Return the found experiment or null if none is found
     return foundExperiment || null;
   }
 
@@ -243,7 +239,7 @@ export class LabComponent implements OnInit, AfterViewInit {
   createOptionsArray(length: number): FormArray {
     const optionsArray = this.builder.array([]);
     for (let i = 0; i < length; i++) {
-      optionsArray.push(this.builder.control('')); // You can also pre-fill with default values
+      optionsArray.push(this.builder.control(''));
     }
     return optionsArray;
   }
@@ -257,7 +253,7 @@ export class LabComponent implements OnInit, AfterViewInit {
         statement: [activity.statement],
         result: [''],
         procedure: this.builder.array([this.builder.group({
-          data: [Handsontable.helper.createSpreadsheetData(3, 3)], // Initial data for the new table
+          data: [Handsontable.helper.createSpreadsheetData(3, 3)],
         })]),
         unit: ['']
       }));
@@ -303,9 +299,7 @@ export class LabComponent implements OnInit, AfterViewInit {
     this.toastr.success(
       "Experiment Saved", "Success"
     );
-    console.log(this.studentSession.value)
     } else {
-      console.log(this.studentSession.value)
       this.toastr.error(
         'Please, complete the required Information',
         'Invalid action'
@@ -317,24 +311,24 @@ export class LabComponent implements OnInit, AfterViewInit {
     const procedureArray = this.finalActivities.at(activityIndex).get('procedure') as FormArray;
     
     procedureArray.push(this.builder.group({
-      data: [Handsontable.helper.createSpreadsheetData(3, 3)], // Initial data for the new table
+      data: [Handsontable.helper.createSpreadsheetData(3, 3)], 
     }));
   }
 
   onTableDataChange(activityIndex: number, procedureIndex: number, newData: any) {
-    this.getFinalActivityProcedures(activityIndex).at(procedureIndex).get('data')?.setValue(newData); // Update table data in procedure
+    this.getFinalActivityProcedures(activityIndex).at(procedureIndex).get('data')?.setValue(newData); 
   }
 
   addExperimentProcedureTable(experiment: AbstractControl, activityIndex: number) {
     const procedureArray = this.getActivities(experiment).at(activityIndex).get('procedure') as FormArray;
     
     procedureArray.push(this.builder.group({
-      data: [Handsontable.helper.createSpreadsheetData(3, 3)], // Initial data for the new table
+      data: [Handsontable.helper.createSpreadsheetData(3, 3)], 
     }));
   }
 
   onExperimentTableDataChange(experiment: AbstractControl, activityIndex: number, procedureIndex: number, newData: any) {
-    this.getExperimentActivityProcedures(experiment, activityIndex).at(procedureIndex).get('data')?.setValue(newData); // Update table data in procedure
+    this.getExperimentActivityProcedures(experiment, activityIndex).at(procedureIndex).get('data')?.setValue(newData); 
   }
 
   getExperimentActivityProcedures(experiment: AbstractControl,activityIndex: number) {
@@ -362,7 +356,6 @@ export class LabComponent implements OnInit, AfterViewInit {
   }
 
   addSelectedProcedure (data:any, selectedProcedureType:String) {
-    console.log(selectedProcedureType)
     if(data.experiment){ //if its a Experiment Activity
       if(selectedProcedureType == "Time-Series"){
         this.toastr.info("Not Implemented yet")

@@ -15,6 +15,8 @@ import { UserService } from 'src/app/core/auth/services/user.service';
 import { map } from 'rxjs/operators';
 import { units } from 'src/app/laboratory/store/units-data-store';
 import { v4 as uuidv4 } from 'uuid';
+import { Experiment } from '../../interfaces/experiment';
+import { Activity } from '../../interfaces/activity';
 
 @Component({
   selector: 'app-create-laboratory',
@@ -118,7 +120,8 @@ export class CreateLaboratoryComponent implements OnInit {
       selectedOptions: new FormArray([this.builder.control('', Validators.required)]),
       videos: new FormArray([this.builder.group({
         name: [''],
-        video: ['']
+        video: [''],
+        file: ['']
       })]),
       activities: new FormArray([
         this.builder.group({
@@ -128,7 +131,7 @@ export class CreateLaboratoryComponent implements OnInit {
           unit: ['']
         })
       ]),
-      dataFile: this.builder.control('')
+      data_file: this.builder.control('')
     })]),
     activities: this.builder.array([
       this.builder.group({
@@ -231,7 +234,8 @@ export class CreateLaboratoryComponent implements OnInit {
       selectedOptions: selectedOptionsArray,
       videos: new FormArray([this.builder.group({
         name: [''],
-        video: ['']
+        video: [''],
+        file: ['']
       })]),
       activities: new FormArray([
         this.builder.group({
@@ -240,7 +244,7 @@ export class CreateLaboratoryComponent implements OnInit {
           unit: ['']
         })
       ]),
-      dataFile: this.builder.control('')
+      data_file: this.builder.control('')
     }));
   }
 
@@ -274,7 +278,8 @@ export class CreateLaboratoryComponent implements OnInit {
   addVideo(index: number): void {
     const videoFormGroup = this.builder.group({
       name: [''],
-      video: ['']
+      video: [''],
+      file: ['']
     })
     this.getVideos(index).push(videoFormGroup)
   }
@@ -318,7 +323,7 @@ export class CreateLaboratoryComponent implements OnInit {
   }
 
   getDataFile(index: number) {
-    return this.experiments.at(index).get('dataFile') as FormControl
+    return this.experiments.at(index).get('data_file') as FormControl
   }
 
 
@@ -327,10 +332,10 @@ export class CreateLaboratoryComponent implements OnInit {
     if (event.target.files.length > 0) {
       const file = event.target.files[0] as File;
       const file_size = file.size;
-      if (file_size <= 50000000) {
+      if (file_size <= 75000000) {
         this.getUrl(file, parameterIndex, index, field);
       } else {
-        this.toastr.error('File size must be 50MB or smaller.');
+        this.toastr.error('File size must be 75MB or smaller.');
       }
     }
   }
@@ -355,8 +360,8 @@ export class CreateLaboratoryComponent implements OnInit {
         });
         this.getVideos(parameterIndex).at(index).get('video')?.updateValueAndValidity();
       } else if (field === 'file' && index !== undefined) { //dataFile
-        this.experiments.at(index).get('dataFile')?.patchValue({ dataFile: result });
-        this.experiments.at(index).get('dataFile')?.updateValueAndValidity();
+        this.experiments.at(index).get('data_file')?.patchValue({ data_file: file });
+        this.experiments.at(index).get('data_file')?.updateValueAndValidity();
       } else if (field === 'video' && parameterIndex === undefined && index === undefined) { //introVideo
         this.introVideo.patchValue({
           video: result,
@@ -382,15 +387,14 @@ export class CreateLaboratoryComponent implements OnInit {
 
   onSubmit(): void {
 
-    this.createLab()
-    /*if (this.newLaboratory.valid) {
+    if (this.newLaboratory.valid) {
     this.createLab()
     } else {
       this.toastr.error(
         'Please, complete the required Information',
         'Invalid action'
       );
-    }*/
+    }
   }
 
   createLab(): void {
@@ -408,11 +412,13 @@ export class CreateLaboratoryComponent implements OnInit {
       next: (_: any) => {
         this.createLabGuides()
         this.createLabParameters()
+        this.createLabExperiments()
+        this.createLabActivities()
         this.toastr.success(
           'Now you will be redirected to your new Laboratory!',
           this.newLaboratory.value.info?.name + ' Successfully Created!'
         );
-        //this.router.navigate(['/ultra-concurrent-rl', this.newLaboratory.value.id])
+        this.router.navigate(['/ultra-concurrent-rl', this.newLaboratory.value.id])
       },
       error: (e: any) => {
         console.log(e)
@@ -455,13 +461,13 @@ export class CreateLaboratoryComponent implements OnInit {
         }
         options_array.push(option_fields)
       })
-      const parameterFiels = {
+      const parameterFields = {
         'name': parameter.name,
         'unit': parameter.unit,
         'laboratory': this.newLaboratory.value.id,
         'parameter_options': options_array
       }
-      this.labService.addLabParameter(parameterFiels).subscribe({
+      this.labService.addLabParameter(parameterFields).subscribe({
         next: (_: any) => {
           //Added Parameter
         },
@@ -469,6 +475,53 @@ export class CreateLaboratoryComponent implements OnInit {
           console.log(e)
           this.toastr.error(
             'There was an error creating the Lab Parameters. Please try later.'
+          );
+        },
+      });
+    });
+  }
+
+  createLabExperiments(): void {
+    this.experiments.value.forEach((experiment: Experiment) => {
+     
+      const experimentFields = {
+        'name': experiment.name,
+        'laboratory': this.newLaboratory.value.id,
+        'parameter_options': experiment.selectedOptions,
+        'experiment_videos': experiment.videos,
+        'experiment_activities': experiment.activities,
+        'data_file':experiment.data_file
+      }
+      this.labService.addLabExperiment(experimentFields).subscribe({
+        next: (_: any) => {
+          //Added Experiment
+        },
+        error: (e: any) => {
+          console.log(e)
+          this.toastr.error(
+            'There was an error creating the Lab Experiments. Please try later.'
+          );
+        },
+      });
+    });
+  }
+
+  createLabActivities(): void {
+    this.activities.value.forEach((activity: any) => {
+      const activityFields = {
+        'statement': activity.statement,
+        'expected_result': activity.result,
+        'unit': activity.unit,
+        'laboratory': this.newLaboratory.value.id,
+      }
+      this.labService.addActivities(activityFields).subscribe({
+        next: (_: any) => {
+          //Added Activities
+        },
+        error: (e: any) => {
+          console.log(e)
+          this.toastr.error(
+            'There was an error creating the Activities. Please try later.'
           );
         },
       });

@@ -44,7 +44,7 @@ img{
       width: 100%;
     }
 }
-.parameter-option:hover{
+.parameter:hover{
   border: 4px solid #000 !important; 
 }
 
@@ -184,4 +184,9 @@ mat-card-actions{
   .procedure-grid {
     grid-template-columns: 1fr;
   }
+}
+
+
+::ng-deep .mat-option.mat-selected:not(.mat-option-multiple):not(.mat-option-disabled){
+  background: rgba(0, 0, 0, 0.5);
 }
