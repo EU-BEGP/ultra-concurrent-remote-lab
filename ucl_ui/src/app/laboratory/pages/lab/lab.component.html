@@ -6,11 +6,11 @@
             [cols]="1" rowHeight="28px" class="mb-24 mt-16">
             <mat-grid-tile rowspan='2'>
                 <span
-                    class="header1 primary ">{{labinfo.info.name}}</span>
+                    class="header1 primary ">{{laboratory?.name}}</span>
             </mat-grid-tile>
             <mat-grid-tile>
                 <span
-                    class="header3">by {{labinfo.info.institution}}</span>
+                    class="header3">by {{laboratory?.institution}}</span>
             </mat-grid-tile>
 
         </mat-grid-list>
@@ -23,14 +23,14 @@
                     <mat-step label="Introduction">
                         <div class="mt-24">
                             <span
-                                class="body">{{labinfo.introduction.description}}</span>
+                                class="body">{{laboratory?.description}}</span>
                         </div>
 
                         <div
                             class="introduction-video-card center mt-16 mb-8">
 
                             <app-video-player
-                                [videoSrc]="labinfo.introduction.introVideo.video"></app-video-player>
+                                [videoSrc]="laboratory?.video"></app-video-player>
 
                         </div>
 
@@ -51,14 +51,14 @@
                                     {{element.title}} </td>
                             </ng-container>
 
-                            <ng-container matColumnDef="link">
+                            <ng-container matColumnDef="url">
                                 <th mat-header-cell *matHeaderCellDef
                                     class="header3 table-header">
                                 </th>
                                 <td mat-cell *matCellDef="let element"
                                     class="actions-column">
                                     <button mat-menu-item type="button"
-                                        (click)="redirectTo(element.link)">
+                                        (click)="redirectTo(element.url)">
                                         <span class="header3"> Open Guide
                                         </span>
                                         <mat-icon
@@ -150,17 +150,27 @@
                                                         (selectionChange)="onOptionChange(experiment,experimentIndex)">
                                                         <mat-option
                                                             class="parameter"
-                                                            *ngFor="let option of parameter.options"
+                                                            *ngFor="let option of parameter.parameter_options"
                                                             [value]="option.id">
                                                             <mat-card
                                                                 class="parameter-option">
                                                                 <img
                                                                     class="parameter-image"
                                                                     mat-card-image
-                                                                    [src]="option.photo">
+                                                                    [src]="option.image ? option.image : defaultImg">
+
                                                                 <mat-card-content>
                                                                     <mat-label
-                                                                        class="header3 center">{{option.value}}</mat-label>
+                                                                        class="header3 center">{{
+                                                                        option.value
+                                                                        +
+                                                                        (parameter.unit
+                                                                        !==
+                                                                        'N/A' ?
+                                                                        ' ' +
+                                                                        parameter.unit
+                                                                        : '') }}
+                                                                    </mat-label>
                                                                 </mat-card-content>
                                                             </mat-card>
                                                         </mat-option>
@@ -191,8 +201,8 @@
 
                                     <div
                                         div
-                                        *ngIf="experiment.get('experimentFound')?.value && experiment.get('experimentDetailsGroup') as detailsGroup"
-                                        [formGroup]="detailsGroup">
+                                        *ngIf="experiment.get('experimentFound')?.value && experiment.get('experimentDetailsGroup') as foundExperiment"
+                                        [formGroup]="foundExperiment">
 
                                         <span mat-caption
                                             class="input-label header3 accent">
@@ -202,7 +212,7 @@
                                         <mat-tab-group mat-stretch-tabs
                                             class="visualization-video-tabs mat-elevation-z4 center">
                                             <mat-tab
-                                                *ngFor="let video of detailsGroup.value.videos; index as videoIndex">
+                                                *ngFor="let video of foundExperiment.value.experiment_videos; index as videoIndex">
                                                 <ng-template mat-tab-label>
                                                     <span
                                                         class="header3">{{video.name}}</span>
@@ -221,14 +231,16 @@
                                             Excel or
                                             CSV
                                             File:
-                                            <button mat-button>
+                                            <button mat-button type="button"
+                                                (click)="downloadDataFile(foundExperiment.value.data_file)">
                                                 <mat-icon
                                                     class="bigger-icon accent"
                                                     matTooltip="Download">save_alt</mat-icon>
                                             </button>
                                         </span>
 
-                                        <div formArrayName="activities">
+                                        <div
+                                            formArrayName="experiment_activities">
                                             <span mat-caption
                                                 class="input-label header3 mt-16 accent">
                                                 Activities
@@ -244,7 +256,7 @@
                                                 <div
                                                     formArrayName="procedure">
                                                     <span mat-caption
-                                                        class="input-label header3 vertical-center accent">
+                                                        class="input-label header3 vertical-center primary">
                                                         Procedure
                                                         <button
                                                             type="button"
@@ -271,7 +283,7 @@
                                                 </div>
 
                                                 <span mat-caption
-                                                    class="input-label header3 vertical-center accent">
+                                                    class="input-label header3 vertical-center primary">
                                                     Answer
                                                 </span>
 
@@ -328,7 +340,7 @@
                             [stepControl]="finalActivities">
 
                             <div
-                                *ngFor="let activity of labinfo.activities; index as activityIndex"
+                                *ngFor="let activity of labActivities; index as activityIndex"
                                 [formGroupName]="activityIndex"
                                 class="mt-16">
                                 <span mat-caption
@@ -337,7 +349,7 @@
                                 </span>
                                 <div formArrayName="procedure">
                                     <span mat-caption
-                                        class="input-label header3 vertical-center accent">
+                                        class="input-label header3 vertical-center primary">
                                         Procedure
                                         <button type="button" mat-button
                                             (click)="openProcedures({'activityIndex':activityIndex})">
@@ -359,7 +371,7 @@
                                     </div>
                                 </div>
                                 <span mat-caption
-                                    class="input-label header3 vertical-center accent">
+                                    class="input-label header3 vertical-center primary">
                                     Answer
                                 </span>
                                 <mat-form-field style="width: 75%"

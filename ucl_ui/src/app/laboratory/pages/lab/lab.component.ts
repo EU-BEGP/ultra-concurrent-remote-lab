@@ -6,7 +6,6 @@ import {Observable} from 'rxjs';
 import {BreakpointObserver} from '@angular/cdk/layout';
 import { FormGroup, FormArray, FormBuilder, Validators, AbstractControl } from '@angular/forms';
 import { StepperOrientation } from '@angular/cdk/stepper';
-import * as data from '../../../mockdata.json'
 import { ToastrService } from 'ngx-toastr';
 import { MatSort} from '@angular/material/sort';
 import { MatPaginator } from '@angular/material/paginator';
@@ -15,31 +14,33 @@ import { units } from 'src/app/laboratory/store/units-data-store';
 import Handsontable from 'handsontable';
 import { MatDialog } from '@angular/material/dialog';
 import { ProcedureToolsDialogComponent } from '../../components/procedure-tools-dialog/procedure-tools-dialog.component';
+import { LaboratoryService } from '../../services/laboratory.service';
+import { Laboratory } from '../../interfaces/laboratory';
+import { Guide } from '../../interfaces/guide';
+import { Activity } from '../../interfaces/activity';
 
-export interface GuideData {
-  title: string,
-  link: string,
-}
 
 @Component({
   selector: 'app-lab',
   templateUrl: './lab.component.html',
   styleUrls: ['./lab.component.css']
 })
-export class LabComponent implements OnInit, AfterViewInit {
+export class LabComponent implements OnInit {
 
   stepperOrientation: Observable<StepperOrientation>
   breakpoint: any
-  breakpointParameter: any
+  breakpointParameter: any 
   id = '';
-  allData: any = (data as any).default;
-  labinfo:any
-  dataSource: MatTableDataSource<GuideData>;
-  displayedColumns: string[] = ['title', 'link'];
+  dataSource!: MatTableDataSource<Guide>;
+  displayedColumns: string[] = ['title', 'url'];
   selectedTabIndex!: number ;
   unit_groups : any= []
+  laboratory!: Laboratory | undefined
+  laboratory_guides!: Guide[]
+  labActivities!:any[]
+  defaultImg = '../../../../assets/emptyimage.jpeg';
 
-  studentSession: FormGroup;
+  studentSession!: FormGroup;
   optionsList: any[] = []; 
   duplicateExperimentMessage = ''; 
 
@@ -48,33 +49,29 @@ export class LabComponent implements OnInit, AfterViewInit {
   @ViewChild(MatSort)
   sort!: MatSort;
 
-  constructor(private route: ActivatedRoute, private http: HttpClient, private builder:FormBuilder, private toastr: ToastrService, private router: Router,  private dialogRef: MatDialog,) 
+  constructor(private route: ActivatedRoute, 
+    private http: HttpClient,
+    private labService: LaboratoryService,
+    private builder:FormBuilder,
+    private toastr: ToastrService,
+    private router: Router,
+    private dialogRef: MatDialog,
+  ) 
+
   { const breakpointObserver = inject(BreakpointObserver);
+
     this.stepperOrientation = breakpointObserver
       .observe('(min-width: 800px)')
       .pipe(map(({matches}) => (matches ? 'horizontal' : 'vertical')));
-
-    this.loadLabInfo()
-
-    this.dataSource = new MatTableDataSource(this.labinfo.introduction.guides.map(function(guide:any) {return {
-      title: guide.title,
-      link: guide.link,
-    }}));
 
     this.studentSession = this.builder.group({
       experiments: this.builder.array([]),
       finalActivities: this.builder.array([])
     });
 
-    this.unit_groups = units
+    this.loadLabInfo()
 
-    this.optionsList = this.labinfo.parameters
-    
-  }
-
-  ngAfterViewInit() {
-    this.dataSource.paginator = this.paginator;
-    this.dataSource.sort = this.sort;
+    this.unit_groups = units    
   }
 
   ngOnInit(): void {
@@ -82,7 +79,6 @@ export class LabComponent implements OnInit, AfterViewInit {
     this.breakpoint = Math.floor(window.innerWidth / 200);
     this.breakpointParameter =  Math.floor(window.innerWidth / 400);
     this.createActivitiesArray()
-    this.addExperiment(); 
   }
 
   addExperiment() {
@@ -101,9 +97,9 @@ export class LabComponent implements OnInit, AfterViewInit {
       experimentNotFound: [false], 
       experimentDetailsGroup: this.builder.group({
         id: [''],
-        activities: this.builder.array([]),
-        videos: [[]],
-        dataFile: ['']
+        experiment_activities: this.builder.array([]),
+        experiment_videos: [[]],
+        data_file: ['']
       })
     });
 
@@ -115,17 +111,57 @@ export class LabComponent implements OnInit, AfterViewInit {
 
   loadLabInfo():void{
     this.id = this.route.snapshot.params['id'];
-    let labIndex = this.allData.map((lab: { id: any; }) => lab.id).indexOf(this.id);
-    if(labIndex >= 0){
-      this.labinfo = this.allData[labIndex]
-    }else {
-      this.toastr.error(`Incorrect Laboratory`);
-      this.router.navigateByUrl('');
-    }
-    
+
+    this.labService.getLabById(this.id).subscribe({
+      next: (lab : any) => {
+       this.laboratory = lab
+      },
+      error: (e: any) => {
+        console.log(e)
+        this.toastr.error(
+          'There was an error getting the Laboratory. Please try again later.'
+        );
+        this.router.navigateByUrl('');
+      },
+    });
+
+    this.labService.getLabGuides(this.id).subscribe({
+      next: (guides : any) => {
+       this.laboratory_guides = guides
+       this.dataSource = new MatTableDataSource(guides.map(function(guide:any) {return {
+        title: guide.title,
+        url: guide.url,
+      }}));
+        this.dataSource.paginator = this.paginator;
+        this.dataSource.sort = this.sort;
+      },
+      error: (e: any) => {
+        console.log(e)
+        this.toastr.error(
+          'There was an error getting the Laboratory. Please try again later.'
+        );
+        this.router.navigateByUrl('');
+      },
+    });
+
+    this.labService.getLabParameters(this.id).subscribe({
+      next: (parameters : any) => {
+        this.optionsList = parameters
+        this.createOptionsArray(this.optionsList.length)
+        this.addExperiment(); 
+      },
+      error: (e: any) => {
+        console.log(e)
+        this.toastr.error(
+          'There was an error getting the Laboratory. Please try again later.'
+        );
+        this.router.navigateByUrl('');
+      },
+    });
+
   }
 
-  onOptionChange(experiment: AbstractControl, experimentIndex: number) {
+  async onOptionChange(experiment: AbstractControl, experimentIndex: number) {
     const selectedOptions = experiment.get('optionsGroup')?.get('selectedOptions')?.value;
 
     const allOptionsSelected = selectedOptions.every((option: any) => option !== '');
@@ -145,17 +181,17 @@ export class LabComponent implements OnInit, AfterViewInit {
       experiment.get('experimentNotFound')?.setValue(false);
     } else {
       this.duplicateExperimentMessage = '';
-    const experimentFound = this.getExperimentByOptions(selectedOptions)
-        if (experimentFound) {
-          // Experiment found
-          experiment.get('experimentFound')?.setValue(true);
-          experiment.get('experimentNotFound')?.setValue(false);
-          this.populateExperimentForm(experimentFound, experiment);
-        } else {
-          // No experiment found with these options
-          experiment.get('experimentFound')?.setValue(false);
-          experiment.get('experimentNotFound')?.setValue(true);
-        }
+      const experimentFound = await this.getExperimentByOptions(selectedOptions)
+      if (experimentFound) {
+        // Experiment found
+        experiment.get('experimentFound')?.setValue(true);
+        experiment.get('experimentNotFound')?.setValue(false);
+        await this.populateExperimentForm(experimentFound, experiment);
+      } else {
+        // No experiment found with these options
+        experiment.get('experimentFound')?.setValue(false);
+        experiment.get('experimentNotFound')?.setValue(true);
+      }
       }
   }
 
@@ -184,57 +220,70 @@ export class LabComponent implements OnInit, AfterViewInit {
     }
   }
 
-  populateExperimentForm(experimentData: any, experiment: AbstractControl) {
-    const experimentDetailsGroup = experiment.get('experimentDetailsGroup') as FormGroup;
+  downloadDataFile(fileUrl: string): void {
+    if (fileUrl) {
+      // Crear un enlace de descarga temporal
+      const link = document.createElement('a');
+      link.href = fileUrl;
+      link.download = fileUrl.split('/').pop() || 'downloaded_file';  // Nombre del archivo
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);  // Eliminar el enlace una vez descargado
+    } else {
+      this.toastr.info(
+        "This Experiment has no Data to Download"
+      );
+    }
+  }
 
+  async populateExperimentForm(experimentData: any, experiment: AbstractControl) {
+    const experimentDetailsGroup = experiment.get('experimentDetailsGroup') as FormGroup;
     experimentDetailsGroup.patchValue({
       id: experimentData.id,
-      videos: experimentData.videos,
-      dataFile: experimentData.dataFile
+      experiment_videos: experimentData.experiment_videos,
+      data_file: experimentData.data_file,
+      experiment_activities:experimentData.experiment_activities
     });
 
-    const activityArray = experimentDetailsGroup.get('activities') as FormArray;
+    const activityArray = experimentDetailsGroup.get('experiment_activities') as FormArray;
     activityArray.clear(); // Clear existing activities
+    
 
     // Populate activities
-    const experimentActivities = this.getActivitiesByExperimentId(experimentData.id)
+    const experimentActivities = await this.getActivitiesByExperimentId(experimentData.id)
 
       experimentActivities.forEach((activity: { id: any, statement: any }) => {
         activityArray.push(this.builder.group({
           id: [activity.id],
           statement: [activity.statement],
           result: [''],  
-          procedure: this.builder.array([this.builder.group({
-            data: [Handsontable.helper.createSpreadsheetData(3, 3)],
-          })]),
+          procedure: this.builder.array([]),
           unit: ['']
         }));
       });
 
   }
 
-  getActivitiesByExperimentId(id: any){
-    const foundExperiment = this.labinfo.experiments.find((experiment: {
-      activities: any; selectedOptions: any; videos: any, id: any;
-    }) => {
-
-      return experiment.id === id;
+  getActivitiesByExperimentId(id: any): Promise<any> {
+    return new Promise((resolve, reject) => {
+      this.labService.getActivitiesByExperimentId(id).subscribe({
+        next: (activities: any) => resolve(activities),
+        error: (e: any) => reject(null),
+      });
     });
-  
-    return foundExperiment ? foundExperiment.activities : null;
   }
 
-  getExperimentByOptions(options :any){
-    const foundExperiment = this.labinfo.experiments.find((experiment: {
-      activities: any; selectedOptions: any; videos: any, id: any;
-    }) => {
-  
-      return experiment.selectedOptions.every((v: any) => options.includes(v));
+  getExperimentByOptions(options: any): Promise<any> {
+    return new Promise((resolve, reject) => {
+      this.labService.getExperimentByOptions(options).subscribe({
+        next: (experiment: any) => resolve(experiment),
+        error: (e: any) => {
+          console.log(e)
+          resolve(undefined)
+        },
+      });
     });
-  
-    return foundExperiment || null;
   }
-
   
   createOptionsArray(length: number): FormArray {
     const optionsArray = this.builder.array([]);
@@ -244,21 +293,36 @@ export class LabComponent implements OnInit, AfterViewInit {
     return optionsArray;
   }
 
-  createActivitiesArray(){
+ async createActivitiesArray(){
     const activityArray = this.studentSession.get('finalActivities') as FormArray;
     activityArray.clear(); // Clear existing activities
-    this.labinfo.activities.forEach((activity: { id: any, statement: any }) => {
+    this.labActivities = await this.getLabActivities();
+    this.labActivities.forEach((activity: any) => {
       activityArray.push(this.builder.group({
         id: [activity.id],
         statement: [activity.statement],
         result: [''],
-        procedure: this.builder.array([this.builder.group({
-          data: [Handsontable.helper.createSpreadsheetData(3, 3)],
-        })]),
+        procedure: this.builder.array([]),
         unit: ['']
       }));
     })
   }
+
+  getLabActivities(): Promise<any> {
+  return new Promise((resolve, reject) => {
+    this.labService.getLabActivities(this.id).subscribe({
+      next: (activities: any) => resolve(activities),
+      error: (e: any) => {
+        console.log(e);
+        this.toastr.error(
+          'There was an error getting the Laboratory. Please try again later.'
+        );
+        this.router.navigateByUrl('');
+        reject(e);  // Rechaza la promesa si hay un error
+      },
+    });
+  });
+}
 
   get finalActivities():FormArray {
       return this.studentSession.get('finalActivities') as FormArray
@@ -273,7 +337,7 @@ export class LabComponent implements OnInit, AfterViewInit {
   }
 
   getActivities(experiment: AbstractControl) {
-    return experiment.get('experimentDetailsGroup')?.get('activities') as FormArray;
+    return experiment.get('experimentDetailsGroup')?.get('experiment_activities') as FormArray;
   }
 
   getFinalActivityProcedures(activityIndex: number) {

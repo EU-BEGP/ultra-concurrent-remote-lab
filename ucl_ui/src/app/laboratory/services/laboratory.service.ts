@@ -15,7 +15,6 @@ import { Experiment } from '../interfaces/experiment';
 
 
 export class LaboratoryService {
-  private URL: string = '';
   private httpOptions = <any>{};
   constructor(private http: HttpClient, private toastr: ToastrService) {
     this.httpOptions = {
@@ -24,12 +23,41 @@ export class LaboratoryService {
       }),
       observe: 'response' as 'response',
     };
-    this.URL = `${config.api.baseUrl}ucl/laboratories/`
   }
 
   getLabs(): Observable<any> {
-    return this.http.get<Laboratory[]>(this.URL);
+    return this.http.get<Laboratory[]>(`${config.api.baseUrl}ucl/laboratories/`);
   }
+
+  getLabById(id: string): Observable<any> {
+    return this.http.get<Laboratory>(`${config.api.baseUrl}ucl/laboratories/${id}/`);
+  }
+
+  getLabGuides(id: string): Observable<any> {
+    return this.http.get<Guide[]>(`${config.api.baseUrl}ucl/laboratories/${id}/guides/`);
+  }
+
+  getLabParameters(id: string): Observable<any> {
+    return this.http.get<Parameter[]>(`${config.api.baseUrl}ucl/laboratories/${id}/parameters/`);
+  }
+
+  getActivitiesByExperimentId(id: string): Observable<any> {
+    return this.http.get<Activity[]>(`${config.api.baseUrl}ucl/experiments/${id}/activities/`);
+  }
+
+  getLabActivities(id: string): Observable<any> {
+    return this.http.get<Activity[]>(`${config.api.baseUrl}ucl/laboratories/${id}/activities/`);
+  }
+
+  getExperimentByOptions(id_array: any): Observable<any> {
+    let params = new HttpParams();
+    id_array.forEach((id:string) => {
+      params = params.append('id', id);
+    });
+
+    return this.http.get<Experiment>(`${config.api.baseUrl}ucl/experiments/filter/`, { params });
+  }
+
 
   addLab(lab: Laboratory): Observable<any> {
     const formData = new FormData();
@@ -41,7 +69,7 @@ export class LaboratoryService {
     formData.append('instructor', String(lab.instructor));
     if (lab.image) formData.append('image', lab.image);
     if (lab.video) formData.append('video', lab.video);
-    return this.http.post<Laboratory>(this.URL, formData);
+    return this.http.post<Laboratory>(`${config.api.baseUrl}ucl/laboratories/`, formData);
   }
 
   addLabGuide(guide: Guide): Observable<any> {
@@ -74,8 +102,8 @@ export class LaboratoryService {
   addLabExperiment(experiment: any): Observable<any> {
     const formData = new FormData();
     formData.append('name', experiment.name!);
-    console.log(experiment.parameter_options)
     formData.append('laboratory', experiment.laboratory!);
+    formData.append('data_file', experiment.data_file!);
   
     experiment.parameter_options!.forEach( (optionId : string, index:number) => {
       formData.append(`parameter_options[${index}]`, optionId);
@@ -87,8 +115,6 @@ export class LaboratoryService {
         formData.append(`experiment_videos[${index}][video]`, video.file); 
       }
     });
-
-    console.log(experiment.experiment_activities)
 
     experiment.experiment_activities!.forEach((activity: any, index: number) => {
       formData.append(`experiment_activities[${index}][statement]`, activity.statement);

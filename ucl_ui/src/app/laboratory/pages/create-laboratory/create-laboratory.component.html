@@ -600,7 +600,8 @@
                                         style="width:25%">
                                         <ngx-mat-file-input
                                             formControlName="data_file"
-                                            (change)="onUpload($event, 'file', i,0)">
+                                            (change)="onUpload($event, 'file', i,0)"
+                                            accept=".xlsx, .xls, .csv">
                                             <mat-icon ngxMatFileInputIcon
                                                 class="accent bigger-icon">upload</mat-icon>
                                         </ngx-mat-file-input>
