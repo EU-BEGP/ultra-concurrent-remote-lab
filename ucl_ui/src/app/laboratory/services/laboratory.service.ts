@@ -26,7 +26,7 @@ export class LaboratoryService {
   }
 
   getLabs(): Observable<any> {
-    return this.http.get<Laboratory[]>(`${config.api.baseUrl}ucl/laboratories/all`);
+    return this.http.get<Laboratory[]>(`${config.api.baseUrl}ucl/laboratories/`);
   }
 
   getLabById(id: string): Observable<any> {

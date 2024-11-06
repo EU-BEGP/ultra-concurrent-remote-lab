@@ -1,10 +1,11 @@
 import { Component, OnInit, OnDestroy  } from '@angular/core';
 import { Router } from '@angular/router';
 import { ActivatedRoute } from '@angular/router';
-import * as data from '../../../mockdata.json'
 import { ToastrService } from 'ngx-toastr';
 import { LaboratoriesDialogComponent } from '../../components/laboratories-dialog/laboratories-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
+import { LaboratoryService } from '../../services/laboratory.service';
+import { Laboratory } from '../../interfaces/laboratory';
 
 @Component({
   selector: 'app-home',
@@ -18,13 +19,12 @@ export class HomeComponent implements OnInit, OnDestroy {
     private router: Router,
     private route: ActivatedRoute,
     private toastr: ToastrService,
-    private dialogRef: MatDialog
+    private dialogRef: MatDialog,
+    private labService: LaboratoryService
   ) { 
   }
-
+  laboratory!: Laboratory | undefined
   labId: any
-  allData: any = (data as any).default;
-  labinfo:any
   breakpoint: any
   breakpointParameter: any
 
@@ -45,13 +45,19 @@ export class HomeComponent implements OnInit, OnDestroy {
 }
 
 loadLabInfo():void{
-  let labIndex = this.allData.map((lab: { id: any; }) => lab.id).indexOf(this.labId);
-  if(labIndex >= 0){
-    this.labinfo = this.allData[labIndex]
-  }else {
-    this.toastr.error(`Laboratory Not Found, Try Again`);
-    this.router.navigateByUrl('');
-  }
+  this.labService.getLabById(this.labId).subscribe({
+    next: (lab : any) => {
+     this.laboratory = lab
+    },
+    error: (e: any) => {
+      console.log(e)
+      this.toastr.error(
+        'There was an error getting the Laboratory. Please try again later.'
+      );
+      this.router.navigateByUrl('');
+    },
+  });
+
 }
    
 

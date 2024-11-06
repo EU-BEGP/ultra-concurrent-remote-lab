@@ -10,18 +10,18 @@
                     (window:resize)="onResize($event)">
                     <mat-grid-tile [rowspan]="breakpoint">
                         <span
-                            *ngIf="labinfo"
-                            class="headerHome">{{labinfo.info.name}}
+                            *ngIf="laboratory"
+                            class="headerHome">{{laboratory.name}}
                         </span>
                         <span
-                            *ngIf="!labinfo"
+                            *ngIf="!laboratory"
                             class="headerHome">Ultra-Concurrent Remote Labs
                         </span>
                     </mat-grid-tile>
-                    <mat-grid-tile *ngIf="labinfo">
+                    <mat-grid-tile *ngIf="laboratory">
                         <span
                             class="header2">by
-                            {{labinfo.info.institution}}
+                            {{laboratory.institution}}
                         </span>
                     </mat-grid-tile>
                     <mat-grid-tile [rowspan]="2">
