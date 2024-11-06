@@ -103,7 +103,9 @@ export class LaboratoryService {
     const formData = new FormData();
     formData.append('name', experiment.name!);
     formData.append('laboratory', experiment.laboratory!);
-    formData.append('data_file', experiment.data_file!);
+
+
+    if (experiment.data_file) formData.append('data_file', experiment.data_file!);
   
     experiment.parameter_options!.forEach( (optionId : string, index:number) => {
       formData.append(`parameter_options[${index}]`, optionId);
@@ -130,16 +132,16 @@ export class LaboratoryService {
   addActivities(activity: any): Observable<any> {
     const formData = new FormData();
     formData.append('statement', activity.statement!);
-    formData.append('expected_result', activity.expected_result!);
-    formData.append('unit', activity.unit!);
+    if(activity.expected_result){
+      formData.append('expected_result', activity.expected_result!);
+      formData.append('unit', activity.unit!);
+    }
     
-    if(activity.laboratory){
-      formData.append('laboratory', activity.laboratory!);
-    }
+    if(activity.laboratory) formData.append('laboratory', activity.laboratory!);
+    
 
-    if(activity.experiment){
-      formData.append('experiment', activity.experiment!);
-    }
+    if(activity.experiment) formData.append('experiment', activity.experiment!);
+
 
     return this.http.post<Activity>(`${config.api.baseUrl}ucl/activities/`, formData);
   }

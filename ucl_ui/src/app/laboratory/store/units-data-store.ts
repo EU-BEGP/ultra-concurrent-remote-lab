@@ -34,6 +34,13 @@ export const units = [
     ]
 },
 {
+    name: "Hours", 
+    
+    units: [
+        {value: "hrs"},
+    ]
+},
+{
     name: "Speed", 
     units: [
         {value: "m/s"},

@@ -1,6 +1,6 @@
 import { BreakpointObserver } from '@angular/cdk/layout';
 import { Component, OnInit, Inject, inject, ViewChild, ElementRef } from '@angular/core';
-import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormArray, FormBuilder, FormControl, FormGroup, Validators, ValidatorFn, AbstractControl } from '@angular/forms';
 import { Guide } from '../../interfaces/guide';
 import { Laboratory } from '../../interfaces/laboratory';
 import { LaboratoryService } from '../../services/laboratory.service';
@@ -17,6 +17,7 @@ import { units } from 'src/app/laboratory/store/units-data-store';
 import { v4 as uuidv4 } from 'uuid';
 import { Experiment } from '../../interfaces/experiment';
 import { Activity } from '../../interfaces/activity';
+import { MatStepper } from '@angular/material/stepper';
 
 @Component({
   selector: 'app-create-laboratory',
@@ -25,6 +26,7 @@ import { Activity } from '../../interfaces/activity';
 })
 export class CreateLaboratoryComponent implements OnInit {
   @ViewChild('videoPlayer') videoplayer!: ElementRef;
+  @ViewChild(MatStepper) stepper!: MatStepper;
   stepperOrientation: Observable<StepperOrientation>
   breakpoint: any
   breakpointVideo: any
@@ -67,7 +69,7 @@ export class CreateLaboratoryComponent implements OnInit {
       this.newLaboratory.get('info')?.get('instructor')?.setValue(response.id!);
     });
   }
-
+  
   onResize(event: any): void {
     this.breakpoint = Math.floor(event.target.innerWidth / 260);
   }
@@ -93,20 +95,22 @@ export class CreateLaboratoryComponent implements OnInit {
         file: ['']
       }),
       introVideo: this.builder.group({
-        video: [''],
-        file: ['']
+        video: this.builder.control('', this.fileRequiredValidator()),
+        file: this.builder.control('', this.fileRequiredValidator())
       }),
       guides: new FormArray([
         this.builder.group({
-          title: [''],
-          url: ['']
+          title: this.builder.control('', Validators.required),
+          url:  this.builder.control('', [Validators.required,  Validators.pattern(
+            '^(https?|ftp):\\/\\/(([^:/\\s]+)(:[0-9]+)?)(\\/[^#\\s]*)?(\\?[^#\\s]*)?(#.*)?$'
+          )])
         })
       ]),
     }),
     parameters: this.builder.array([
       this.builder.group({
-        name: [''],
-        unit: [''],
+        name: this.builder.control('', Validators.required),
+        unit: this.builder.control('', Validators.required),
         parameter_options: new FormArray([this.builder.group({
           id: [uuidv4()],
           value: [''],
@@ -119,14 +123,14 @@ export class CreateLaboratoryComponent implements OnInit {
     experiments: this.builder.array([this.builder.group({
       selectedOptions: new FormArray([this.builder.control('', Validators.required)]),
       videos: new FormArray([this.builder.group({
-        name: [''],
-        video: [''],
-        file: ['']
+        name: this.builder.control('', Validators.required),
+        video: this.builder.control('', this.fileRequiredValidator()),
+        file: this.builder.control('', this.fileRequiredValidator())
       })]),
       activities: new FormArray([
         this.builder.group({
           id: [uuidv4()],
-          statement: [''],
+          statement:  this.builder.control('', Validators.required),
           result: [''],
           unit: ['']
         })
@@ -136,12 +140,19 @@ export class CreateLaboratoryComponent implements OnInit {
     activities: this.builder.array([
       this.builder.group({
         id: [uuidv4()],
-        statement: [''],
+        statement:  this.builder.control('', Validators.required),
         result: [''],
         unit: ['']
       })
     ])
   })
+
+  fileRequiredValidator(): ValidatorFn {
+    return (control: AbstractControl): { [key: string]: any } | null => {
+      const file = control.value;
+      return file ? null : { required: true };
+    };
+  }
 
   get introPhoto() {
     return this.newLaboratory.get('introduction')?.get('introPhoto') as FormGroup
@@ -168,8 +179,10 @@ export class CreateLaboratoryComponent implements OnInit {
 
   addGuide(): void {
     const guideFormGroup = this.builder.group({
-      title: [''],
-      url: ['']
+      title: this.builder.control('', Validators.required),
+      url: this.builder.control('', [Validators.required,  Validators.pattern(
+        '^(https?|ftp):\\/\\/(([^:/\\s]+)(:[0-9]+)?)(\\/[^#\\s]*)?(\\?[^#\\s]*)?(#.*)?$'
+      )])
     })
     this.guides.push(guideFormGroup)
   }
@@ -180,11 +193,11 @@ export class CreateLaboratoryComponent implements OnInit {
 
   addParameter(): void {
     const parametersFormGroup = this.builder.group({
-      name: [''],
+      name:  this.builder.control('', Validators.required),
       unit: [''],
       parameter_options: new FormArray([this.builder.group({
         id: [uuidv4()],
-        value: [''],
+        value: this.builder.control('', Validators.required),
         image: [this.defaultImg],
         file: ['']
       }
@@ -200,7 +213,7 @@ export class CreateLaboratoryComponent implements OnInit {
   addOption(index: number): void {
     const optionFormGroup = this.builder.group({
       id: [uuidv4()],
-      value: [''],
+      value:  this.builder.control('', Validators.required),
       image: [this.defaultImg],
       file: ['']
     })
@@ -233,13 +246,13 @@ export class CreateLaboratoryComponent implements OnInit {
     this.experiments.push(this.builder.group({
       selectedOptions: selectedOptionsArray,
       videos: new FormArray([this.builder.group({
-        name: [''],
-        video: [''],
-        file: ['']
+        name:  this.builder.control('', Validators.required),
+        video: this.builder.control('', this.fileRequiredValidator()),
+        file: this.builder.control('', this.fileRequiredValidator()),
       })]),
       activities: new FormArray([
         this.builder.group({
-          statement: [''],
+          statement:  this.builder.control('', Validators.required),
           result: [''],
           unit: ['']
         })
@@ -277,9 +290,9 @@ export class CreateLaboratoryComponent implements OnInit {
 
   addVideo(index: number): void {
     const videoFormGroup = this.builder.group({
-      name: [''],
-      video: [''],
-      file: ['']
+      name:  this.builder.control('', Validators.required),
+      video: this.builder.control('', this.fileRequiredValidator()),
+      file: this.builder.control('', this.fileRequiredValidator())
     })
     this.getVideos(index).push(videoFormGroup)
   }
@@ -294,7 +307,7 @@ export class CreateLaboratoryComponent implements OnInit {
 
   addExperimentActivity(index: number): void {
     const activityFormGroup = this.builder.group({
-      statement: [''],
+      statement:  this.builder.control('', Validators.required),
       result: [''],
       unit: ['']
     })
@@ -315,7 +328,7 @@ export class CreateLaboratoryComponent implements OnInit {
 
   addActivity(): void {
     const activityFormGroup = this.builder.group({
-      statement: [''],
+      statement:  this.builder.control('', Validators.required),
       result: [''],
       unit: ['']
     })
@@ -526,6 +539,21 @@ export class CreateLaboratoryComponent implements OnInit {
         },
       });
     });
+  }
+  nextStepIntroduction() {
+    if (this.introduction.valid) {
+      this.stepper.next(); 
+    } else {
+      this.introduction.markAllAsTouched(); 
+    }
+  }
+
+  nextStepExperiments() {
+    if (this.experiments.valid) {
+      this.stepper.next(); 
+    } else {
+      this.experiments.markAllAsTouched(); 
+    }
   }
 }
 

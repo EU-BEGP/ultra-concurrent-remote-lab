@@ -399,6 +399,18 @@ mat-dialog-actions{
   color:black;
 }
 
+
+.error-message {
+  color: #f44336;
+  margin-top: 8px !important;
+  margin-bottom: 0px !important; 
+}
+
+.error-border {
+  border: 2px solid #f44336;  /* Cambia el color o grosor del borde */
+  box-shadow: 0 0 5px rgba(255, 0, 0, 0.5);  /* Opcional: agrega una sombra alrededor del borde */
+}
+
 /* --------------------------TYPOGRAPHY------------------------- */
 
 .header1 {
