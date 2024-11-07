@@ -61,7 +61,7 @@ class VideoExperimentAdmin(admin.ModelAdmin):
 
 class SessionAdmin(admin.ModelAdmin):
     ordering = ["id"]
-    list_display = ["id", "student", "laboratory", "registration_date"]
+    list_display = ["id", "user", "laboratory", "registration_date"]
 
 
 class ActivityAdmin(admin.ModelAdmin):

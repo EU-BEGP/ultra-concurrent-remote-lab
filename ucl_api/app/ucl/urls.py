@@ -6,20 +6,15 @@ from ucl.views import (
     laboratory_views,
     option_views,
     parameter_views,
+    procedure_views,
     session_views,
     solved_activity_views,
     video_experiment_views,
-    procedure_views,
 )
 
 app_name = "ucl"
 
 urlpatterns = [
-    path(
-        "laboratories/all/",
-        laboratory_views.ListAllLaboratoryView.as_view(),
-        name="laboratory_list_all",
-    ),
     path(
         "laboratories/",
         laboratory_views.ListCreateLaboratoryView.as_view(),

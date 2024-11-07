@@ -95,8 +95,8 @@ class ExperimentSerializer(serializers.ModelSerializer):
 class SessionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Session
-        fields = ["id", "student", "laboratory", "registration_date"]
-        read_only_fields = ["student"]
+        fields = ["id", "user", "laboratory", "registration_date"]
+        read_only_fields = ["user"]
 
 
 class ProcedureSerializer(serializers.ModelSerializer):

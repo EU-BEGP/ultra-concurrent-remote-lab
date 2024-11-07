@@ -15,20 +15,26 @@ import random
 
 
 class CreateUserView(generics.CreateAPIView):
-    """Create a new user"""
+    """
+    CREATE a new user
+    """
 
     serializer_class = UserSerializer
 
 
 class CreateTokenView(ObtainAuthToken):
-    """Get token for user"""
+    """
+    GET token for user
+    """
 
     serializer_class = AuthTokenSerializer
     renderer_classes = api_settings.DEFAULT_RENDERER_CLASSES
 
 
 class ManageUserView(generics.RetrieveUpdateAPIView):
-    """Manage the authenticated user"""
+    """
+    MANAGE the authenticated user
+    """
 
     serializer_class = UserProfileSerializer
     authentication_classes = (authentication.TokenAuthentication,)
@@ -40,6 +46,10 @@ class ManageUserView(generics.RetrieveUpdateAPIView):
 
 
 class ActivateUserAccount(generics.UpdateAPIView):
+    """
+    ACTIVATE a created user account
+    """
+
     serializer_class = AccountActivationSerializer
     queryset = User.objects.all()
 
@@ -67,6 +77,10 @@ class ActivateUserAccount(generics.UpdateAPIView):
 
 
 class RequestVerificationCode(generics.UpdateAPIView):
+    """
+    REQUEST verification code in case of expiration or loss
+    """
+
     serializer_class = AccountActivationSerializer
     queryset = User.objects.all()
 

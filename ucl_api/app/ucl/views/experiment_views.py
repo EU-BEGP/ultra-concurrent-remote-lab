@@ -1,20 +1,27 @@
 from django.shortcuts import get_object_or_404
+from drf_spectacular.utils import extend_schema_view, extend_schema, OpenApiParameter
 from rest_framework import generics, status
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.exceptions import NotFound, ValidationError
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from ucl.models import Activity, Experiment, Option, VideoExperiment
-from ucl.permissions import IsInstructor
+from ucl.permissions import ApplicationPermissionManager
 from ucl.serializers import ActivitySerializer, ExperimentSerializer
 import uuid
 
 
-## Create Experiment
 class ExperimentCreateView(generics.CreateAPIView):
+    """
+    CREATE an experiment
+    """
+
     serializer_class = ExperimentSerializer
     authentication_classes = (TokenAuthentication,)
-    permission_classes = (IsAuthenticated, IsInstructor)
+    permission_classes = (
+        IsAuthenticated,
+        ApplicationPermissionManager,
+    )
 
     def create(self, request, *args, **kwargs):
         created_entities = []
@@ -24,6 +31,7 @@ class ExperimentCreateView(generics.CreateAPIView):
                 "data_file": request.data.get("data_file"),
                 "laboratory": request.data.get("laboratory"),
             }
+
             # Create experiment
             serializer = self.get_serializer(data=cleaned_data, partial=True)
             serializer.is_valid(raise_exception=True)
@@ -109,33 +117,60 @@ class ExperimentCreateView(generics.CreateAPIView):
             return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
 
-## Retrieve, Update or Destroy Specific Experiment
 class ExperimentDetailView(generics.RetrieveUpdateDestroyAPIView):
+    """
+    RETRIEVE, UPDATE or DESTROY a specific experiment
+    """
+
     serializer_class = ExperimentSerializer
     authentication_classes = (TokenAuthentication,)
-    permission_classes = (IsAuthenticated, IsInstructor)
-
-    def get_queryset(self):
-        instructor = self.request.user.id
-        return (
-            Experiment.objects.filter(laboratory__instructor=instructor)
-            .select_related("laboratory")
-            .prefetch_related("experiment_videos", "experiment_activities")
-        )
+    permission_classes = (
+        IsAuthenticated,
+        ApplicationPermissionManager,
+    )
+    queryset = Experiment.objects.all()
 
 
-# Retrieve experiment based on the combination of options ids
+@extend_schema_view(
+    get=extend_schema(
+        parameters=[
+            OpenApiParameter(
+                name="laboratory",
+                description="Laboratory Id",
+                type=str,
+            ),
+            OpenApiParameter(
+                name="id",
+                description="List of Options Ids",
+                type={
+                    "type": "array",
+                    "items": {"type": "string"},
+                },
+                explode=True,
+            ),
+        ]
+    )
+)
 class ExperimentRetrieveByOptionIdsView(generics.RetrieveAPIView):
+    """
+    RETRIEVE an experiment based on the combination of options ids
+    """
+
     serializer_class = ExperimentSerializer
     authentication_classes = (TokenAuthentication,)
-    permission_classes = (IsAuthenticated, IsInstructor)
-
-    def get_queryset(self):
-        instructor_id = self.request.user.id
-        return Experiment.objects.filter(laboratory__instructor=instructor_id)
+    permission_classes = (
+        IsAuthenticated,
+        ApplicationPermissionManager,
+    )
+    queryset = Experiment.objects.all()
 
     def get_object(self):
         ids = self.request.query_params.getlist("id")
+        laboratory = self.request.query_params.get("laboratory")
+
+        if not laboratory:
+            raise ValidationError("Provide laboratory ID.")
+
         if not ids:
             raise ValidationError("No option IDs provided.")
 
@@ -144,7 +179,7 @@ class ExperimentRetrieveByOptionIdsView(generics.RetrieveAPIView):
         except ValueError:
             raise ValidationError("One or more provided option IDs are invalid.")
 
-        experiments = self.get_queryset()
+        experiments = Experiment.objects.filter(laboratory=laboratory)
         matching_experiment = None
 
         for experiment in experiments:
@@ -165,23 +200,29 @@ class ExperimentRetrieveByOptionIdsView(generics.RetrieveAPIView):
             experiment = self.get_object()
             serializer = self.get_serializer(experiment)
             return Response(serializer.data, status=status.HTTP_200_OK)
-        except (ValidationError, NotFound) as e:
+        except ValidationError as e:
+            return Response(
+                {"error": str(e.detail[0])}, status=status.HTTP_400_BAD_REQUEST
+            )
+        except (Exception, NotFound) as e:
             return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
 
-# List all activities that belongs to an experiment
 class ListExperimentActivitiesView(generics.ListAPIView):
+    """
+    LIST all the existing activities from a experiment
+    """
+
     serializer_class = ActivitySerializer
     authentication_classes = (TokenAuthentication,)
-    permission_classes = (IsAuthenticated, IsInstructor)
+    permission_classes = (
+        IsAuthenticated,
+        ApplicationPermissionManager,
+    )
 
     def get_queryset(self):
-        laboratory_instructor = self.request.user.id
         experiment_id = self.kwargs.get("pk")
-
-        experiment = get_object_or_404(
-            Experiment, id=experiment_id, laboratory__instructor=laboratory_instructor
-        )
+        experiment = get_object_or_404(Experiment, id=experiment_id)
         activities = Activity.objects.filter(experiment=experiment)
 
         return activities.select_related("experiment__laboratory")

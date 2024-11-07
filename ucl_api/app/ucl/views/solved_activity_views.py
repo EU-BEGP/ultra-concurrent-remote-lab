@@ -6,16 +6,17 @@ from ucl.models import Procedure, SolvedActivity
 from ucl.serializers import SolvedActivitySerializer
 
 
-# Create a SolvedActivity
 class ListCreateSolvedActivityView(generics.ListCreateAPIView):
+    """
+    CREATE a solved activity
+    """
+
     serializer_class = SolvedActivitySerializer
     authentication_classes = (TokenAuthentication,)
     permission_classes = (IsAuthenticated,)
 
     def get_queryset(self):
-        return SolvedActivity.objects.filter(
-            session__student=self.request.user
-        ).prefetch_related("procedures")
+        return SolvedActivity.objects.filter(session__user=self.request.user)
 
     def create(self, request, *args, **kwargs):
         created_entities = []
@@ -25,7 +26,7 @@ class ListCreateSolvedActivityView(generics.ListCreateAPIView):
                 "activity": request.data.get("activity"),
                 "session": request.data.get("session"),
             }
-            # Create experiment
+            # Create solved activity
             serializer = self.get_serializer(data=cleaned_data, partial=True)
             serializer.is_valid(raise_exception=True)
             solved_activity = serializer.save()
@@ -38,8 +39,6 @@ class ListCreateSolvedActivityView(generics.ListCreateAPIView):
                 proc_name = request.data.get(f"procedures[{index}][name]")
                 proc_type = request.data.get(f"procedures[{index}][data_type]")
                 proc_data = request.FILES.get(f"procedures[{index}][data]")
-
-                print(proc_name, proc_type, proc_data)
 
                 if not proc_name or not proc_type or not proc_data:
                     index = 0
@@ -66,13 +65,14 @@ class ListCreateSolvedActivityView(generics.ListCreateAPIView):
             return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
 
-## Retrieve, Update or Destroy a specific solved activity
 class RetrieveUpdateDestroySolvedActivityView(generics.RetrieveUpdateDestroyAPIView):
+    """
+    RETRIEVE, UPDATE or DESTROY a specific solved activity
+    """
+
     serializer_class = SolvedActivitySerializer
     authentication_classes = (TokenAuthentication,)
     permission_classes = (IsAuthenticated,)
 
     def get_queryset(self):
-        return SolvedActivity.objects.filter(
-            session__student=self.request.user
-        ).prefetch_related("procedures")
+        return SolvedActivity.objects.filter(session__user=self.request.user)

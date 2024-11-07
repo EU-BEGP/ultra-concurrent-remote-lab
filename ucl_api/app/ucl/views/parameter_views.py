@@ -4,26 +4,33 @@ from rest_framework.exceptions import ValidationError
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from ucl.models import Option, Parameter
-from ucl.permissions import IsInstructor
+from ucl.permissions import ApplicationPermissionManager
 from ucl.serializers import ParameterSerializer
 from ucl.views.common import validate_uuid
 
 
-# Create a Parameter
 class CreateParameterView(generics.CreateAPIView):
+    """
+    CREATE a parameter
+    """
+
     serializer_class = ParameterSerializer
     authentication_classes = (TokenAuthentication,)
-    permission_classes = (IsAuthenticated, IsInstructor)
+    permission_classes = (
+        IsAuthenticated,
+        ApplicationPermissionManager,
+    )
 
     def create(self, request, *args, **kwargs):
         created_entities = []
         try:
-            # Exctract the neccesary fields for parameter creation
+            # Extract the neccesary fields for parameter creation
             cleaned_data = {
                 "name": request.data.get("name"),
                 "unit": request.data.get("unit"),
                 "laboratory": request.data.get("laboratory"),
             }
+
             # Create parameter
             serializer = self.get_serializer(data=cleaned_data, partial=True)
             serializer.is_valid(raise_exception=True)
@@ -74,13 +81,15 @@ class CreateParameterView(generics.CreateAPIView):
             return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
 
-## Retrieve, Update or Destroy a specific parameter
 class RetrieveUpdateDestroyParameterView(generics.RetrieveUpdateDestroyAPIView):
+    """
+    RETRIEVE, UPDATE or DESTROY a specific parameter
+    """
+
     serializer_class = ParameterSerializer
     authentication_classes = (TokenAuthentication,)
-    permission_classes = (IsAuthenticated, IsInstructor)
-
-    def get_queryset(self):
-        instructor = self.request.user.id
-        parameters = Parameter.objects.filter(laboratory__instructor=instructor)
-        return parameters
+    permission_classes = (
+        IsAuthenticated,
+        ApplicationPermissionManager,
+    )
+    queryset = Parameter.objects.all()

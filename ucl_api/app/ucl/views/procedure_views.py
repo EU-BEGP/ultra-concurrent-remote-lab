@@ -5,13 +5,16 @@ from ucl.models import Procedure
 from ucl.serializers import ProcedureSerializer
 
 
-## Retrieve, Update or Destroy a specific procedure
 class RetrieveUpdateDestroyProcedureView(generics.RetrieveUpdateDestroyAPIView):
+    """
+    RETRIEVE, UPDATE or DESTROY a specific procedure
+    """
+
     serializer_class = ProcedureSerializer
     authentication_classes = (TokenAuthentication,)
     permission_classes = (IsAuthenticated,)
 
     def get_queryset(self):
         return Procedure.objects.filter(
-            solved_activity__session__student=self.request.user
+            solved_activity__session__user=self.request.user
         )

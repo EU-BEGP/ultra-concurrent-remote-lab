@@ -115,9 +115,9 @@ class Activity(models.Model):
 
 class Session(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    student = models.ForeignKey(
+    user = models.ForeignKey(
         settings.AUTH_USER_MODEL,
-        related_name="student_sessions",
+        related_name="user_sessions",
         on_delete=models.CASCADE,
     )
     laboratory = models.ForeignKey(

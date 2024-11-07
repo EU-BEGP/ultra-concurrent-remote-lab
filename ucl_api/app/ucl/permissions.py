@@ -1,10 +1,17 @@
 from rest_framework import permissions
 
 
-class IsInstructor(permissions.BasePermission):
+class ApplicationPermissionManager(permissions.BasePermission):
     """
-    Permission to only allow instructors to access objects.
+    Permission that allows:
+        - The retrieval or list of objects to both students and instructors.
+        - The creation, modification or deletion of objects to only instructors.
     """
 
     def has_permission(self, request, view):
-        return request.user.groups.filter(name="instructors").exists()
+        if request.method == "GET":
+            return True
+        elif request.method in ["POST", "PUT", "PATCH", "DELETE"]:
+            return request.user.groups.filter(name="instructors").exists()
+        else:
+            return False

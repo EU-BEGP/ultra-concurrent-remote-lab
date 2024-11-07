@@ -6,31 +6,37 @@ from ucl.models import Session
 from ucl.serializers import SessionSerializer
 
 
-# Create a Session
 class ListCreateSessionView(generics.ListCreateAPIView):
+    """
+    CREATE a session
+    """
+
     serializer_class = SessionSerializer
     authentication_classes = (TokenAuthentication,)
     permission_classes = (IsAuthenticated,)
 
     def get_queryset(self):
-        return Session.objects.filter(student=self.request.user)
+        return Session.objects.filter(user=self.request.user)
 
     def create(self, request, *args, **kwargs):
-        student = request.user
+        user = request.user
         data = request.data
 
         serializer = self.get_serializer(data=data)
         serializer.is_valid(raise_exception=True)
-        serializer.save(student=student)
+        serializer.save(user=user)
 
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 
-## Retrieve, Update or Destroy a specific session
 class RetrieveUpdateDestroySessionView(generics.RetrieveUpdateDestroyAPIView):
+    """
+    RETRIEVE, UPDATE or DESTROY a specific session
+    """
+
     serializer_class = SessionSerializer
     authentication_classes = (TokenAuthentication,)
     permission_classes = (IsAuthenticated,)
 
     def get_queryset(self):
-        return Session.objects.filter(student=self.request.user)
+        return Session.objects.filter(user=self.request.user)
