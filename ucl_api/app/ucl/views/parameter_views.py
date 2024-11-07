@@ -67,14 +67,7 @@ class CreateParameterView(generics.CreateAPIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
 
         except ValidationError as e:
-            # Extract and format the error details
-            error_details = {
-                field: [str(error) for error in errors]
-                for field, errors in e.detail.items()
-            }
-            return Response(
-                {"error": error_details}, status=status.HTTP_400_BAD_REQUEST
-            )
+            return Response({"error": e.detail[0]}, status=status.HTTP_400_BAD_REQUEST)
         except Exception as e:
             for entity in created_entities:
                 entity.delete()
