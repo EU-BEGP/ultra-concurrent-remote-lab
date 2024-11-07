@@ -264,7 +264,7 @@
                                                             (click)="openProcedures({'experiment':experiment,'activityIndex':activityIndex})">
                                                             <mat-icon
                                                                 class="add-new bigger-icon"
-                                                                matTooltip="Add Prcedure">add_circle</mat-icon>
+                                                                matTooltip="Add Procedure">add_circle</mat-icon>
                                                         </button>
                                                     </span>
                                                     <div
@@ -287,36 +287,33 @@
                                                     Answer
                                                 </span>
 
-                                                <mat-form-field
-                                                    style="width: 75%"
-                                                    class="input-field pr-8"
-                                                    appearance="outline">
-                                                    <input matInput
-                                                        placeholder="Answer"
-                                                        formControlName="result"
-                                                        required>
-                                                </mat-form-field>
+                                                <div style="display: flex">
+                                                    <mat-form-field
+                                                        style="width: 85%"
+                                                        class="input-field pr-8"
+                                                        appearance="outline">
+                                                        <input matInput
+                                                            placeholder="Answer"
+                                                            formControlName="result"
+                                                            required>
 
-                                                <mat-form-field
-                                                    style="width: 25%"
-                                                    appearance="outline">
-                                                    <mat-select
-                                                        placeholder="Unit"
-                                                        formControlName="unit">
-                                                        <mat-optgroup
-                                                            class="accent"
-                                                            *ngFor="let group of unit_groups">
-                                                            <span
-                                                                class="primary header3">{{group.name}}</span>
-                                                            <mat-option
-                                                                *ngFor="let unit of group.units"
-                                                                [value]="unit.value">
-                                                                <span
-                                                                    class="body1">{{unit.value}}</span>
-                                                            </mat-option>
-                                                        </mat-optgroup>
-                                                    </mat-select>
-                                                </mat-form-field>
+                                                    </mat-form-field>
+                                                    <span
+                                                        style="width: 15%; align-items: center;"
+                                                        class="ml-16 input-label body1 vertical-center">
+                                                        {{activity.value.unit}}
+                                                        <mat-icon
+                                                            style="height: 36px;"
+                                                            *ngIf="activity.value.result && activity.value.result == activity.value.expected_result"
+                                                            class="ml-16 success vertical-center bigger-icon"
+                                                            matTooltip="Right Answer">check</mat-icon>
+                                                        <mat-icon
+                                                            style="height: 36px;"
+                                                            *ngIf="activity.value.result && activity.value.result != activity.value.expected_result"
+                                                            class="ml-16 error vertical-center bigger-icon"
+                                                            matTooltip="Wrong Answer">close</mat-icon>
+                                                    </span>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -340,12 +337,12 @@
                             [stepControl]="finalActivities">
 
                             <div
-                                *ngFor="let activity of labActivities; index as activityIndex"
+                                *ngFor="let activity of finalActivities.controls; index as activityIndex"
                                 [formGroupName]="activityIndex"
                                 class="mt-16">
                                 <span mat-caption
                                     class="input-label header3">
-                                    {{activityIndex+1}}.{{' '+activity.statement}}
+                                    {{activityIndex+1}}.{{' '+activity.value.statement}}
                                 </span>
                                 <div formArrayName="procedure">
                                     <span mat-caption
@@ -374,33 +371,33 @@
                                     class="input-label header3 vertical-center primary">
                                     Answer
                                 </span>
-                                <mat-form-field style="width: 75%"
-                                    class="input-field pr-8"
-                                    appearance="outline">
-                                    <input matInput placeholder="Answer"
-                                        required
-                                        formControlName="result">
-                                </mat-form-field>
-                                <mat-form-field
-                                    style="width: 25%"
-                                    appearance="outline">
-                                    <mat-select
-                                        placeholder="Unit"
-                                        formControlName="unit">
-                                        <mat-optgroup
-                                            class="accent"
-                                            *ngFor="let group of unit_groups">
-                                            <span
-                                                class="primary header3">{{group.name}}</span>
-                                            <mat-option
-                                                *ngFor="let unit of group.units"
-                                                [value]="unit.value">
-                                                <span
-                                                    class="body1">{{unit.value}}</span>
-                                            </mat-option>
-                                        </mat-optgroup>
-                                    </mat-select>
-                                </mat-form-field>
+                                <div style="display: flex">
+                                    <mat-form-field
+                                        style="width: 85%"
+                                        class="input-field pr-8"
+                                        appearance="outline">
+                                        <input matInput
+                                            placeholder="Answer"
+                                            formControlName="result"
+                                            required>
+
+                                    </mat-form-field>
+                                    <span
+                                        style="width: 15%; align-items: center;"
+                                        class="ml-16 input-label body1 vertical-center">
+                                        {{activity.value.unit}}
+                                        <mat-icon
+                                            style="height: 36px;"
+                                            *ngIf="activity.value.result && activity.value.result == activity.value.expected_result"
+                                            class="ml-16 success vertical-center bigger-icon"
+                                            matTooltip="Right Answer">check</mat-icon>
+                                        <mat-icon
+                                            style="height: 36px;"
+                                            *ngIf="activity.value.result && activity.value.result != activity.value.expected_result"
+                                            class="ml-16 error vertical-center bigger-icon"
+                                            matTooltip="Wrong Answer">close</mat-icon>
+                                    </span>
+                                </div>
 
                             </div>
                             <mat-card-actions>

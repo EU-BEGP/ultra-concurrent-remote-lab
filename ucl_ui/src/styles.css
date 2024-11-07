@@ -358,6 +358,7 @@ mat-dialog-actions{
 
 .bigger-icon{
   transform: scale(1.5);
+  height: 36px;
 }
 
 .secondary-button {
@@ -404,6 +405,12 @@ mat-dialog-actions{
   color: #f44336;
   margin-top: 8px !important;
   margin-bottom: 0px !important; 
+}
+.error{
+  color: #f44336;
+}
+.success{
+  color: green
 }
 
 .error-border {

@@ -252,13 +252,14 @@ export class LabComponent implements OnInit {
     // Populate activities
     const experimentActivities = await this.getActivitiesByExperimentId(experimentData.id)
 
-      experimentActivities.forEach((activity: { id: any, statement: any }) => {
+      experimentActivities.forEach((activity: any) => {
         activityArray.push(this.builder.group({
           id: [activity.id],
           statement: [activity.statement],
+          expected_result: [activity.expected_result],
           result: [''],  
           procedure: this.builder.array([]),
-          unit: ['']
+          unit: [activity.unit]
         }));
       });
 
@@ -301,9 +302,10 @@ export class LabComponent implements OnInit {
       activityArray.push(this.builder.group({
         id: [activity.id],
         statement: [activity.statement],
+        expected_result: [activity.expected_result],
         result: [''],
         procedure: this.builder.array([]),
-        unit: ['']
+        unit: [activity.unit]
       }));
     })
   }
