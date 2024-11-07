@@ -31,6 +31,7 @@ FORCE_SCRIPT_NAME = os.environ.get("FORCE_SCRIPT_NAME")
 # Application definition
 
 INSTALLED_APPS = [
+    "app",
     "users",
     "ucl",
     "django.contrib.admin",
