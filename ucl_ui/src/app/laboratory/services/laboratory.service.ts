@@ -25,8 +25,14 @@ export class LaboratoryService {
     };
   }
 
-  getLabs(): Observable<any> {
-    return this.http.get<Laboratory[]>(`${config.api.baseUrl}ucl/laboratories/`);
+  getLabs(owner : boolean): Observable<any> {
+    if(owner){
+      let params = new HttpParams();
+      params = params.append('owned', owner)
+      return this.http.get<Laboratory[]>(`${config.api.baseUrl}ucl/laboratories/` , { params });
+    } else {
+      return this.http.get<Laboratory[]>(`${config.api.baseUrl}ucl/laboratories/`);
+    }
   }
 
   getLabById(id: string): Observable<any> {
@@ -49,10 +55,12 @@ export class LaboratoryService {
     return this.http.get<Activity[]>(`${config.api.baseUrl}ucl/laboratories/${id}/activities/`);
   }
 
-  getExperimentByOptions(id_array: any): Observable<any> {
+  getExperimentByOptions(id_array: any, labId:string): Observable<any> {
     let params = new HttpParams();
+    params = params.append('laboratory', labId)
     id_array.forEach((id:string) => {
       params = params.append('id', id);
+      
     });
 
     return this.http.get<Experiment>(`${config.api.baseUrl}ucl/experiments/filter/`, { params });

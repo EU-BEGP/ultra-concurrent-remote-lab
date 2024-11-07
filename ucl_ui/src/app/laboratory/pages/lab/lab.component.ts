@@ -276,7 +276,7 @@ export class LabComponent implements OnInit {
 
   getExperimentByOptions(options: any): Promise<any> {
     return new Promise((resolve, reject) => {
-      this.labService.getExperimentByOptions(options).subscribe({
+      this.labService.getExperimentByOptions(options, this.id).subscribe({
         next: (experiment: any) => resolve(experiment),
         error: (e: any) => {
           console.log(e)

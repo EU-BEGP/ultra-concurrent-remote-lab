@@ -299,6 +299,7 @@
 
                                                     </mat-form-field>
                                                     <span
+                                                        *ngIf="activity.value.expected_result"
                                                         style="width: 15%; align-items: center;"
                                                         class="ml-16 input-label body1 vertical-center">
                                                         {{activity.value.unit}}
@@ -383,6 +384,7 @@
 
                                     </mat-form-field>
                                     <span
+                                        *ngIf="activity.value.expected_result"
                                         style="width: 15%; align-items: center;"
                                         class="ml-16 input-label body1 vertical-center">
                                         {{activity.value.unit}}

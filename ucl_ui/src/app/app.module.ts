@@ -45,6 +45,8 @@ import { HotTableModule } from '@handsontable/angular';
 import { DynamicTableComponent } from './laboratory/components/dynamic-table/dynamic-table.component';
 import { ProcedureToolsDialogComponent } from './laboratory/components/procedure-tools-dialog/procedure-tools-dialog.component';
 
+import {ClipboardModule} from '@angular/cdk/clipboard';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -75,6 +77,7 @@ import { ProcedureToolsDialogComponent } from './laboratory/components/procedure
     FormsModule,
     ReactiveFormsModule,
     CountdownModule,
+    ClipboardModule,
     ToastrModule.forRoot({
       timeOut: 5000,
       closeButton: true,
