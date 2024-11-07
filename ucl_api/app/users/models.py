@@ -1,6 +1,7 @@
 from django.contrib.auth.models import (
     AbstractBaseUser,
     BaseUserManager,
+    Group,
     PermissionsMixin,
 )
 from django.db import models
@@ -47,6 +48,8 @@ class UserManager(BaseUserManager):
         user.is_staff = True
         user.is_superuser = True
         user.is_active = True
+        group = Group.objects.get(name="instructors")
+        user.groups.add(group)
         user.save(using=self._db)
 
         return user
@@ -72,3 +75,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     objects = UserManager()
     USERNAME_FIELD = "email"
+
+    def current_groups(self):
+        groups = Group.objects.filter(user=self)
+        return ", ".join(group.name for group in groups)

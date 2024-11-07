@@ -21,6 +21,7 @@ class UserAdmin(BaseUserAdmin):
         "email_expiration_time",
         "is_active",
         "is_superuser",
+        "current_groups",
     ]
     fieldsets = (
         (None, {"fields": ("email", "password")}),
