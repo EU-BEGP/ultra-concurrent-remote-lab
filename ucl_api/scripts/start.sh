@@ -9,7 +9,7 @@ if [ "$ENVIRONMENT" = "production" ]; then
   python manage.py wait_for_db
 
   # Start Gunicorn
-  gunicorn --bind 0.0.0.0:8000 --workers=2 app.wsgi:application
+  gunicorn --bind 0.0.0.0:8000 --workers=2 --timeout 120 app.wsgi:application
 
 elif [ "$ENVIRONMENT" = "development" ]; then
 
@@ -19,6 +19,6 @@ elif [ "$ENVIRONMENT" = "development" ]; then
   python manage.py wait_for_db
 
   # Start Gunicorn with reload configuration
-  gunicorn --bind 0.0.0.0:8000 --reload app.wsgi:application
+  gunicorn --bind 0.0.0.0:8000 --reload --workers=2 --timeout 120 app.wsgi:application
 
 fi
