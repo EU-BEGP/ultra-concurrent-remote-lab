@@ -79,7 +79,7 @@ def generate_unique_filename_image(instance, filename):
 class Laboratory(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     name = models.CharField(max_length=50)
-    description = models.CharField(max_length=200)
+    description = models.CharField(max_length=1000)
     category = models.CharField(max_length=100)
     institution = models.CharField(max_length=100)
     video = models.FileField(

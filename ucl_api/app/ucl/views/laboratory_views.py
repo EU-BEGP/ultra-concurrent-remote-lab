@@ -13,7 +13,7 @@ from ucl.serializers import (
     LaboratorySerializer,
     ParameterSerializer,
 )
-from ucl.views.common import validate_uuid
+from ucl.views.common import validate_uuid, handle_validation_error
 
 
 @extend_schema_view(
@@ -62,7 +62,7 @@ class ListCreateLaboratoryView(generics.ListCreateAPIView):
 
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         except ValidationError as e:
-            return Response({"error": e.detail[0]}, status=status.HTTP_400_BAD_REQUEST)
+            return handle_validation_error(e)
 
 
 class RetrieveUpdateDestroyLaboratoryView(generics.RetrieveUpdateDestroyAPIView):

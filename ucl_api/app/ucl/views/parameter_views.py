@@ -6,7 +6,7 @@ from rest_framework.response import Response
 from ucl.models import Option, Parameter
 from ucl.permissions import ApplicationPermissionManager
 from ucl.serializers import ParameterSerializer
-from ucl.views.common import validate_uuid
+from ucl.views.common import validate_uuid, handle_validation_error
 
 
 class CreateParameterView(generics.CreateAPIView):
@@ -67,10 +67,14 @@ class CreateParameterView(generics.CreateAPIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
 
         except ValidationError as e:
-            return Response({"error": e.detail[0]}, status=status.HTTP_400_BAD_REQUEST)
+            for entity in created_entities:
+                entity.delete()
+
+            return handle_validation_error(e)
         except Exception as e:
             for entity in created_entities:
                 entity.delete()
+
             return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
 

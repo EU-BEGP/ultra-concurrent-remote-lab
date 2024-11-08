@@ -1,3 +1,4 @@
+from ucl.views.common import handle_validation_error
 from django.shortcuts import get_object_or_404
 from drf_spectacular.utils import extend_schema_view, extend_schema, OpenApiParameter
 from rest_framework import generics, status
@@ -200,10 +201,10 @@ class ExperimentRetrieveByOptionIdsView(generics.RetrieveAPIView):
             experiment = self.get_object()
             serializer = self.get_serializer(experiment)
             return Response(serializer.data, status=status.HTTP_200_OK)
+
         except ValidationError as e:
-            return Response(
-                {"error": str(e.detail[0])}, status=status.HTTP_400_BAD_REQUEST
-            )
+            return handle_validation_error(e)
+
         except (Exception, NotFound) as e:
             return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
