@@ -1,4 +1,4 @@
-from ucl.views.common import handle_validation_error
+from ucl.views.common import handle_validation_error, validate_uuid
 from django.shortcuts import get_object_or_404
 from drf_spectacular.utils import extend_schema_view, extend_schema, OpenApiParameter
 from rest_framework import generics, status
@@ -27,16 +27,19 @@ class ExperimentCreateView(generics.CreateAPIView):
     def create(self, request, *args, **kwargs):
         created_entities = []
         try:
+            experiment_id = request.data.get("id")
             cleaned_data = {
                 "name": request.data.get("name"),
                 "data_file": request.data.get("data_file"),
                 "laboratory": request.data.get("laboratory"),
             }
 
+            validate_uuid(experiment_id, Experiment)
+
             # Create experiment
             serializer = self.get_serializer(data=cleaned_data, partial=True)
             serializer.is_valid(raise_exception=True)
-            experiment = serializer.save()
+            experiment = serializer.save(id=experiment_id)
 
             created_entities.append(experiment)
 
@@ -61,7 +64,7 @@ class ExperimentCreateView(generics.CreateAPIView):
 
                 index += 1
 
-            # Handle experiments
+            # Handle experiment videos
             while True:
                 video_name = request.data.get(f"experiment_videos[{index}][name]")
                 video_file = request.FILES.get(f"experiment_videos[{index}][video]")
@@ -78,34 +81,6 @@ class ExperimentCreateView(generics.CreateAPIView):
                 )
                 video_experiment_instance.save()
                 created_entities.append(video_experiment_instance)
-
-                index += 1
-
-            # Handle activities
-            while True:
-                activity_statement = request.data.get(
-                    f"experiment_activities[{index}][statement]"
-                )
-                activity_expected_result = request.data.get(
-                    f"experiment_activities[{index}][expected_result]"
-                )
-                activity_unit = request.data.get(
-                    f"experiment_activities[{index}][unit]"
-                )
-
-                if not activity_statement:
-                    index = 0
-                    break
-
-                # Create activity
-                activity_instance = Activity(
-                    statement=activity_statement,
-                    expected_result=activity_expected_result,
-                    unit=activity_unit,
-                    experiment=experiment,
-                )
-                activity_instance.save()
-                created_entities.append(activity_instance)
 
                 index += 1
 

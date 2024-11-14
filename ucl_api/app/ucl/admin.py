@@ -24,12 +24,13 @@ class LaboratoryAdmin(admin.ModelAdmin):
         "instructor",
         "image",
         "video",
+        "registration_date",
     ]
 
 
 class GuideAdmin(admin.ModelAdmin):
     ordering = ["id"]
-    list_display = ["id", "title", "URL", "file", "laboratory"]
+    list_display = ["id", "title", "URL", "file", "laboratory", "registration_date"]
 
 
 class ParameterAdmin(admin.ModelAdmin):
@@ -51,6 +52,7 @@ class ExperimentAdmin(admin.ModelAdmin):
         "laboratory",
         "parameters",
         "param_options",
+        "registration_date",
     ]
 
 
@@ -70,7 +72,7 @@ class ActivityAdmin(admin.ModelAdmin):
         "id",
         "statement",
         "expected_result",
-        "unit",
+        "result_unit",
         "experiment",
         "laboratory",
         "registration_date",
@@ -84,7 +86,7 @@ class SolvedActivityAdmin(admin.ModelAdmin):
 
 class ProcedureAdmin(admin.ModelAdmin):
     ordering = ["id"]
-    list_display = ["id", "name", "data_type", "data", "solved_activity"]
+    list_display = ["id", "name", "description", "data_type", "data", "solved_activity"]
 
 
 admin.site.register(Laboratory, LaboratoryAdmin)

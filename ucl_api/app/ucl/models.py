@@ -27,8 +27,14 @@ def generate_unique_filename_file(instance, filename):
         instance_content = instance.data_file.read()
         field_name = "experiment_data_files"
     elif isinstance(instance, Procedure):
+        if instance.activity:
+            field_name = "activity_procedure_files"
+        elif instance.solved_activity:
+            field_name = "solved_activity_procedure_files"
+        else:
+            field_name = "procedure_files"
+
         instance_content = instance.data.read()
-        field_name = "procedure_files"
     else:
         raise ValueError(
             "Instance must pertain to a model that have valid image or file fields."
@@ -79,7 +85,7 @@ def generate_unique_filename_image(instance, filename):
 class Laboratory(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     name = models.CharField(max_length=50)
-    description = models.CharField(max_length=1000)
+    description = models.TextField(null=True, blank=True)
     category = models.CharField(max_length=100)
     institution = models.CharField(max_length=100)
     video = models.FileField(
@@ -184,7 +190,6 @@ class VideoExperiment(models.Model):
     experiment = models.ForeignKey(
         Experiment, related_name="experiment_videos", on_delete=models.CASCADE
     )
-    registration_date = models.DateTimeField(auto_now_add=True)
 
     class Meta:
         verbose_name_plural = "VideoExperiments"
@@ -194,7 +199,9 @@ class Activity(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     statement = models.CharField(max_length=500)
     expected_result = models.CharField(max_length=500, null=True, default=None)
-    unit = models.CharField(max_length=20, null=True, default=None)
+    result_unit = models.CharField(max_length=20, null=True, default=None)
+    registration_date = models.DateTimeField(auto_now_add=True)
+
     experiment = models.ForeignKey(
         Experiment,
         related_name="experiment_activities",
@@ -209,7 +216,6 @@ class Activity(models.Model):
         null=True,
         default=None,
     )
-    registration_date = models.DateTimeField(auto_now_add=True)
 
     class Meta:
         verbose_name_plural = "Activities"
@@ -235,6 +241,8 @@ class Session(models.Model):
 class SolvedActivity(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     result = models.CharField(max_length=500)
+    registration_date = models.DateTimeField(auto_now_add=True)
+
     activity = models.ForeignKey(
         Activity,
         related_name="activity_solved_activity",
@@ -245,7 +253,6 @@ class SolvedActivity(models.Model):
         related_name="session_solved_activities",
         on_delete=models.CASCADE,
     )
-    registration_date = models.DateTimeField(auto_now_add=True)
 
     class Meta:
         verbose_name_plural = "SolvedActivities"
@@ -253,11 +260,20 @@ class SolvedActivity(models.Model):
 
 class Procedure(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    name = models.CharField(max_length=200)
+    name = models.CharField(max_length=255)
+    description = models.TextField(null=True, blank=True)
     data_type = models.CharField(max_length=100)
     data = models.FileField(
         upload_to=generate_unique_filename_file,
         storage=UniqueFilenameStorage,
+    )
+
+    activity = models.ForeignKey(
+        Activity,
+        related_name="procedures",
+        on_delete=models.CASCADE,
+        null=True,
+        default=None,
     )
     solved_activity = models.ForeignKey(
         SolvedActivity,
@@ -266,4 +282,18 @@ class Procedure(models.Model):
         null=True,
         default=None,
     )
-    registration_date = models.DateTimeField(auto_now_add=True)
+
+    def save(self, *args, **kwargs):
+        # Ensure only one of `activity` or `solved_activity` is set
+        if not (self.activity or self.solved_activity):
+            raise ValueError(
+                "A procedure must be linked to either an activity or a solved activity."
+            )
+
+        # Ensure that both ForeignKeys are not set simultaneously
+        if self.activity and self.solved_activity:
+            raise ValueError(
+                "A procedure cannot be linked to both an activity and a solved activity at the same time."
+            )
+
+        super().save(*args, **kwargs)

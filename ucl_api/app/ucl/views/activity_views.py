@@ -1,8 +1,8 @@
-from django.db.models import Q
-from rest_framework import generics
+from rest_framework import generics, status
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
-from ucl.models import Activity
+from rest_framework.response import Response
+from ucl.models import Activity, Procedure
 from ucl.permissions import ApplicationPermissionManager
 from ucl.serializers import ActivitySerializer
 
@@ -18,6 +18,57 @@ class CreateActivityView(generics.CreateAPIView):
         IsAuthenticated,
         ApplicationPermissionManager,
     )
+
+    def create(self, request, *args, **kwargs):
+        created_entities = []
+        try:
+            cleaned_data = {
+                "statement": request.data.get("statement"),
+                "expected_result": request.data.get("expected_result"),
+                "result_unit": request.data.get("result_unit"),
+                "experiment": request.data.get("experiment"),
+                "laboratory": request.data.get("laboratory"),
+            }
+
+            # Create experiment
+            serializer = self.get_serializer(data=cleaned_data, partial=True)
+            serializer.is_valid(raise_exception=True)
+            activity = serializer.save()
+
+            created_entities.append(activity)
+
+            index = 0
+            # Handle procedures
+            while True:
+                proc_name = request.data.get(f"procedures[{index}][name]")
+                proc_description = request.data.get(f"procedures[{index}][description]")
+                proc_type = request.data.get(f"procedures[{index}][data_type]")
+                proc_data = request.FILES.get(f"procedures[{index}][data]")
+
+                if not proc_name or not proc_type or not proc_data:
+                    index = 0
+                    break
+
+                # Create procedure
+                procedure_instance = Procedure(
+                    name=proc_name,
+                    description=proc_description,
+                    data_type=proc_type,
+                    data=proc_data,
+                    activity=activity,
+                )
+                procedure_instance.save()
+                created_entities.append(procedure_instance)
+
+                index += 1
+
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+        except Exception as e:
+            for entity in created_entities:
+                entity.delete()
+
+            return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
 
 class RetrieveUpdateDestroyActivityView(generics.RetrieveUpdateDestroyAPIView):

@@ -37,6 +37,7 @@ class ListCreateSolvedActivityView(generics.ListCreateAPIView):
             # Handle procedures
             while True:
                 proc_name = request.data.get(f"procedures[{index}][name]")
+                proc_description = request.data.get(f"procedures[{index}][description]")
                 proc_type = request.data.get(f"procedures[{index}][data_type]")
                 proc_data = request.FILES.get(f"procedures[{index}][data]")
 
@@ -47,6 +48,7 @@ class ListCreateSolvedActivityView(generics.ListCreateAPIView):
                 # Create procedure
                 procedure_instance = Procedure(
                     name=proc_name,
+                    description=proc_description,
                     data_type=proc_type,
                     data=proc_data,
                     solved_activity=solved_activity,

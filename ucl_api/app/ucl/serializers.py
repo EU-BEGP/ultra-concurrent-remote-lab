@@ -25,13 +25,14 @@ class LaboratorySerializer(serializers.ModelSerializer):
             "instructor",
             "image",
             "video",
+            "registration_date",
         ]
 
 
 class GuideSerializer(serializers.ModelSerializer):
     class Meta:
         model = Guide
-        fields = ["id", "title", "url", "file", "laboratory"]
+        fields = ["id", "title", "url", "file", "laboratory", "registration_date"]
 
 
 class OptionSerializer(serializers.ModelSerializer):
@@ -45,7 +46,7 @@ class ParameterSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Parameter
-        fields = ["id", "laboratory", "name", "unit", "parameter_options"]
+        fields = ["id", "name", "unit", "laboratory", "parameter_options"]
 
 
 class VideoExperimentSerializer(serializers.ModelSerializer):
@@ -54,23 +55,8 @@ class VideoExperimentSerializer(serializers.ModelSerializer):
         fields = ["id", "name", "video", "experiment"]
 
 
-class ActivitySerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Activity
-        fields = [
-            "id",
-            "statement",
-            "expected_result",
-            "unit",
-            "experiment",
-            "laboratory",
-            "registration_date",
-        ]
-
-
 class ExperimentSerializer(serializers.ModelSerializer):
     experiment_videos = VideoExperimentSerializer(many=True)
-    experiment_activities = ActivitySerializer(many=True)
 
     class Meta:
         model = Experiment
@@ -81,7 +67,7 @@ class ExperimentSerializer(serializers.ModelSerializer):
             "laboratory",
             "parameter_options",
             "experiment_videos",
-            "experiment_activities",
+            "registration_date",
         )
 
     def to_representation(self, instance):
@@ -102,7 +88,32 @@ class SessionSerializer(serializers.ModelSerializer):
 class ProcedureSerializer(serializers.ModelSerializer):
     class Meta:
         model = Procedure
-        fields = ["id", "name", "data_type", "data", "solved_activity"]
+        fields = [
+            "id",
+            "name",
+            "description",
+            "data_type",
+            "data",
+            "solved_activity",
+            "activity",
+        ]
+
+
+class ActivitySerializer(serializers.ModelSerializer):
+    procedures = ProcedureSerializer(many=True)
+
+    class Meta:
+        model = Activity
+        fields = [
+            "id",
+            "statement",
+            "expected_result",
+            "result_unit",
+            "registration_date",
+            "experiment",
+            "laboratory",
+            "procedures",
+        ]
 
 
 class SolvedActivitySerializer(serializers.ModelSerializer):
@@ -113,8 +124,8 @@ class SolvedActivitySerializer(serializers.ModelSerializer):
         fields = [
             "id",
             "result",
+            "registration_date",
             "activity",
             "session",
-            "registration_date",
             "procedures",
         ]

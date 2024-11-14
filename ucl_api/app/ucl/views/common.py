@@ -4,12 +4,12 @@ from rest_framework.response import Response
 import uuid
 
 
-def validate_uuid(laboratory_id, model):
+def validate_uuid(id, model):
     """
     Validate the UUID for a given model.
     """
 
-    if not laboratory_id:
+    if not id:
         raise ValidationError(
             {
                 "error": [
@@ -22,7 +22,7 @@ def validate_uuid(laboratory_id, model):
         )
 
     try:
-        uuid_obj = uuid.UUID(laboratory_id)
+        uuid_obj = uuid.UUID(id)
     except ValueError:
         raise ValidationError(
             {
