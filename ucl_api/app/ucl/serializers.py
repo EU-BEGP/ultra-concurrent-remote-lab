@@ -90,8 +90,6 @@ class ProcedureSerializer(serializers.ModelSerializer):
         model = Procedure
         fields = [
             "id",
-            "name",
-            "description",
             "data_type",
             "data",
             "solved_activity",
