@@ -26,15 +26,6 @@ def generate_unique_filename_file(instance, filename):
     elif isinstance(instance, Experiment):
         instance_content = instance.data_file.read()
         field_name = "experiment_data_files"
-    elif isinstance(instance, Procedure):
-        if instance.activity:
-            field_name = "activity_procedure_files"
-        elif instance.solved_activity:
-            field_name = "solved_activity_procedure_files"
-        else:
-            field_name = "procedure_files"
-
-        instance_content = instance.data.read()
     else:
         raise ValueError(
             "Instance must pertain to a model that have valid image or file fields."
@@ -261,10 +252,7 @@ class SolvedActivity(models.Model):
 class Procedure(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     data_type = models.CharField(max_length=100)
-    data = models.FileField(
-        upload_to=generate_unique_filename_file,
-        storage=UniqueFilenameStorage,
-    )
+    data = models.TextField()
 
     activity = models.ForeignKey(
         Activity,

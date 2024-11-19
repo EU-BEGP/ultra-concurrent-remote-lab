@@ -41,7 +41,7 @@ class CreateActivityView(generics.CreateAPIView):
             # Handle procedures
             while True:
                 proc_type = request.data.get(f"procedures[{index}][data_type]")
-                proc_data = request.FILES.get(f"procedures[{index}][data]")
+                proc_data = request.data.get(f"procedures[{index}][data]")
 
                 if not proc_type or not proc_data:
                     index = 0
