@@ -109,9 +109,9 @@ export class LaboratoryService {
 
   addLabExperiment(experiment: any): Observable<any> {
     const formData = new FormData();
+    formData.append('id', experiment.id!);
     formData.append('name', experiment.name!);
     formData.append('laboratory', experiment.laboratory!);
-
 
     if (experiment.data_file) formData.append('data_file', experiment.data_file!);
   
@@ -125,16 +125,24 @@ export class LaboratoryService {
         formData.append(`experiment_videos[${index}][video]`, video.file); 
       }
     });
-
-    experiment.experiment_activities!.forEach((activity: any, index: number) => {
-      formData.append(`experiment_activities[${index}][statement]`, activity.statement);
-      if (activity.result) {
-        formData.append(`experiment_activities[${index}][expected_result]`, activity.result); 
-        formData.append(`experiment_activities[${index}][unit]`, activity.unit); 
-      }
-    });
-
     return this.http.post<Experiment>(`${config.api.baseUrl}ucl/experiments/`, formData);
+  }
+
+  addExperimentActivities(activity: any): Observable<any> {
+    const formData = new FormData();
+    formData.append('statement', activity.statement!);
+    if(activity.expected_result){
+      formData.append('expected_result', activity.expected_result!);
+      formData.append('result_unit', activity.result_unit!);
+    }
+    
+    if(activity.laboratory) formData.append('laboratory', activity.laboratory!);
+    
+
+    if(activity.experiment) formData.append('experiment', activity.experiment!);
+
+
+    return this.http.post<Activity>(`${config.api.baseUrl}ucl/activities/`, formData);
   }
 
   addActivities(activity: any): Observable<any> {
@@ -142,7 +150,7 @@ export class LaboratoryService {
     formData.append('statement', activity.statement!);
     if(activity.expected_result){
       formData.append('expected_result', activity.expected_result!);
-      formData.append('unit', activity.unit!);
+      formData.append('result_unit', activity.result_unit!);
     }
     
     if(activity.laboratory) formData.append('laboratory', activity.laboratory!);

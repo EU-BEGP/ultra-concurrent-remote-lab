@@ -18,6 +18,11 @@ import { LaboratoryService } from '../../services/laboratory.service';
 import { Laboratory } from '../../interfaces/laboratory';
 import { Guide } from '../../interfaces/guide';
 import { Activity } from '../../interfaces/activity';
+import { v4 as uuidv4 } from 'uuid';
+import { SessionService } from '../../services/session.service';
+import { Session } from '../../interfaces/session';
+import { UserService } from 'src/app/core/auth/services/user.service';
+import { User } from 'src/app/core/auth/interfaces/user';
 
 
 @Component({
@@ -40,6 +45,7 @@ export class LabComponent implements OnInit {
   labActivities!:any[]
   defaultImg = '../../../../assets/emptyimage.jpeg';
 
+  userId :number | undefined 
   studentSession!: FormGroup;
   optionsList: any[] = []; 
   duplicateExperimentMessage = ''; 
@@ -56,6 +62,8 @@ export class LabComponent implements OnInit {
     private toastr: ToastrService,
     private router: Router,
     private dialogRef: MatDialog,
+    private sessionService: SessionService,
+    private userService: UserService
   ) 
 
   { const breakpointObserver = inject(BreakpointObserver);
@@ -65,13 +73,32 @@ export class LabComponent implements OnInit {
       .pipe(map(({matches}) => (matches ? 'horizontal' : 'vertical')));
 
     this.studentSession = this.builder.group({
+      id:[uuidv4()],
       experiments: this.builder.array([]),
       finalActivities: this.builder.array([])
     });
 
     this.loadLabInfo()
 
+    this.getUserId()
+
     this.unit_groups = units    
+  }
+
+  
+  getUserId(){
+    const token = localStorage.getItem('token');
+
+    if (token) {
+      this.userService.getUserData().subscribe(
+        (user : User) => {
+          this.userId = user.id 
+        },
+        (err : any) => (this.userId = undefined)
+      );
+    } else {
+      this.userId = undefined;
+    }
   }
 
   ngOnInit(): void {
@@ -258,8 +285,8 @@ export class LabComponent implements OnInit {
           statement: [activity.statement],
           expected_result: [activity.expected_result],
           result: [''],  
-          procedure: this.builder.array([]),
-          unit: [activity.unit]
+          procedures: this.builder.array([]),
+          result_unit: [activity.result_unit]
         }));
       });
 
@@ -304,8 +331,8 @@ export class LabComponent implements OnInit {
         statement: [activity.statement],
         expected_result: [activity.expected_result],
         result: [''],
-        procedure: this.builder.array([]),
-        unit: [activity.unit]
+        procedures: this.builder.array([]),
+        result_unit: [activity.result_unit]
       }));
     })
   }
@@ -343,7 +370,7 @@ export class LabComponent implements OnInit {
   }
 
   getFinalActivityProcedures(activityIndex: number) {
-    return this.finalActivities.at(activityIndex).get('procedure') as FormArray;
+    return this.finalActivities.at(activityIndex).get('procedures') as FormArray;
   }
   
 
@@ -362,9 +389,7 @@ export class LabComponent implements OnInit {
 
   onSubmit(): void {
     if (this.studentSession.valid) {
-    this.toastr.success(
-      "Experiment Saved", "Success"
-    );
+    this.saveSession()
     } else {
       this.toastr.error(
         'Please, complete the required Information',
@@ -373,8 +398,70 @@ export class LabComponent implements OnInit {
     }
   }
 
+  saveSession(){
+    const sessionFields = {
+      'id': this.studentSession.value.id,
+      'laboratory': this.id,
+      'user': this.userId
+    }
+    this.sessionService.addSession(sessionFields as Session).subscribe({
+      next: (_: any) => {
+
+       this.createSolvedFinalActivities()
+       this.createSolvedExperimentActivities()
+        this.toastr.success("Session Saved")
+        this.studentSession.reset()
+      },
+      error: (e: any) => {
+        console.log(e)
+        this.toastr.error(
+          'There was an error saving your Session. Please try later.'
+        );
+      },
+    });
+
+  }
+
+  createSolvedExperimentActivities(){
+    
+    this.experiments.value.forEach((experiment:any) => {
+      (experiment)
+      experiment.experimentDetailsGroup.experiment_activities.forEach((activity:any)=>{
+        this.saveActivity(activity)
+      })
+    });
+  }
+
+  createSolvedFinalActivities(){
+    
+    this.finalActivities.value.forEach((activity:any) => {
+      this.saveActivity(activity)
+    });
+  }
+
+  saveActivity(activity:any){
+    const solvedActivityFields = {
+      'result': activity.result,
+      'activity': activity.id,
+      'session': this.studentSession.value.id,
+      'procedures': activity.procedures
+    }
+    this.sessionService.addSolvedActivities(solvedActivityFields as Session).subscribe({
+      next: (_: any) => {
+
+      },
+      error: (e: any) => {
+        console.log(e)
+        this.toastr.error(
+          'There was an error saving the solved Activities. Please try later.'
+        );
+      },
+    });
+  }
+
+
   addProcedureTable(activityIndex: number) {
-    const procedureArray = this.finalActivities.at(activityIndex).get('procedure') as FormArray;
+    const procedureArray = this.finalActivities.at(activityIndex).get('procedures') as FormArray;
     
     procedureArray.push(this.builder.group({
       data: [Handsontable.helper.createSpreadsheetData(3, 3)], 
@@ -386,7 +473,7 @@ export class LabComponent implements OnInit {
   }
 
   addExperimentProcedureTable(experiment: AbstractControl, activityIndex: number) {
-    const procedureArray = this.getActivities(experiment).at(activityIndex).get('procedure') as FormArray;
+    const procedureArray = this.getActivities(experiment).at(activityIndex).get('procedures') as FormArray;
     
     procedureArray.push(this.builder.group({
       data: [Handsontable.helper.createSpreadsheetData(3, 3)], 
@@ -398,17 +485,17 @@ export class LabComponent implements OnInit {
   }
 
   getExperimentActivityProcedures(experiment: AbstractControl,activityIndex: number) {
-    return this.getActivities(experiment).at(activityIndex).get('procedure') as FormArray;
+    return this.getActivities(experiment).at(activityIndex).get('procedures') as FormArray;
   }
 
   removeProcedure(activityIndex: number, procedureIndex: number) {
-    const procedure = this.finalActivities.at(activityIndex).get('procedure') as FormArray;
-    procedure.removeAt(procedureIndex);
+    const procedures = this.finalActivities.at(activityIndex).get('procedures') as FormArray;
+    procedures.removeAt(procedureIndex);
   }
 
   removeExperimentActivityProcedure(experiment: AbstractControl, activityIndex: number, procedureIndex: number) {
-    const procedure = this.getActivities(experiment).at(activityIndex).get('procedure') as FormArray;
-    procedure.removeAt(procedureIndex);
+    const procedures = this.getActivities(experiment).at(activityIndex).get('procedures') as FormArray;
+    procedures.removeAt(procedureIndex);
   }
 
   openProcedures(data : any){

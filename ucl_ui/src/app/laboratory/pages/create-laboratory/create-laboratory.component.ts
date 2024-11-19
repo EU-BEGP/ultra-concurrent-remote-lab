@@ -121,6 +121,7 @@ export class CreateLaboratoryComponent implements OnInit {
       })
     ]),
     experiments: this.builder.array([this.builder.group({
+      id: [uuidv4()],
       selectedOptions: new FormArray([this.builder.control('', Validators.required)]),
       videos: new FormArray([this.builder.group({
         name: this.builder.control('', Validators.required),
@@ -132,7 +133,7 @@ export class CreateLaboratoryComponent implements OnInit {
           id: [uuidv4()],
           statement:  this.builder.control('', Validators.required),
           result: [''],
-          unit: ['']
+          result_unit: ['']
         })
       ]),
       data_file: this.builder.control('')
@@ -142,7 +143,7 @@ export class CreateLaboratoryComponent implements OnInit {
         id: [uuidv4()],
         statement:  this.builder.control('', Validators.required),
         result: [''],
-        unit: ['']
+        result_unit: ['']
       })
     ])
   })
@@ -244,6 +245,7 @@ export class CreateLaboratoryComponent implements OnInit {
     });
 
     this.experiments.push(this.builder.group({
+      id: [uuidv4()],
       selectedOptions: selectedOptionsArray,
       videos: new FormArray([this.builder.group({
         name:  this.builder.control('', Validators.required),
@@ -254,7 +256,7 @@ export class CreateLaboratoryComponent implements OnInit {
         this.builder.group({
           statement:  this.builder.control('', Validators.required),
           result: [''],
-          unit: ['']
+          result_unit: ['']
         })
       ]),
       data_file: this.builder.control('')
@@ -309,7 +311,7 @@ export class CreateLaboratoryComponent implements OnInit {
     const activityFormGroup = this.builder.group({
       statement:  this.builder.control('', Validators.required),
       result: [''],
-      unit: ['']
+      result_unit: ['']
     })
     this.getExperimentActivites(index).push(activityFormGroup)
   }
@@ -330,7 +332,7 @@ export class CreateLaboratoryComponent implements OnInit {
     const activityFormGroup = this.builder.group({
       statement:  this.builder.control('', Validators.required),
       result: [''],
-      unit: ['']
+      result_unit: ['']
     })
     this.activities.push(activityFormGroup)
   }
@@ -498,16 +500,36 @@ export class CreateLaboratoryComponent implements OnInit {
     this.experiments.value.forEach((experiment: Experiment) => {
      
       const experimentFields = {
+        'id': experiment.id,
         'name': experiment.name,
         'laboratory': this.newLaboratory.value.id,
         'parameter_options': experiment.selectedOptions,
         'experiment_videos': experiment.videos,
-        'experiment_activities': experiment.activities,
         'data_file':experiment.data_file
       }
       this.labService.addLabExperiment(experimentFields).subscribe({
         next: (_: any) => {
           //Added Experiment
+          experiment.activities.forEach((activity: any) => {
+            const activityFields = {
+                'statement': activity.statement,
+                'expected_result': activity.result,
+                'result_unit': activity.result_unit,
+                'experiment': experiment.id
+              }
+
+            this.labService.addExperimentActivities(activityFields).subscribe({
+              next: (_: any) => {
+                //Added Activity
+              },
+              error: (e: any) => {
+                console.log(e)
+                this.toastr.error(
+                  'There was an error creating the Experiment Activities. Please try later.'
+                );
+              },
+            });
+          });
         },
         error: (e: any) => {
           console.log(e)
@@ -524,7 +546,7 @@ export class CreateLaboratoryComponent implements OnInit {
       const activityFields = {
         'statement': activity.statement,
         'expected_result': activity.result,
-        'unit': activity.unit,
+        'result_unit': activity.result_unit,
         'laboratory': this.newLaboratory.value.id,
       }
       this.labService.addActivities(activityFields).subscribe({

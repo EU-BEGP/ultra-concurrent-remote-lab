@@ -94,7 +94,7 @@ export class LaboratoriesDialogComponent implements OnInit {
       this.dataSource.sort = this.sort;
    }
     else{
-      this.no_my_labs_data = true
+      this.no_labs_data = true
     }
   });
   }
@@ -106,7 +106,7 @@ export class LaboratoriesDialogComponent implements OnInit {
         this.dataSource_my_labs.paginator = this.paginator_my_labs;
         this.dataSource_my_labs.sort = this.sort_my_labs;
       } else {
-        this.no_labs_data = true
+        this.no_my_labs_data = true
       }
     });
   }
