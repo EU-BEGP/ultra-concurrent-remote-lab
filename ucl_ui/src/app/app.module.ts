@@ -46,6 +46,7 @@ import { DynamicTableComponent } from './laboratory/components/dynamic-table/dyn
 import { ProcedureToolsDialogComponent } from './laboratory/components/procedure-tools-dialog/procedure-tools-dialog.component';
 
 import {ClipboardModule} from '@angular/cdk/clipboard';
+import { SessionsListDialogComponent } from './laboratory/components/sessions-list-dialog/sessions-list-dialog.component';
 
 @NgModule({
   declarations: [
@@ -68,6 +69,7 @@ import {ClipboardModule} from '@angular/cdk/clipboard';
     VideoPlayerComponent,
     DynamicTableComponent,
     ProcedureToolsDialogComponent,
+    SessionsListDialogComponent,
   ],
   imports: [
     BrowserModule,

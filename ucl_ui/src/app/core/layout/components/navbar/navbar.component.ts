@@ -15,6 +15,7 @@ import { User } from '../../../auth/interfaces/user';
 
 import { MatDialog } from '@angular/material/dialog';
 import { LaboratoriesDialogComponent } from 'src/app/laboratory/components/laboratories-dialog/laboratories-dialog.component';
+import { SessionsListDialogComponent } from 'src/app/laboratory/components/sessions-list-dialog/sessions-list-dialog.component';
 
 @Component({
   selector: 'app-navbar',
@@ -112,6 +113,15 @@ export class NavbarComponent implements OnInit {
      dialogRef.afterClosed().subscribe((res: any) => {
      })
   }
+
+  openSessions(){
+    const dialogRef = this.dialogRef.open(SessionsListDialogComponent, {
+      width: '75vw'
+     })
+     dialogRef.afterClosed().subscribe((res: any) => {
+     })
+  }
+
 
   logout(): void {
     localStorage.removeItem('token');

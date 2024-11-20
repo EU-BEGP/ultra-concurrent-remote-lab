@@ -1,0 +1,17 @@
+.demo-table {
+    width: 100%;
+  }
+
+  .dialog-title{
+    margin-bottom: 16px;
+  }
+  
+  
+  .mat-menu-item .mat-icon-no-color{
+    color: #f3ae20;
+  }
+  .table-header{
+    border-bottom: 3px solid currentColor;
+  }
+
+  
