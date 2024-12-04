@@ -83,12 +83,12 @@
                                     <mat-card
                                         class="intro-video-card mat-elevation-z4 center mb-16"
                                         formGroupName="introVideo"
-                                        [ngClass]="{'error-border': introVideo.get('video')?.hasError('required') && (introVideo.get('video')?.touched || introVideo.get('video')?.dirty)}">
+                                        [ngClass]="{'error-border': introVideo.get('file')?.hasError('required') && (introVideo.get('video')?.touched || introVideo.get('video')?.dirty)}">
                                         <app-video-player
                                             [videoSrc]="introVideo.value.video"></app-video-player>
                                         <mat-card-content>
                                             <p
-                                                *ngIf="introVideo.get('video')?.hasError('required') && (introVideo.get('video')?.touched || introVideo.get('video')?.dirty)"
+                                                *ngIf="introVideo.get('file')?.hasError('required') && (introVideo.get('video')?.touched || introVideo.get('video')?.dirty)"
                                                 class="error-message body1">
                                                 Please upload a
                                                 video file.
@@ -263,25 +263,14 @@
                                 </mat-form-field>
                                 <mat-form-field
                                     style="width: 50%"
-                                    appearance="outline">
-                                    <mat-select
+                                    appearance="outline"
+                                    class="input-field">
+                                    <input matInput
                                         placeholder="W/m2"
                                         formControlName="unit"
                                         required>
-                                        <mat-optgroup
-                                            class="accent"
-                                            *ngFor="let group of unit_groups">
-                                            <span
-                                                class="primary header3">{{group.name}}</span>
-                                            <mat-option
-                                                *ngFor="let unit of group.units"
-                                                [value]="unit.value">
-                                                <span
-                                                    class="body1">{{unit.value}}</span>
-                                            </mat-option>
-                                        </mat-optgroup>
-                                    </mat-select>
                                 </mat-form-field>
+
                                 <span mat-caption
                                     class="input-label header3">
                                     Add
@@ -463,13 +452,13 @@
                                                 <mat-card
                                                     class="video-card mat-elevation-z4"
                                                     [formGroupName]="videoIndex"
-                                                    [ngClass]="{'error-border': video.get('video')?.hasError('required') && (video.get('video')?.touched || video.get('video')?.dirty)}">
+                                                    [ngClass]="{'error-border': video.get('file')?.hasError('required') && (video.get('video')?.touched || video.get('video')?.dirty)}">
                                                     <app-video-player
                                                         [videoSrc]="video.value.video"></app-video-player>
                                                     <mat-card-content
                                                         class="mt-8">
                                                         <p
-                                                            *ngIf="video.get('video')?.hasError('required') && (video.get('video')?.touched || video.get('video')?.dirty)"
+                                                            *ngIf="video.get('file')?.hasError('required') && (video.get('video')?.touched || video.get('video')?.dirty)"
                                                             class="error-message">
                                                             Please upload a
                                                             video file.
@@ -580,24 +569,13 @@
                                                 </mat-form-field>
                                                 <mat-form-field
                                                     style="width: 25%"
-                                                    appearance="outline">
-                                                    <mat-select
-                                                        placeholder="Unit"
+                                                    appearance="outline"
+                                                    class="input-field">
+                                                    <input matInput
+                                                        placeholder="W/m2"
                                                         formControlName="result_unit">
-                                                        <mat-optgroup
-                                                            class="accent"
-                                                            *ngFor="let group of unit_groups">
-                                                            <span
-                                                                class="primary header3">{{group.name}}</span>
-                                                            <mat-option
-                                                                *ngFor="let unit of group.units"
-                                                                [value]="unit.value">
-                                                                <span
-                                                                    class="body1">{{unit.value}}</span>
-                                                            </mat-option>
-                                                        </mat-optgroup>
-                                                    </mat-select>
                                                 </mat-form-field>
+
                                             </div>
                                             <button type="button" mat-button
                                                 class="center"
@@ -692,24 +670,13 @@
                                 </mat-form-field>
                                 <mat-form-field
                                     style="width: 25%"
-                                    appearance="outline">
-                                    <mat-select
-                                        placeholder="Unit"
+                                    appearance="outline"
+                                    class="input-field">
+                                    <input matInput
+                                        placeholder="W/m2"
                                         formControlName="result_unit">
-                                        <mat-optgroup
-                                            class="accent"
-                                            *ngFor="let group of unit_groups">
-                                            <span
-                                                class="primary header3">{{group.name}}</span>
-                                            <mat-option
-                                                *ngFor="let unit of group.units"
-                                                [value]="unit.value">
-                                                <span
-                                                    class="body1">{{unit.value}}</span>
-                                            </mat-option>
-                                        </mat-optgroup>
-                                    </mat-select>
                                 </mat-form-field>
+
                             </div>
                             <div class="center">
                                 <span mat-caption

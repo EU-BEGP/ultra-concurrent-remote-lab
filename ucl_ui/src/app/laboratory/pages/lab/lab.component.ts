@@ -464,7 +464,7 @@ export class LabComponent implements OnInit {
     const procedureArray = this.finalActivities.at(activityIndex).get('procedures') as FormArray;
     
     procedureArray.push(this.builder.group({
-      data: [Handsontable.helper.createSpreadsheetData(3, 3)], 
+      data: [Handsontable.helper.createSpreadsheetData(10, 2)], 
     }));
   }
 
@@ -476,7 +476,7 @@ export class LabComponent implements OnInit {
     const procedureArray = this.getActivities(experiment).at(activityIndex).get('procedures') as FormArray;
     
     procedureArray.push(this.builder.group({
-      data: [Handsontable.helper.createSpreadsheetData(3, 3)], 
+      data: [Handsontable.helper.createSpreadsheetData(10, 2)], 
     }));
   }
 

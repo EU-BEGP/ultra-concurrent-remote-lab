@@ -13,7 +13,6 @@ import { ToastrService } from 'ngx-toastr';
 import { User } from 'src/app/core/auth/interfaces/user';
 import { UserService } from 'src/app/core/auth/services/user.service';
 import { map } from 'rxjs/operators';
-import { units } from 'src/app/laboratory/store/units-data-store';
 import { v4 as uuidv4 } from 'uuid';
 import { Experiment } from '../../interfaces/experiment';
 import { Activity } from '../../interfaces/activity';
@@ -33,6 +32,7 @@ export class CreateLaboratoryComponent implements OnInit {
   breakpointOption: any
   videoRowHeight: any
   defaultImg = '../../../../assets/emptyimage.jpeg';
+  defaultVideo = '../../../../assets/empty_video.mp4';
   categories = [
     { name: 'Photovoltaic Energy' },
     { name: 'Thermal Energy' },
@@ -41,7 +41,6 @@ export class CreateLaboratoryComponent implements OnInit {
     { name: 'Hydraulic Energy' },
     { name: 'Other' },
   ];
-  unit_groups: any = []
   currentUserId: any = 0;
 
   constructor(private builder: FormBuilder, private toastr: ToastrService, private router: Router, private userService: UserService, private labService: LaboratoryService) {
@@ -49,7 +48,7 @@ export class CreateLaboratoryComponent implements OnInit {
     this.stepperOrientation = breakpointObserver
       .observe('(min-width: 800px)')
       .pipe(map(({ matches }) => (matches ? 'horizontal' : 'vertical')));
-    this.unit_groups = units
+  
   }
 
   ngOnInit(): void {
@@ -95,7 +94,7 @@ export class CreateLaboratoryComponent implements OnInit {
         file: ['']
       }),
       introVideo: this.builder.group({
-        video: this.builder.control('', this.fileRequiredValidator()),
+        video: [this.defaultVideo],
         file: this.builder.control('', this.fileRequiredValidator())
       }),
       guides: new FormArray([
@@ -125,7 +124,7 @@ export class CreateLaboratoryComponent implements OnInit {
       selectedOptions: new FormArray([this.builder.control('', Validators.required)]),
       videos: new FormArray([this.builder.group({
         name: this.builder.control('', Validators.required),
-        video: this.builder.control('', this.fileRequiredValidator()),
+        video: [this.defaultVideo],
         file: this.builder.control('', this.fileRequiredValidator())
       })]),
       activities: new FormArray([
@@ -249,7 +248,7 @@ export class CreateLaboratoryComponent implements OnInit {
       selectedOptions: selectedOptionsArray,
       videos: new FormArray([this.builder.group({
         name:  this.builder.control('', Validators.required),
-        video: this.builder.control('', this.fileRequiredValidator()),
+        video: [this.defaultVideo],
         file: this.builder.control('', this.fileRequiredValidator()),
       })]),
       activities: new FormArray([
@@ -293,7 +292,7 @@ export class CreateLaboratoryComponent implements OnInit {
   addVideo(index: number): void {
     const videoFormGroup = this.builder.group({
       name:  this.builder.control('', Validators.required),
-      video: this.builder.control('', this.fileRequiredValidator()),
+      video: [this.defaultVideo],
       file: this.builder.control('', this.fileRequiredValidator())
     })
     this.getVideos(index).push(videoFormGroup)
