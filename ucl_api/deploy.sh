@@ -3,18 +3,32 @@
 # Exit immediately if a command exits with a non-zero status
 set -e
 
+# Function to check for Docker Compose command
+check_docker_compose() {
+  if command -v docker-compose &>/dev/null; then
+    echo "docker-compose"
+  elif command -v docker &>/dev/null && docker compose version &>/dev/null; then
+    echo "docker compose"
+  else
+    echo "[x] Error: Docker Compose is not installed."
+    exit 1
+  fi
+}
+
+docker_compose_cmd=$(check_docker_compose)
+
 echo -e "\nBuilding docker image...\n"
-docker-compose build
+$docker_compose_cmd build
 
 echo -e "\nRunning database migrations...\n"
-docker-compose run --rm app python manage.py makemigrations
-docker-compose run --rm app python manage.py migrate
+$docker_compose_cmd run --rm app python manage.py makemigrations
+$docker_compose_cmd run --rm app python manage.py migrate
 
 STATICFILES_DIR="./app/staticfiles/"
 if [ ! -d "$STATICFILES_DIR" ]; then
   echo -e "\nStatic files directory does not exist."
   echo -e "Creating...\n"
-  docker-compose run --rm app python manage.py collectstatic
+  $docker_compose_cmd run --rm app python manage.py collectstatic
 fi
 
 while true; do
@@ -24,7 +38,7 @@ while true; do
 
   case "$superuser" in
   yes)
-    docker-compose run --rm app python manage.py createsuperuser
+    $docker_compose_cmd run --rm app python manage.py createsuperuser
     break
     ;;
   no)
@@ -37,4 +51,4 @@ while true; do
 done
 
 echo -e "\nRunning the application...\n"
-docker-compose up
+$docker_compose_cmd up
