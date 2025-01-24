@@ -1,9 +1,10 @@
+from django.shortcuts import get_object_or_404
 from rest_framework import generics, status
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
-from ucl.models import Session
-from ucl.serializers import SessionSerializer
+from ucl.models import Session, SolvedActivity
+from ucl.serializers import SessionSerializer, SolvedActivitySerializer
 from ucl.views.common import validate_uuid
 
 
@@ -44,3 +45,20 @@ class RetrieveUpdateDestroySessionView(generics.RetrieveUpdateDestroyAPIView):
 
     def get_queryset(self):
         return Session.objects.filter(user=self.request.user)
+
+
+class ListSessionSolvedActivitiesView(generics.ListAPIView):
+    """
+    LIST all the existing solved activities from a session
+    """
+
+    serializer_class = SolvedActivitySerializer
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = (IsAuthenticated,)
+
+    def get_queryset(self):
+        session_id = self.kwargs.get("pk")
+        session = get_object_or_404(Session, id=session_id)
+        solved_activities = SolvedActivity.objects.filter(session=session)
+
+        return solved_activities

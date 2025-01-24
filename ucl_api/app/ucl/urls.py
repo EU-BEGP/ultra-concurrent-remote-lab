@@ -116,6 +116,11 @@ urlpatterns = [
         name="session_detail",
     ),
     path(
+        "sessions/<uuid:pk>/solved-activities/",
+        session_views.ListSessionSolvedActivitiesView.as_view(),
+        name="session_solved_activities",
+    ),
+    path(
         "solved-activities/",
         solved_activity_views.ListCreateSolvedActivityView.as_view(),
         name="guide_list_create",
