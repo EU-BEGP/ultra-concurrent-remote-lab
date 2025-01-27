@@ -3,7 +3,7 @@ from rest_framework import generics, status
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
-from ucl.models import Session, SolvedActivity
+from ucl.models import Activity, Session, SolvedActivity
 from ucl.serializers import SessionSerializer, SolvedActivitySerializer
 from ucl.views.common import validate_uuid
 
@@ -60,5 +60,26 @@ class ListSessionSolvedActivitiesView(generics.ListAPIView):
         session_id = self.kwargs.get("pk")
         session = get_object_or_404(Session, id=session_id)
         solved_activities = SolvedActivity.objects.filter(session=session)
+
+        return solved_activities
+
+
+class ListSessionActivitySolvedActivitiesView(generics.ListAPIView):
+    """
+    LIST all the existing solved activities from a session and from an activity
+    """
+
+    serializer_class = SolvedActivitySerializer
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = (IsAuthenticated,)
+
+    def get_queryset(self):
+        session_id = self.kwargs.get("session_pk")
+        activity_id = self.kwargs.get("activity_pk")
+        session = get_object_or_404(Session, id=session_id)
+        activity = get_object_or_404(Activity, id=activity_id)
+        solved_activities = SolvedActivity.objects.filter(
+            session=session, activity=activity
+        )
 
         return solved_activities
