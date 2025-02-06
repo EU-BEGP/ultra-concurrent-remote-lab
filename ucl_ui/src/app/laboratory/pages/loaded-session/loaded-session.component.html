@@ -1,0 +1,176 @@
+<app-navbar></app-navbar>
+<div>
+    <div class="page-container">
+        <div class="headers">
+            <mat-card-title class="dialog-title">
+                <span
+                    class="header1 vertical-center primary">
+                    {{laboratory?.name}} </span>
+            </mat-card-title>
+            <mat-card-title class="dialog-title">
+                <span
+                    class="header3 vertical-center">{{formattedDate}}
+                    {{formattedTime}}
+                    Hrs</span>
+            </mat-card-title>
+        </div>
+
+        <mat-card-content>
+
+            <div class="activities-container">
+                <!-- Experiments Card -->
+                <mat-card class="activities-card">
+                    <mat-card-title class="dialog-title">
+                        <span class="header2">Experiment</span>
+                        <span class="header2">Activities</span>
+                    </mat-card-title>
+                    <mat-card-content>
+                        <div
+                            *ngFor="let experiment of labExperiments; index as experimentIndex"
+                            class="mt-24">
+                            <span mat-caption
+                                class="input-label header3 accent">
+                                Experiment {{ experimentIndex + 1 }}
+                            </span>
+                            <div>
+                                <span mat-caption
+                                    class="input-label header3 vertical-center">Configuration</span>
+                            </div>
+                            <div class="input-label body vertical-center">
+                                <ng-container
+                                    *ngFor="let parameter of experiment.parameter_options; let last = last">
+                                    <span>{{ parameter.value }}</span>
+                                    <span *ngIf="!last"> - </span>
+                                </ng-container>
+                            </div>
+                            <span mat-caption
+                                class="input-label header3 vertical-center">Activities</span>
+                            <div
+                                *ngFor="let activity of experiment.activities; index as activityIndex">
+                                <span mat-caption
+                                    class="input-label header3 primary">
+                                    {{ activityIndex + 1 }}.{{ ' ' +
+                                    activity.statement }}
+                                </span>
+                                <div style="display: flex" class="mt-8">
+                                    <ng-container *ngIf="!activity.solved">
+                                        <span
+                                            class="error"
+                                            style="align-items: center; align-content: center;">
+                                            Incomplete Activity
+                                        </span>
+                                        <mat-icon
+                                            class="ml-16 error bigger-icon"
+                                            matTooltip="Incomplete">close</mat-icon>
+                                    </ng-container>
+                                </div>
+
+                                <div *ngIf="activity.solved">
+
+                                    <div>
+                                        <span mat-caption
+                                            class="input-label header3 vertical-center">Procedure</span>
+                                        <div class="procedure-grid">
+                                            <span
+                                                *ngIf="activity.solved.procedures.length == 0"
+                                                style=" align-items: center;"
+                                                class="input-label body1 vertical-center info">
+                                                Empty Procedures
+
+                                            </span>
+                                            <div
+                                                *ngFor="let procedure of activity.solved.procedures; let procedureIndex = index">
+                                                <app-dynamic-table
+                                                    [data]="procedure.data"
+                                                    [read_only]="true">
+                                                </app-dynamic-table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <span mat-caption
+                                        class="input-label header3 vertical-center">Answer</span>
+                                    <div style="display: flex">
+                                        <ng-container>
+                                            <span
+                                                style="align-items: center; align-content: center;">{{activity.solved.result}}</span>
+                                            <span
+                                                style="align-items: center; align-content: center;">
+                                                {{activity.result_unit}}
+                                            </span>
+                                            <mat-icon
+                                                *ngIf="activity.solved.result && activity.solved.result == activity.expected_result"
+                                                class="ml-16 success bigger-icon"
+                                                matTooltip="Right Answer">check</mat-icon>
+                                            <mat-icon
+                                                *ngIf="activity.solved.result && activity.solved.result != activity.expected_result"
+                                                class="ml-16 error bigger-icon"
+                                                matTooltip="Wrong Answer">close</mat-icon>
+                                        </ng-container>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </mat-card-content>
+                </mat-card>
+
+                <!-- Final Lab Activities Card -->
+                <mat-card class="activities-card">
+                    <mat-card-title class="dialog-title">
+                        <span class="header2">Final</span>
+                        <span class="header2">Activities</span>
+                    </mat-card-title>
+                    <mat-card-content>
+                        <div
+                            *ngFor="let activity of mergedLabActivities; index as activityIndex"
+                            class="mt-24">
+                            <span mat-caption
+                                class="input-label header3 accent">
+                                {{ activityIndex + 1 }}.{{ ' ' +
+                                activity.statement }}
+                            </span>
+                            <div>
+                                <span mat-caption
+                                    class="input-label header3 vertical-center">Procedure</span>
+                                <div class="procedure-grid">
+                                    <span
+                                        *ngIf="activity.solved.procedures.length == 0"
+                                        style=" align-items: center;"
+                                        class="input-label body1 vertical-center info">
+                                        Empty Procedures
+
+                                    </span>
+                                    <div
+                                        *ngFor="let procedure of activity.solved.procedures; let procedureIndex = index">
+                                        <app-dynamic-table
+                                            [data]="procedure.data"
+                                            [read_only]="true">
+                                        </app-dynamic-table>
+                                    </div>
+                                </div>
+                            </div>
+                            <span mat-caption
+                                class="input-label header3 vertical-center">Answer</span>
+                            <div style="display: flex">
+                                <ng-container>
+                                    <span
+                                        style="align-items: center; align-content: center;">{{activity.solved.result}}</span>
+                                    <span
+                                        style="align-items: center; align-content: center;">
+                                        {{activity.result_unit}} </span>
+                                    <mat-icon
+                                        *ngIf="activity.solved.result && activity.solved.result == activity.expected_result"
+                                        class="ml-16 success bigger-icon"
+                                        matTooltip="Right Answer">check</mat-icon>
+                                    <mat-icon
+                                        *ngIf="activity.solved.result && activity.solved.result != activity.expected_result"
+                                        class="ml-16 error bigger-icon"
+                                        matTooltip="Wrong Answer">close</mat-icon>
+                                </ng-container>
+                            </div>
+                        </div>
+                    </mat-card-content>
+                </mat-card>
+            </div>
+        </mat-card-content>
+    </div>
+</div>

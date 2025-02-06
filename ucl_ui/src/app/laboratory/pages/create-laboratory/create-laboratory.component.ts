@@ -109,7 +109,7 @@ export class CreateLaboratoryComponent implements OnInit {
     parameters: this.builder.array([
       this.builder.group({
         name: this.builder.control('', Validators.required),
-        unit: this.builder.control('', Validators.required),
+        unit: [''],
         parameter_options: new FormArray([this.builder.group({
           id: [uuidv4()],
           value: [''],

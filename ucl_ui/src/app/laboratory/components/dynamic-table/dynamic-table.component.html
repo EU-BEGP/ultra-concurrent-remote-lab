@@ -6,24 +6,23 @@
         [columnHeaderHeight]="40"
         width="100%"
         stretchH='all'
-        [manualColumnResize]="true"
+        [manualColumnResize]="!read_only"
         [data]="data"
         [colHeaders]="true"
         [rowHeaders]="true"
         licenseKey="non-commercial-and-evaluation"
-        [dropdownMenu]="['col_left', 'col_right', 'clear_column', 'remove_col']"
-        [contextMenu]="['row_above', 'row_below', 'remove_row']"
-        [manualRowMove]="true"
+        [dropdownMenu]="read_only ? false : ['col_left', 'col_right', 'clear_column', 'remove_col']"
+        [contextMenu]="read_only ? false : ['row_above', 'row_below', 'remove_row']"
+        [manualRowMove]="!read_only"
         [settings]="tableConfig"
         [formulas]="{ engine: hyperformulaInstance }"
-        (afterChange)="emitDataChange()">
+        (afterChange)="!read_only && emitDataChange()">
     </hot-table>
-    <button type="button"
+
+    <button *ngIf="!read_only" type="button"
         class="delete-btn bigger-icon"
         mat-button
         (click)="onDeleteTable()">
-        <mat-icon
-            class="accent"
-            matTooltip="Delete Procedure">delete</mat-icon>
+        <mat-icon class="accent" matTooltip="Delete Procedure">delete</mat-icon>
     </button>
 </div>

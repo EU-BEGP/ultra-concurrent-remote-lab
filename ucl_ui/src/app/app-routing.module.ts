@@ -8,6 +8,7 @@ import { ProfileComponent } from './core/auth/pages/profile/profile.component';
 import { ActivationComponent } from './core/auth/pages/activation/activation.component';
 import { LabComponent } from './laboratory/pages/lab/lab.component';
 import { CreateLaboratoryComponent } from './laboratory/pages/create-laboratory/create-laboratory.component';
+import { LoadedSessionComponent } from './laboratory/pages/loaded-session/loaded-session.component';
 
 const routes: Routes = [
   { path: 'ultra-concurrent-rl',
@@ -38,6 +39,7 @@ const routes: Routes = [
     component: CreateLaboratoryComponent,
   },
   {path: 'laboratory/:id', component: LabComponent},
+  {path: 'session/:id', component: LoadedSessionComponent},
   {
     path: '**',
     component: NotFoundComponent,

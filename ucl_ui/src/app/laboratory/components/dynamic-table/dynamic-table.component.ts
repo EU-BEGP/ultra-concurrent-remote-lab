@@ -15,6 +15,7 @@ export class DynamicTableComponent implements OnInit {
 
   @Output() dataChange = new EventEmitter<any>(); // Emit data changes
   @Input() data: any;
+  @Input() read_only: boolean = false; // Default value is false
 
   availableFunctions = [
     '=SUM(A1:An)',
@@ -43,7 +44,7 @@ export class DynamicTableComponent implements OnInit {
   });
   
   tableConfig = {
-    columns: (col: number) => {
+    /*columns: (col: number) => {
       return {
         type: 'autocomplete',
         source: this.availableFunctions,
@@ -51,7 +52,7 @@ export class DynamicTableComponent implements OnInit {
         visibleRows: 4,
         trimDropdown: false,
       };
-    },
+    },*/
     afterGetColHeader: (col: any, TH: {
       style: any; classList: { add: (arg0: string) => void; }; 
 }) => {

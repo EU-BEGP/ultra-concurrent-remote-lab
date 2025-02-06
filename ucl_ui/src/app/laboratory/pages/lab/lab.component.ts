@@ -411,6 +411,7 @@ export class LabComponent implements OnInit {
        this.createSolvedExperimentActivities()
         this.toastr.success("Session Saved")
         this.studentSession.reset()
+        this.router.navigateByUrl('/session/'+sessionFields.id);
       },
       error: (e: any) => {
         console.log(e)

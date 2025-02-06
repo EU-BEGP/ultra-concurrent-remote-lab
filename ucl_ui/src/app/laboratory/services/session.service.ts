@@ -27,9 +27,17 @@ import { SolvedActivity } from '../interfaces/solvedActivity';
       };
     }
   
-    getSessions(): Observable<any> {
+    getSessions(): Observable <any> {
         return this.http.get<Session[]>(`${config.api.baseUrl}ucl/sessions/`);
     }
+
+    getSessionById(id: string): Observable <any> {
+        return this.http.get<Session>(`${config.api.baseUrl}ucl/sessions/${id}/`);
+    }
+
+    getSolvedActivitiesById(id: string): Observable <any> {
+      return this.http.get<Session>(`${config.api.baseUrl}ucl/sessions/${id}/solved-activities`);
+  }
 
     addSession(session: Session): Observable<any> {
         const formData = new FormData();

@@ -50,7 +50,6 @@ export class SessionsListDialogComponent implements OnInit {
     private sessionService: SessionService,
     private userService: UserService,
     private laboratoryService: LaboratoryService)
-    //private clipboard: Clipboard) 
     {
     }
 
@@ -153,8 +152,7 @@ export class SessionsListDialogComponent implements OnInit {
 
 
   redirectTo(id: string) {
-    this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
-      this.router.navigate(['laboratory/'+id])});
+    this.router.navigate(['session/'+id]);
   }
 
 

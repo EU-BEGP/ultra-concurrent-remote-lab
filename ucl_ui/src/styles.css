@@ -115,6 +115,10 @@ th.mat-header-cell:first-of-type, td.mat-cell:first-of-type, td.mat-footer-cell:
   padding: 8px;
 }
 
+.p-16{
+  padding: 16px;
+}
+
 .ml-4{
   margin-left: 4px;
 }

@@ -55,6 +55,10 @@ export class LaboratoryService {
     return this.http.get<Activity[]>(`${config.api.baseUrl}ucl/laboratories/${id}/activities/`);
   }
 
+  getLabExperiments(id: string): Observable<any> {
+    return this.http.get<Experiment[]>(`${config.api.baseUrl}ucl/laboratories/${id}/experiments/`);
+  }
+
   getExperimentByOptions(id_array: any, labId:string): Observable<any> {
     let params = new HttpParams();
     params = params.append('laboratory', labId)
@@ -91,7 +95,7 @@ export class LaboratoryService {
   addLabParameter(parameter: any): Observable<any> {
     const formData = new FormData();
     formData.append('name', parameter.name!);
-    formData.append('unit', parameter.unit!);
+    if (parameter.unit)  formData.append('unit', parameter.unit!);
     formData.append('laboratory', parameter.laboratory!);
 
     // Loop through each option in parameter_options

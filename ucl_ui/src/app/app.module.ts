@@ -47,6 +47,7 @@ import { ProcedureToolsDialogComponent } from './laboratory/components/procedure
 
 import {ClipboardModule} from '@angular/cdk/clipboard';
 import { SessionsListDialogComponent } from './laboratory/components/sessions-list-dialog/sessions-list-dialog.component';
+import { LoadedSessionComponent } from './laboratory/pages/loaded-session/loaded-session.component';
 
 @NgModule({
   declarations: [
@@ -70,6 +71,7 @@ import { SessionsListDialogComponent } from './laboratory/components/sessions-li
     DynamicTableComponent,
     ProcedureToolsDialogComponent,
     SessionsListDialogComponent,
+    LoadedSessionComponent,
   ],
   imports: [
     BrowserModule,
