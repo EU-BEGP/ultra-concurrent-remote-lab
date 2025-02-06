@@ -43,7 +43,7 @@ export class LabComponent implements OnInit {
   laboratory!: Laboratory | undefined
   laboratory_guides!: Guide[]
   labActivities!:any[]
-  defaultImg = '../../../../assets/emptyimage.jpeg';
+  defaultImg = './assets/emptyimage.jpeg';
 
   userId :number | undefined 
   studentSession!: FormGroup;
