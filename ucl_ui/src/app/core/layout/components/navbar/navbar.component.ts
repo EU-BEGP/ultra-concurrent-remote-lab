@@ -40,27 +40,27 @@ export class NavbarComponent implements OnInit {
     private domSanitizer: DomSanitizer){
     this.matIconRegistry.addSvgIcon(
      "experiment",
-      this.domSanitizer.bypassSecurityTrustResourceUrl("./assets/experiment.svg")
+      this.domSanitizer.bypassSecurityTrustResourceUrl("assets/experiment.svg")
     );
 
     this.matIconRegistry.addSvgIcon(
       "laboratories",
-       this.domSanitizer.bypassSecurityTrustResourceUrl("./assets/laboratories.svg")
+       this.domSanitizer.bypassSecurityTrustResourceUrl("assets/laboratories.svg")
      );
 
      this.matIconRegistry.addSvgIcon(
       "account",
-       this.domSanitizer.bypassSecurityTrustResourceUrl("./assets/account.svg")
+       this.domSanitizer.bypassSecurityTrustResourceUrl("assets/account.svg")
      );
 
      this.matIconRegistry.addSvgIcon(
       "add",
-       this.domSanitizer.bypassSecurityTrustResourceUrl("./assets/add.svg")
+       this.domSanitizer.bypassSecurityTrustResourceUrl("assets/add.svg")
      );
 
      this.matIconRegistry.addSvgIcon(
       "arrowdown",
-       this.domSanitizer.bypassSecurityTrustResourceUrl("./assets/arrowdown.svg")
+       this.domSanitizer.bypassSecurityTrustResourceUrl("assets/arrowdown.svg")
      );
   }
 

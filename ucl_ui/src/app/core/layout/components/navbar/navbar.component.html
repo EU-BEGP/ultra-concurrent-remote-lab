@@ -1,6 +1,6 @@
 <mat-toolbar color="primary" class="toolbar">
   <div id="main-label" (click)="goToHome()">
-    <img id="logo" src="./assets/logo.png" alt="logo" width="32px" />
+    <img id="logo" src="assets/logo.png" alt="logo" width="32px" />
     <span *ngIf="(isHandset | async)!.matches; else completeHeader"
       id="navbar-title"
       class="header2">Ultra-Concurrent RLs</span>

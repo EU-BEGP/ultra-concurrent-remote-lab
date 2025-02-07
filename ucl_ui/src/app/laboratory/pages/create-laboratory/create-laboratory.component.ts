@@ -31,8 +31,8 @@ export class CreateLaboratoryComponent implements OnInit {
   breakpointVideo: any
   breakpointOption: any
   videoRowHeight: any
-  defaultImg = './assets/emptyimage.jpeg';
-  defaultVideo = './assets/empty_video.mp4';
+  defaultImg = 'assets/emptyimage.jpeg';
+  defaultVideo = 'assets/empty_video.mp4';
   categories = [
     { name: 'Photovoltaic Energy' },
     { name: 'Thermal Energy' },
