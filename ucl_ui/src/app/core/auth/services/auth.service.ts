@@ -68,6 +68,15 @@ export class AuthService {
       throw error;
     };
   }
+  activateAccount(params: any): Observable<any> {
+    var URL = `${config.api.baseUrl}${config.api.users.accountActivation}`;
+    return this.http.patch(URL, params);
+  }
+
+  requestVerificationCode(id: any): Observable<any> {
+    var URL = `${config.api.baseUrl}${config.api.users.codeRequest}`;
+    return this.http.patch(URL, { id: id });
+  }
 
   private getServerErrorMessage(error: HttpErrorResponse): string {
     let errorMsg = 'A server error has ocurred please try later.';

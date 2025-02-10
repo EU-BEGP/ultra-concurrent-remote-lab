@@ -52,6 +52,7 @@ import { TimelineChartComponent } from './laboratory/components/timeline-chart/t
 
 import { PlotlyModule } from 'angular-plotly.js'; // Importa el módulo de Plotly
 import * as PlotlyJS from 'plotly.js-dist-min';
+import { CodeActivationComponent } from './core/auth/pages/code-activation/code-activation.component';
 
 PlotlyModule.plotlyjs = PlotlyJS;
 
@@ -79,6 +80,7 @@ PlotlyModule.plotlyjs = PlotlyJS;
     SessionsListDialogComponent,
     LoadedSessionComponent,
     TimelineChartComponent,
+    CodeActivationComponent,
   ],
   imports: [
     BrowserModule,
