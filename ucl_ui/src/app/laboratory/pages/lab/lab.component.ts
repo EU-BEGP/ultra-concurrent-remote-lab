@@ -23,7 +23,7 @@ import { SessionService } from '../../services/session.service';
 import { Session } from '../../interfaces/session';
 import { UserService } from 'src/app/core/auth/services/user.service';
 import { User } from 'src/app/core/auth/interfaces/user';
-
+import { ChangeDetectorRef } from '@angular/core';
 
 @Component({
   selector: 'app-lab',
@@ -43,12 +43,23 @@ export class LabComponent implements OnInit {
   laboratory!: Laboratory | undefined
   laboratory_guides!: Guide[]
   labActivities!:any[]
-  defaultImg = './assets/emptyimage.jpeg';
+  defaultImg = 'assets/emptyimage.jpeg';
 
   userId :number | undefined 
   studentSession!: FormGroup;
   optionsList: any[] = []; 
   duplicateExperimentMessage = ''; 
+
+  timeSeriesData = [
+    {
+      name: 'Experiment A',
+      values: { x: ['2024-01-01', '2024-02-01', '2024-03-01'], y: [10, 15, 12] },
+    },
+    {
+      name: 'Experiment B',
+      values: { x: ['2024-01-01', '2024-02-01', '2024-03-01'], y: [5, 8, 6] },
+    },
+  ];
 
   @ViewChild(MatPaginator)
   paginator!: MatPaginator;
@@ -63,7 +74,8 @@ export class LabComponent implements OnInit {
     private router: Router,
     private dialogRef: MatDialog,
     private sessionService: SessionService,
-    private userService: UserService
+    private userService: UserService,
+    private cdr: ChangeDetectorRef
   ) 
 
   { const breakpointObserver = inject(BreakpointObserver);
@@ -461,28 +473,38 @@ export class LabComponent implements OnInit {
   }
 
 
-  addProcedureTable(activityIndex: number) {
+  addProcedureTable(activityIndex: number, data_type:string) {
     const procedureArray = this.finalActivities.at(activityIndex).get('procedures') as FormArray;
     
     procedureArray.push(this.builder.group({
-      data: [Handsontable.helper.createSpreadsheetData(10, 2)], 
+      data: [Handsontable.helper.createSpreadsheetData(5, 2)], 
+      data_type: data_type
     }));
   }
 
   onTableDataChange(activityIndex: number, procedureIndex: number, newData: any) {
-    this.getFinalActivityProcedures(activityIndex).at(procedureIndex).get('data')?.setValue(newData); 
+    const procedure = this.getFinalActivityProcedures(activityIndex).at(procedureIndex);
+    if (procedure) {
+      procedure.get('data')?.setValue(JSON.parse(JSON.stringify(newData)));
+      this.cdr.detectChanges();  // Fuerza la actualización del gráfico
+    }
   }
 
-  addExperimentProcedureTable(experiment: AbstractControl, activityIndex: number) {
+  addExperimentProcedureTable(experiment: AbstractControl, activityIndex: number, data_type: string) {
     const procedureArray = this.getActivities(experiment).at(activityIndex).get('procedures') as FormArray;
     
     procedureArray.push(this.builder.group({
-      data: [Handsontable.helper.createSpreadsheetData(10, 2)], 
+      data: [Handsontable.helper.createSpreadsheetData(5, 2)], 
+      data_type: data_type
     }));
   }
 
   onExperimentTableDataChange(experiment: AbstractControl, activityIndex: number, procedureIndex: number, newData: any) {
-    this.getExperimentActivityProcedures(experiment, activityIndex).at(procedureIndex).get('data')?.setValue(newData); 
+    const procedure = this.getExperimentActivityProcedures(experiment, activityIndex).at(procedureIndex)
+    if (procedure) {
+      procedure.get('data')?.setValue(JSON.parse(JSON.stringify(newData)));
+      this.cdr.detectChanges();  // Fuerza la actualización del gráfico
+    }
   }
 
   getExperimentActivityProcedures(experiment: AbstractControl,activityIndex: number) {
@@ -511,18 +533,22 @@ export class LabComponent implements OnInit {
 
   addSelectedProcedure (data:any, selectedProcedureType:String) {
     if(data.experiment){ //if its a Experiment Activity
-      if(selectedProcedureType == "Time-Series"){
-        this.toastr.info("Not Implemented yet")
+      if(selectedProcedureType == "Time-Line"){
+        this.addExperimentProcedureTable(data.experiment,data.activityIndex, "chart")
       }
       else if(selectedProcedureType == "Dynamic Tables"){
-        this.addExperimentProcedureTable(data.experiment,data.activityIndex)
+        this.addExperimentProcedureTable(data.experiment,data.activityIndex, "table")
       }
     }else{ //if its a Final Activity
-      if(selectedProcedureType == "Time-Series"){
-        this.toastr.info("Not Implemented yet")
+      if(selectedProcedureType == "Time-Line"){
+        this.addProcedureTable(data.activityIndex, "chart")
       } else if(selectedProcedureType == "Dynamic Tables"){
-        this.addProcedureTable(data.activityIndex)
+        this.addProcedureTable(data.activityIndex, "table")
       }
     }
   }
+
+  trackByFn(index: number, item: AbstractControl) {
+    return item.value?.id || index;
+}
 }

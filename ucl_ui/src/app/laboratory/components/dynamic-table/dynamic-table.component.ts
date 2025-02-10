@@ -53,6 +53,13 @@ export class DynamicTableComponent implements OnInit {
         trimDropdown: false,
       };
     },*/
+    cells: (row: number, col: number) => {
+      const cellProperties: any = {};
+      if (this.read_only) {
+        cellProperties.readOnly = true;  // Las celdas serán de solo lectura
+      }
+      return cellProperties;
+    },
     afterGetColHeader: (col: any, TH: {
       style: any; classList: { add: (arg0: string) => void; }; 
 }) => {
@@ -79,12 +86,23 @@ export class DynamicTableComponent implements OnInit {
         TH.style.borderRight= "3px solid currentColor"
       }
     },
+    afterChange: (changes: any, source: string) => {
+      if (source !== 'loadData' && changes) {
+        this.emitDataChange();
+      }
+    }
   };
 
   constructor() { }
 
   emitDataChange() {
     this.dataChange.emit(this.data);
+  }
+
+  onTableChanged(event: any) {
+    if (!this.read_only) {
+      this.emitDataChange();
+    }
   }
 
 }

@@ -5,7 +5,7 @@
         rowHeights="40px"
         [columnHeaderHeight]="40"
         width="100%"
-        stretchH='all'
+        stretchH="all"
         [manualColumnResize]="!read_only"
         [data]="data"
         [colHeaders]="true"
@@ -16,7 +16,7 @@
         [manualRowMove]="!read_only"
         [settings]="tableConfig"
         [formulas]="{ engine: hyperformulaInstance }"
-        (afterChange)="!read_only && emitDataChange()">
+        (afterChange)="onTableChanged($event)">
     </hot-table>
 
     <button *ngIf="!read_only" type="button"

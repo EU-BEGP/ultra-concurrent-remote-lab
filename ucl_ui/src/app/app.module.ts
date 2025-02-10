@@ -48,6 +48,12 @@ import { ProcedureToolsDialogComponent } from './laboratory/components/procedure
 import {ClipboardModule} from '@angular/cdk/clipboard';
 import { SessionsListDialogComponent } from './laboratory/components/sessions-list-dialog/sessions-list-dialog.component';
 import { LoadedSessionComponent } from './laboratory/pages/loaded-session/loaded-session.component';
+import { TimelineChartComponent } from './laboratory/components/timeline-chart/timeline-chart.component';
+
+import { PlotlyModule } from 'angular-plotly.js'; // Importa el módulo de Plotly
+import * as PlotlyJS from 'plotly.js-dist-min';
+
+PlotlyModule.plotlyjs = PlotlyJS;
 
 @NgModule({
   declarations: [
@@ -72,6 +78,7 @@ import { LoadedSessionComponent } from './laboratory/pages/loaded-session/loaded
     ProcedureToolsDialogComponent,
     SessionsListDialogComponent,
     LoadedSessionComponent,
+    TimelineChartComponent,
   ],
   imports: [
     BrowserModule,
@@ -98,7 +105,8 @@ import { LoadedSessionComponent } from './laboratory/pages/loaded-session/loaded
     VgOverlayPlayModule,
     VgBufferingModule,
     NgxMatFileInputModule,
-    HotTableModule
+    HotTableModule,
+    PlotlyModule
   ],
   providers: [
     CookieService,

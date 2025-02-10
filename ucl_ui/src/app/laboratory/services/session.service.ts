@@ -56,7 +56,7 @@ import { SolvedActivity } from '../interfaces/solvedActivity';
         if(solved_activity.procedures.length > 0) {
           solved_activity.procedures.forEach((procedure: any, index: number) => {
             formData.append(`procedures[${index}][name]`, 'nombre');
-            formData.append(`procedures[${index}][data_type]`, 'table');
+            formData.append(`procedures[${index}][data_type]`, procedure.data_type);
             formData.append(`procedures[${index}][data]`, JSON.stringify(procedure.data));
           });
         }

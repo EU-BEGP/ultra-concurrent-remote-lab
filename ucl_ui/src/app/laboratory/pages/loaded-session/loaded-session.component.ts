@@ -26,6 +26,16 @@ export class LoadedSessionComponent implements OnInit {
   solvedActivities!:any[]
   mergedExperiments!:any[]
   testData:any[]=[[1,2,3],[1,2,3]]
+  timeSeriesData = [
+    {
+      name: 'Experiment A',
+      values: { x: ['2024-01-01', '2024-02-01', '2024-03-01'], y: [10, 15, 12] },
+    },
+    {
+      name: 'Experiment B',
+      values: { x: ['2024-01-01', '2024-02-01', '2024-03-01'], y: [5, 8, 6] },
+    },
+  ];
 
   constructor(
     private route: ActivatedRoute,
@@ -102,7 +112,6 @@ export class LoadedSessionComponent implements OnInit {
   }
 
   getConvertedData(data: any): any {
-    console.log(JSON.parse(data))
     return JSON.parse(data);
   }
 

@@ -269,18 +269,32 @@
                                                                 matTooltip="Add Procedure">add_circle</mat-icon>
                                                         </button>
                                                     </span>
-                                                    <div
-                                                        class="procedure-grid">
-                                                        <div
-                                                            *ngFor="let procedureStep of getExperimentActivityProcedures(experiment,activityIndex).controls; let procedureIndex = index"
-                                                            [formGroupName]="procedureIndex">
-                                                            <app-dynamic-table
-                                                                [read_only]="false"
-                                                                [data]="procedureStep.get('data')?.value"
-                                                                (dataChange)="onExperimentTableDataChange(experiment,activityIndex, procedureIndex, $event)"
-                                                                (deleteProcedure)="removeExperimentActivityProcedure(experiment,activityIndex, procedureIndex)">
-                                                            </app-dynamic-table>
-                                                        </div>
+                                                    <div class="procedure-grid">
+                                                        <ng-container
+                                                            *ngFor="let procedureStep of getExperimentActivityProcedures(experiment, activityIndex).controls; let procedureIndex = index">
+
+                                                            <!-- Cada tabla ocupa una celda independiente -->
+                                                            <div
+                                                                class="procedure-item"
+                                                                [formGroupName]="procedureIndex">
+                                                                <app-dynamic-table
+                                                                    [read_only]="false"
+                                                                    [data]="procedureStep.get('data')?.value"
+                                                                    (dataChange)="onExperimentTableDataChange(experiment, activityIndex, procedureIndex, $event)"
+                                                                    (deleteProcedure)="removeExperimentActivityProcedure(experiment, activityIndex, procedureIndex)">
+                                                                </app-dynamic-table>
+                                                            </div>
+
+                                                            <!-- Cada gráfico ocupa una celda independiente -->
+                                                            <div
+                                                                class="procedure-item"
+                                                                *ngIf="procedureStep.get('data_type')?.value == 'chart'">
+                                                                <app-timeline-chart
+                                                                    [data]="procedureStep.get('data')?.value">
+                                                                </app-timeline-chart>
+                                                            </div>
+
+                                                        </ng-container>
                                                     </div>
 
                                                 </div>
@@ -359,18 +373,35 @@
                                                 matTooltip="Add Procedure">add_circle</mat-icon>
                                         </button>
                                     </span>
+
                                     <div class="procedure-grid">
-                                        <div
-                                            *ngFor="let procedureStep of getFinalActivityProcedures(activityIndex).controls; let procedureIndex = index"
-                                            [formGroupName]="procedureIndex">
-                                            <app-dynamic-table
-                                                [read_only]="false"
-                                                [data]="procedureStep.get('data')?.value"
-                                                (dataChange)="onTableDataChange(activityIndex, procedureIndex, $event)"
-                                                (deleteProcedure)="removeProcedure(activityIndex, procedureIndex)">
-                                            </app-dynamic-table>
-                                        </div>
+                                        <ng-container
+                                            *ngFor="let procedureStep of getFinalActivityProcedures(activityIndex).controls; let procedureIndex = index; trackBy: trackByFn">
+
+                                            <!-- Cada tabla ocupa una celda independiente -->
+                                            <div
+                                                class="procedure-item"
+                                                [formGroupName]="procedureIndex">
+                                                <app-dynamic-table
+                                                    [read_only]="false"
+                                                    [data]="procedureStep.get('data')?.value"
+                                                    (dataChange)="onTableDataChange(activityIndex, procedureIndex, $event)"
+                                                    (deleteProcedure)="removeProcedure(activityIndex, procedureIndex)">
+                                                </app-dynamic-table>
+                                            </div>
+
+                                            <!-- Cada gráfico ocupa una celda independiente -->
+                                            <div
+                                                class="procedure-item center"
+                                                *ngIf="procedureStep.get('data_type')?.value == 'chart'">
+                                                <app-timeline-chart
+                                                    [data]="procedureStep.get('data')?.value">
+                                                </app-timeline-chart>
+                                            </div>
+
+                                        </ng-container>
                                     </div>
+
                                 </div>
                                 <span mat-caption
                                     class="input-label header3 vertical-center primary">

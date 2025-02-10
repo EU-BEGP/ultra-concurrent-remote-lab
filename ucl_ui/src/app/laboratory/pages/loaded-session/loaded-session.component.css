@@ -8,6 +8,7 @@
 }
 
 .activities-card {
+    padding-bottom: 24px;
     padding-left: 32px;
     padding-right: 32px;
     width: 48%; 
@@ -59,3 +60,18 @@
   text-align: center; 
 }
 
+
+.procedure-item {
+  display: flex;
+  justify-content: center;  /* Alinea horizontalmente */
+  align-items: center;  /* Alinea verticalmente */
+  min-width: 0; 
+  height: auto;  /* Ajusta el alto según el contenido */
+  width: 100%;  /* Asegura que ocupe el 100% del espacio disponible */
+}
+
+/* Si hay un contenedor envolvente para el gráfico */
+.app-timeline-chart {
+  width: 100%;  /* Asegura que el gráfico ocupe todo el ancho del contenedor */
+  height: auto;  /* Ajusta el alto según el contenido */
+}

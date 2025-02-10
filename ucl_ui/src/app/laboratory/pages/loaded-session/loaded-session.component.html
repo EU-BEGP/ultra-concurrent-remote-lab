@@ -55,7 +55,7 @@
                                 <div style="display: flex" class="mt-8">
                                     <ng-container *ngIf="!activity.solved">
                                         <span
-                                            class="error"
+                                            class="error body"
                                             style="align-items: center; align-content: center;">
                                             Incomplete Activity
                                         </span>
@@ -70,21 +70,34 @@
                                     <div>
                                         <span mat-caption
                                             class="input-label header3 vertical-center">Procedure</span>
-                                        <div class="procedure-grid">
+                                        <div>
                                             <span
                                                 *ngIf="activity.solved.procedures.length == 0"
                                                 style=" align-items: center;"
-                                                class="input-label body1 vertical-center info">
+                                                class="input-label body vertical-center info">
                                                 Empty Procedures
 
                                             </span>
-                                            <div
+                                            <ng-container
                                                 *ngFor="let procedure of activity.solved.procedures; let procedureIndex = index">
-                                                <app-dynamic-table
-                                                    [data]="procedure.data"
-                                                    [read_only]="true">
-                                                </app-dynamic-table>
-                                            </div>
+                                                <!-- Cada tabla ocupa una celda independiente -->
+                                                <div>
+                                                    <app-dynamic-table
+                                                        [data]="procedure.data"
+                                                        [read_only]="true">
+                                                    </app-dynamic-table>
+                                                </div>
+
+                                                <!-- Cada gráfico ocupa una celda independiente -->
+                                                <div class="procedure-item"
+                                                    *ngIf="procedure.data_type == 'chart'">
+                                                    <app-timeline-chart
+                                                        [data]="procedure.data">
+                                                    </app-timeline-chart>
+                                                </div>
+
+                                            </ng-container>
+
                                         </div>
                                     </div>
                                     <span mat-caption
@@ -92,9 +105,11 @@
                                     <div style="display: flex">
                                         <ng-container>
                                             <span
-                                                style="align-items: center; align-content: center;">{{activity.solved.result}}</span>
+                                                style="align-items: center; align-content: center;"
+                                                class="body">{{activity.solved.result}}</span>
                                             <span
-                                                style="align-items: center; align-content: center;">
+                                                style="align-items: center; align-content: center;"
+                                                class="body">
                                                 {{activity.result_unit}}
                                             </span>
                                             <mat-icon
@@ -131,21 +146,35 @@
                             <div>
                                 <span mat-caption
                                     class="input-label header3 vertical-center">Procedure</span>
-                                <div class="procedure-grid">
+                                <div>
                                     <span
                                         *ngIf="activity.solved.procedures.length == 0"
                                         style=" align-items: center;"
-                                        class="input-label body1 vertical-center info">
+                                        class="input-label body vertical-center info">
                                         Empty Procedures
 
                                     </span>
-                                    <div
+
+                                    <ng-container
                                         *ngFor="let procedure of activity.solved.procedures; let procedureIndex = index">
-                                        <app-dynamic-table
-                                            [data]="procedure.data"
-                                            [read_only]="true">
-                                        </app-dynamic-table>
-                                    </div>
+                                        <!-- Cada tabla ocupa una celda independiente -->
+                                        <div>
+                                            <app-dynamic-table
+                                                [data]="procedure.data"
+                                                [read_only]="true">
+                                            </app-dynamic-table>
+                                        </div>
+
+                                        <!-- Cada gráfico ocupa una celda independiente -->
+                                        <div class="procedure-item"
+                                            *ngIf="procedure.data_type == 'chart'">
+                                            <app-timeline-chart
+                                                [data]="procedure.data">
+                                            </app-timeline-chart>
+                                        </div>
+
+                                    </ng-container>
+
                                 </div>
                             </div>
                             <span mat-caption
@@ -153,9 +182,11 @@
                             <div style="display: flex">
                                 <ng-container>
                                     <span
-                                        style="align-items: center; align-content: center;">{{activity.solved.result}}</span>
+                                        style="align-items: center; align-content: center;"
+                                        class="body">{{activity.solved.result}}</span>
                                     <span
-                                        style="align-items: center; align-content: center;">
+                                        style="align-items: center; align-content: center;"
+                                        class="body">
                                         {{activity.result_unit}} </span>
                                     <mat-icon
                                         *ngIf="activity.solved.result && activity.solved.result == activity.expected_result"

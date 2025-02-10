@@ -161,26 +161,28 @@ mat-card-actions{
 
 .procedure-grid {
   display: grid;
-  gap: 16px; /* Space between items */
-  padding-right: 40px; /* Adjust as needed for button space */
+  gap: 16px; 
+  padding-right: 40px; 
 }
 
+.procedure-item {
+  min-width: 0; 
+}
+
+
 @media (min-width: 1024px) {
-  /* 3 columns when each table has a width of ~33% */
   .procedure-grid {
     grid-template-columns: repeat(3, 1fr);
   }
 }
 
 @media (min-width: 768px) and (max-width: 1023px) {
-  /* 2 columns when each table has a width of ~50% */
   .procedure-grid {
     grid-template-columns: repeat(2, 1fr);
   }
 }
 
 @media (max-width: 767px) {
-  /* 1 column when each table has a width of 100% */
   .procedure-grid {
     grid-template-columns: 1fr;
   }
