@@ -1,0 +1,38 @@
+<div class="activation-dialog">
+    <mat-card-title class="dialog-title center">
+        <span class="first-title header2">Thanks</span>
+        <span class="second-title header2">for Signing Up!</span>
+    </mat-card-title>
+    <div *ngIf="!activationStatus" class="mt-24">
+        <div class="verification-text">
+            <span class="body">A verification code has been sent to your email
+                (Check inbox and spam)</span>
+            <span class="body">Enter the code within 15 minutes to complete the
+                verification.</span>
+        </div>
+        <form (ngSubmit)="sendCode()" #verificationForm>
+            <div class="input-container">
+                <input *ngFor="let i of [0,1,2,3,4,5]; let idx = index"
+                    type="tel"
+                    maxlength="1"
+                    pattern="[0-9]"
+                    class="input-element"
+                    (paste)="handlePaste($event)"
+                    (input)="handleInput($event)"
+                    (keydown)="handleKeyDown($event)" />
+            </div>
+
+            <span class="body">
+                Didn’t receive the email? Click
+                <span class="clickable-text" (click)="resendCode()">here</span>
+                to resend.
+            </span>
+            <div class="button-container">
+                <button mat-raised-button color="primary" type="submit"
+                    class="header2">
+                    Activate Account
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

@@ -10,6 +10,8 @@ import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { AuthService } from '../../services/auth.service';
 import { User } from '../../interfaces/user';
+import { MatDialog } from '@angular/material/dialog';
+import { CodeActivationDialogComponent } from '../code-activation-dialog/code-activation-dialog.component';
 
 @Component({
   selector: 'app-registration',
@@ -38,6 +40,7 @@ export class RegistrationComponent implements OnInit {
     private toastr: ToastrService,
     private router: Router,
     private formBuilder: FormBuilder,
+    private dialog: MatDialog,
   ) { }
 
   ngOnInit(): void { }
@@ -69,16 +72,24 @@ export class RegistrationComponent implements OnInit {
     this.authService.signUp(user).subscribe((response) => {
       if (response.status !== null && response.status === 201) {
         localStorage.setItem('user_id', response.body.id.toString());
-
+        console.log(response)
         this.toastr.success(
           `Welcome ${user.name}`,
           'Successful registration',
         );
 
-        setTimeout((): void => {
-          this.router.navigate(['/account-activation'])
-        }, 2000);
+        setTimeout(() => {
+          this.openActivationDialog(response.body.id);
+        }, 500);
       }
+    });
+  }
+
+  openActivationDialog(userId: string): void {
+    this.dialog.open(CodeActivationDialogComponent, {
+      width: '40vw',
+      disableClose: true, // No se puede cerrar haciendo clic afuera
+      data: { userId }
     });
   }
 
