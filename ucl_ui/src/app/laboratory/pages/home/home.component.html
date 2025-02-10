@@ -6,33 +6,18 @@
                 <source src="assets/Newton.mp4" type="video/mp4">
             </video>
             <div class="header-content">
-                <mat-grid-list cols="1" rowHeight="48px"
-                    (window:resize)="onResize($event)">
-                    <mat-grid-tile [rowspan]="breakpoint">
-                        <span
-                            *ngIf="laboratory"
-                            class="headerHome">{{laboratory.name}}
-                        </span>
-                        <span
-                            *ngIf="!laboratory"
-                            class="headerHome">Ultra-Concurrent Remote Labs
-                        </span>
-                    </mat-grid-tile>
-                    <mat-grid-tile *ngIf="laboratory">
-                        <span
-                            class="header2">by
-                            {{laboratory.institution}}
-                        </span>
-                    </mat-grid-tile>
-                    <mat-grid-tile [rowspan]="2">
-                        <button mat-raised-button color="primary"
-                            (click)="goToRemoteLab()"
-                            class="buttonsHome">
-                            Go to Remote Lab
-                        </button>
-                    </mat-grid-tile>
-                </mat-grid-list>
+                <span *ngIf="laboratory"
+                    class="headerHome">{{laboratory.name}}</span>
+                <span *ngIf="!laboratory" class="headerHome">Ultra-Concurrent
+                    Remote Labs Builder</span>
 
+                <span *ngIf="laboratory" class="institution">by
+                    {{laboratory.institution}}</span>
+
+                <button mat-raised-button color="primary"
+                    (click)="goToRemoteLab()" class="buttonsHome">
+                    Go to Remote Lab
+                </button>
             </div>
         </mat-card-content>
     </mat-card>
