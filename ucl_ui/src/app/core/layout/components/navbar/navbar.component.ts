@@ -16,6 +16,7 @@ import { User } from '../../../auth/interfaces/user';
 import { MatDialog } from '@angular/material/dialog';
 import { LaboratoriesDialogComponent } from 'src/app/laboratory/components/laboratories-dialog/laboratories-dialog.component';
 import { SessionsListDialogComponent } from 'src/app/laboratory/components/sessions-list-dialog/sessions-list-dialog.component';
+import { ProfileFormComponent } from 'src/app/core/auth/components/profile-form/profile-form.component';
 
 @Component({
   selector: 'app-navbar',
@@ -121,6 +122,15 @@ export class NavbarComponent implements OnInit {
      dialogRef.afterClosed().subscribe((res: any) => {
      })
   }
+
+  openProfile(){
+    const dialogRef = this.dialogRef.open(ProfileFormComponent, {
+      width: '40vw'
+     })
+     dialogRef.afterClosed().subscribe((res: any) => {
+     })
+  }
+
 
 
   logout(): void {

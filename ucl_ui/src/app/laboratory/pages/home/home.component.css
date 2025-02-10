@@ -2,7 +2,7 @@
 .mat-raised-button {
   padding: 4px 12px;
   cursor: pointer;
-  border-radius: 12px;
+  border-radius: 8px;
 }
 
 @media screen and (min-width: 664px) {
@@ -50,7 +50,7 @@
 
 .headerHome {
   color: white;
-  font-size: 3.5vw;
+  font-size: 3vw;
   word-wrap: break-word;
   hyphens: auto;
   min-width: 60vw;
