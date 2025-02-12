@@ -77,10 +77,7 @@ export class RegistrationComponent implements OnInit {
           `Welcome ${user.name}`,
           'Successful registration',
         );
-
-        setTimeout(() => {
-          this.openActivationDialog(response.body.id);
-        }, 500);
+        this.openActivationDialog(response.body.id);
       }
     });
   }
@@ -88,7 +85,7 @@ export class RegistrationComponent implements OnInit {
   openActivationDialog(userId: string): void {
     this.dialog.open(CodeActivationDialogComponent, {
       width: '40vw',
-      disableClose: true, // No se puede cerrar haciendo clic afuera
+      disableClose: true, 
       data: { userId }
     });
   }

@@ -50,7 +50,7 @@ import { SolvedActivity } from '../interfaces/solvedActivity';
     addSolvedActivities(solved_activity: any): Observable<any> {
       const test_file = '../store/Test-handsontable.csv'
         const formData = new FormData();
-        formData.append('result', solved_activity.result!)
+        if(solved_activity.result) formData.append('result', solved_activity.result!)
         formData.append('activity', solved_activity.activity!)
         formData.append('session', solved_activity.session!)
         if(solved_activity.procedures.length > 0) {

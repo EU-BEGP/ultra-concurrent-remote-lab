@@ -137,6 +137,9 @@ export class LaboratoryService {
     formData.append('statement', activity.statement!);
     if(activity.expected_result){
       formData.append('expected_result', activity.expected_result!);
+    }
+
+    if(activity.result_unit){
       formData.append('result_unit', activity.result_unit!);
     }
     
@@ -152,8 +155,12 @@ export class LaboratoryService {
   addActivities(activity: any): Observable<any> {
     const formData = new FormData();
     formData.append('statement', activity.statement!);
+
     if(activity.expected_result){
       formData.append('expected_result', activity.expected_result!);
+    }
+
+    if(activity.result_unit){
       formData.append('result_unit', activity.result_unit!);
     }
     
