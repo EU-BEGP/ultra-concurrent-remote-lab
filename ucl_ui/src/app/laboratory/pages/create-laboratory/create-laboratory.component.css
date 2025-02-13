@@ -44,13 +44,13 @@ mat-divider{
 .parameter-option {
     height: 296px;
     min-width: 200px;
-    .mat-form-field-wrapper{
+    mat-form-field-wrapper{
         padding-bottom: 0px;
     }
 }
   
 mat-grid-tile{
-    .mat-grid-tile-content{
+    mat-grid-tile-content{
    justify-content: left;
     }
 }
@@ -99,7 +99,7 @@ img{
 
 .video-card {
     width: 55vw;
-    .mat-form-field-wrapper{
+    mat-form-field-wrapper{
         padding-bottom: 0px;
     }
 }

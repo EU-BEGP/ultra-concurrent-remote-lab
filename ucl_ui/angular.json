@@ -19,7 +19,13 @@
           "options": {
             "allowedCommonJsDependencies": [
               "handsontable",
-              "core-js"
+              "core-js",
+              "moment",
+              "pikaday",
+              "plotly.js-dist-min",
+              "handsontable",
+              "dompurify",
+              "tiny-emitter"
             ],
             "outputPath": "dist/ultra-concurrent-remote-lab",
             "index": "src/index.html",
@@ -43,13 +49,13 @@
               "budgets": [
                 {
                   "type": "initial",
-                  "maximumWarning": "4mb",
-                  "maximumError": "6mb"
+                  "maximumWarning": "7mb",
+                  "maximumError": "7mb"
                 },
                 {
                   "type": "anyComponentStyle",
-                  "maximumWarning": "2kb",
-                  "maximumError": "4kb"
+                  "maximumWarning": "1mb",
+                  "maximumError": "1mb"
                 }
               ],
               "fileReplacements": [

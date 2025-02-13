@@ -1,7 +1,7 @@
 {
   "version": "0.1.0",
   "api": {
-    "baseUrl": "http://localhost:8002/",
+    "baseUrl": "",
     "users": {
       "me": "users/me/",
       "login": "users/token/",
@@ -10,8 +10,7 @@
       "passwordReset": "accounts/password_reset/",
       "accountActivation": "users/activate-account/",
       "codeRequest": "users/request-code/"
-    },
-    "messagesWS": ""
+    }
   },
   "organizationData": {
     "name": "Universidad Privada Boliviana",
