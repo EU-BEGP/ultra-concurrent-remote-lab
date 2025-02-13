@@ -157,6 +157,12 @@ export class LoadedSessionComponent implements OnInit {
           });
   
           this.labExperiments = await Promise.all(experimentActivitiesPromises);
+            // **Sorting: Move experiments with at least one solved activity to the top**
+          this.labExperiments.sort((a: any, b: any) => {
+            const aSolved = a.activities.some((activity: any) => activity.solved);
+            const bSolved = b.activities.some((activity: any) => activity.solved);
+            return bSolved - aSolved; // Sort so that solved ones come first
+          });
         } catch (e) {
           console.log(e);
           this.toastr.error('There was an error processing the activities. Please try again later.');
