@@ -552,7 +552,19 @@
                                                         placeholder="Question {{activityIndex+1}}"
                                                         formControlName="statement"
                                                         required>
+                                                    <button *ngIf="i > 0"
+                                                        mat-icon-button
+                                                        matSuffix
+                                                        type="button"
+                                                        (click)="copyActivity(i, activityIndex)">
+                                                        <mat-icon
+                                                            class="accent bigger-icon"
+                                                            matTooltip="Copy Activity from Previous Experiment">
+                                                            content_copy
+                                                        </mat-icon>
+                                                    </button>
                                                 </mat-form-field>
+
                                                 <span mat-caption
                                                     class="input-label header3">
                                                     Expected Result

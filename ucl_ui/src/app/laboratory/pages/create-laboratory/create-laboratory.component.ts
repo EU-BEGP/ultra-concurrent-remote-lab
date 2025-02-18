@@ -154,6 +154,25 @@ export class CreateLaboratoryComponent implements OnInit {
     };
   }
 
+  copyActivity(experimentIndex: number, activityIndex: number) {
+    const experimentsArray = this.experiments
+    
+    if (experimentIndex > 0) { 
+        const previousExperiment = experimentsArray.at(experimentIndex - 1) as FormGroup;
+        const currentExperiment = experimentsArray.at(experimentIndex) as FormGroup;
+
+        const previousActivities = previousExperiment.get('activities') as FormArray;
+        const currentActivities = currentExperiment.get('activities') as FormArray;
+
+        if (activityIndex < previousActivities.length) { 
+          const previousStatement = previousActivities.at(activityIndex).get('statement')?.value;
+
+            currentActivities.at(activityIndex).patchValue({ statement: previousStatement });
+        }
+    }
+}
+
+
   get introPhoto() {
     return this.newLaboratory.get('introduction')?.get('introPhoto') as FormGroup
   }

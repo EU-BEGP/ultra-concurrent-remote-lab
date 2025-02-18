@@ -113,11 +113,11 @@
                                                 {{activity.result_unit}}
                                             </span>
                                             <mat-icon
-                                                *ngIf="activity.solved.result && activity.solved.result == activity.expected_result"
+                                                *ngIf="activity.expected_result && activity.solved.result && activity.solved.result == activity.expected_result"
                                                 class="ml-16 success bigger-icon"
                                                 matTooltip="Right Answer">check</mat-icon>
                                             <mat-icon
-                                                *ngIf="activity.solved.result && activity.solved.result != activity.expected_result"
+                                                *ngIf="activity.expected_result && activity.solved.result && activity.solved.result != activity.expected_result"
                                                 class="ml-16 error bigger-icon"
                                                 matTooltip="Wrong Answer">close</mat-icon>
                                         </ng-container>
@@ -189,11 +189,11 @@
                                         class="body">
                                         {{activity.result_unit}} </span>
                                     <mat-icon
-                                        *ngIf="activity.solved.result && activity.solved.result == activity.expected_result"
+                                        *ngIf="activity.expected_result && activity.solved.result && activity.solved.result == activity.expected_result"
                                         class="ml-16 success bigger-icon"
                                         matTooltip="Right Answer">check</mat-icon>
                                     <mat-icon
-                                        *ngIf="activity.solved.result && activity.solved.result != activity.expected_result"
+                                        *ngIf="activity.expected_result && activity.solved.result && activity.solved.result != activity.expected_result"
                                         class="ml-16 error bigger-icon"
                                         matTooltip="Wrong Answer">close</mat-icon>
                                 </ng-container>
