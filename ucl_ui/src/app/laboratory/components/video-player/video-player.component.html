@@ -1,30 +1,39 @@
-<div class="video-container">
-    <vg-player class="video-player">
-        <vg-overlay-play></vg-overlay-play>
-        <vg-buffering></vg-buffering>
+<div>
 
-        <vg-scrub-bar>
-            <vg-scrub-bar-current-time></vg-scrub-bar-current-time>
-            <vg-scrub-bar-buffering-time></vg-scrub-bar-buffering-time>
-        </vg-scrub-bar>
+    <div *ngIf="!isYouTubeVideo" class="video-container">
+        <!-- Video Normal -->
+        <vg-player class="video-player">
+            <vg-overlay-play></vg-overlay-play>
+            <vg-buffering></vg-buffering>
+            <vg-controls [vgAutohide]="true" [vgAutohideTime]="3"
+                class="vg-controls">
+                <vg-play-pause></vg-play-pause>
+                <vg-playback-button
+                    [playbackValues]="['0.5', '1.0', '2.0', '5.0', '10.0']"></vg-playback-button>
+                <vg-time-display vgProperty="current"
+                    vgFormat="mm:ss"></vg-time-display>
+                <vg-scrub-bar style="pointer-events: none;"></vg-scrub-bar>
+                <vg-time-display vgProperty="total"
+                    vgFormat="mm:ss"></vg-time-display>
+                <vg-mute></vg-mute>
+                <vg-volume></vg-volume>
+                <vg-fullscreen></vg-fullscreen>
+            </vg-controls>
+            <video [vgMedia]="$any(media)" #media id="singleVideo"
+                preload="auto"
+                [src]="videoSrc"></video>
+        </vg-player>
 
-        <vg-controls [vgAutohide]="true" [vgAutohideTime]="3"
-            class="vg-controls">
-            <vg-play-pause></vg-play-pause>
-            <vg-playback-button
-                [playbackValues]="['0.5', '1.0', '2.0', '5.0', '10.0']"></vg-playback-button>
-            <vg-time-display vgProperty="current"
-                vgFormat="mm:ss"></vg-time-display>
-            <vg-scrub-bar style="pointer-events: none;"></vg-scrub-bar>
-            <vg-time-display vgProperty="total"
-                vgFormat="mm:ss"></vg-time-display>
-            <vg-mute></vg-mute>
-            <vg-volume></vg-volume>
-            <vg-fullscreen></vg-fullscreen>
-        </vg-controls>
+    </div>
 
-        <video [vgMedia]="$any(media)" #media id="singleVideo" preload="auto"
-            [src]="videoSrc"></video>
-
-    </vg-player>
+    <!-- YouTube Player -->
+    <div *ngIf="isYouTubeVideo">
+        <div *ngIf="isLoading" class="loader-container">
+            <div class="loader"></div>
+        </div>
+        <youtube-player class="video-container"
+            [videoId]="youtubeVideoId"
+            (ready)="onYouTubeReady()">
+        </youtube-player>
+    </div>
 </div>

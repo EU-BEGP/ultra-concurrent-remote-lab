@@ -37,6 +37,9 @@ import { VgCoreModule } from '@videogular/ngx-videogular/core';
 import { VgControlsModule } from '@videogular/ngx-videogular/controls';
 import { VgOverlayPlayModule } from '@videogular/ngx-videogular/overlay-play';
 import { VgBufferingModule } from '@videogular/ngx-videogular/buffering';
+
+import { YouTubePlayerModule } from '@angular/youtube-player';
+
 import { LaboratoriesDialogComponent } from './laboratory/components/laboratories-dialog/laboratories-dialog.component';
 import { NgxMatFileInputModule } from '@angular-material-components/file-input';
 import { VideoPlayerComponent } from './laboratory/components/video-player/video-player.component';
@@ -81,6 +84,7 @@ PlotlyModule.plotlyjs = PlotlyJS;
     LoadedSessionComponent,
     TimelineChartComponent,
     CodeActivationDialogComponent,
+    
   ],
   imports: [
     BrowserModule,
@@ -108,7 +112,8 @@ PlotlyModule.plotlyjs = PlotlyJS;
     VgBufferingModule,
     NgxMatFileInputModule,
     HotTableModule,
-    PlotlyModule
+    PlotlyModule,
+    YouTubePlayerModule
   ],
   providers: [
     CookieService,
