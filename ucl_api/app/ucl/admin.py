@@ -24,6 +24,7 @@ class LaboratoryAdmin(admin.ModelAdmin):
         "instructor",
         "image",
         "video",
+        "youtube_url",
         "registration_date",
     ]
 
@@ -58,7 +59,7 @@ class ExperimentAdmin(admin.ModelAdmin):
 
 class VideoExperimentAdmin(admin.ModelAdmin):
     ordering = ["id"]
-    list_display = ["id", "name", "video", "experiment"]
+    list_display = ["id", "name", "video", "youtube_url", "experiment"]
 
 
 class SessionAdmin(admin.ModelAdmin):

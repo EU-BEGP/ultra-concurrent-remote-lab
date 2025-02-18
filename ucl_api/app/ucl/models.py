@@ -86,6 +86,7 @@ class Laboratory(models.Model):
         upload_to=generate_unique_filename_video,
         storage=UniqueFilenameStorage,
     )
+    youtube_video = models.URLField(null=True, default=None)
     image = models.ImageField(
         default=None,
         null=True,
@@ -102,6 +103,14 @@ class Laboratory(models.Model):
 
     class Meta:
         verbose_name_plural = "Laboratories"
+
+    def youtube_url(self):
+        youtube_video = self.youtube_video
+        if youtube_video:
+            # Ensure it's a valid YouTube URL or a string
+            return format_html('<a href="{0}">{0}</a>', youtube_video)
+
+        return ""
 
 
 class Guide(models.Model):
@@ -177,13 +186,24 @@ class VideoExperiment(models.Model):
     video = models.FileField(
         upload_to=generate_unique_filename_video,
         storage=UniqueFilenameStorage,
+        null=True,
+        default=None,
     )
+    youtube_video = models.URLField(null=True, default=None)
     experiment = models.ForeignKey(
         Experiment, related_name="experiment_videos", on_delete=models.CASCADE
     )
 
     class Meta:
         verbose_name_plural = "VideoExperiments"
+
+    def youtube_url(self):
+        youtube_video = self.youtube_video
+        if youtube_video:
+            # Ensure it's a valid YouTube URL or a string
+            return format_html('<a href="{0}">{0}</a>', youtube_video)
+
+        return ""
 
 
 class Activity(models.Model):

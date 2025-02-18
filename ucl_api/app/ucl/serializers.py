@@ -25,6 +25,7 @@ class LaboratorySerializer(serializers.ModelSerializer):
             "instructor",
             "image",
             "video",
+            "youtube_video",
             "registration_date",
         ]
 
@@ -52,7 +53,7 @@ class ParameterSerializer(serializers.ModelSerializer):
 class VideoExperimentSerializer(serializers.ModelSerializer):
     class Meta:
         model = VideoExperiment
-        fields = ["id", "name", "video", "experiment"]
+        fields = ["id", "name", "video", "youtube_video", "experiment"]
 
 
 class ExperimentSerializer(serializers.ModelSerializer):

@@ -66,10 +66,15 @@ class ExperimentCreateView(generics.CreateAPIView):
 
             # Handle experiment videos
             while True:
-                video_name = request.data.get(f"experiment_videos[{index}][name]")
-                video_file = request.FILES.get(f"experiment_videos[{index}][video]")
+                video_name = request.data.get(f"experiment_videos[{index}][name]", None)
+                youtube_video = request.data.get(
+                    f"experiment_videos[{index}][youtube_video]", None
+                )
+                video_file = request.FILES.get(
+                    f"experiment_videos[{index}][video]", None
+                )
 
-                if not video_name or not video_file:
+                if not video_name and not (video_file or youtube_video):
                     index = 0
                     break
 
@@ -77,6 +82,7 @@ class ExperimentCreateView(generics.CreateAPIView):
                 video_experiment_instance = VideoExperiment(
                     name=video_name,
                     video=video_file,
+                    youtube_video=youtube_video,
                     experiment=experiment,
                 )
                 video_experiment_instance.save()
