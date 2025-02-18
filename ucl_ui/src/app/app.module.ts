@@ -20,14 +20,12 @@ import { SpinnerComponent } from './core/layout/components/spinner/spinner.compo
 import { ScrollToTopComponent } from './core/layout/components/scroll-to-top/scroll-to-top.component';
 
 import { AccessComponent } from './core/auth/pages/access/access.component';
-import { ActivationComponent } from './core/auth/pages/activation/activation.component';
 import { NotFoundComponent } from './core/auth/pages/not-found/not-found.component';
 
 import { AuthInterceptorService } from './core/auth/services/auth-interceptor.service';
 
 import { HomeComponent } from './laboratory/pages/home/home.component';
 
-import { ProfileComponent } from './core/auth/pages/profile/profile.component';
 import { ProfileFormComponent } from './core/auth/components/profile-form/profile-form.component';
 import { CountdownModule } from 'ngx-countdown';
 import { LabComponent } from './laboratory/pages/lab/lab.component';
@@ -56,6 +54,7 @@ import { TimelineChartComponent } from './laboratory/components/timeline-chart/t
 import { PlotlyModule } from 'angular-plotly.js'; // Importa el módulo de Plotly
 import * as PlotlyJS from 'plotly.js-dist-min';
 import { CodeActivationDialogComponent } from './core/auth/components/code-activation-dialog/code-activation-dialog.component';
+import { UploadOptionsDialogComponent } from './laboratory/components/upload-options-dialog/upload-options-dialog.component';
 
 PlotlyModule.plotlyjs = PlotlyJS;
 
@@ -67,12 +66,10 @@ PlotlyModule.plotlyjs = PlotlyJS;
     LoginComponent,
     RegistrationComponent,
     AccessComponent,
-    ActivationComponent,
     SpinnerComponent,
     ScrollToTopComponent,
     NotFoundComponent,
     HomeComponent,
-    ProfileComponent,
     ProfileFormComponent,
     LabComponent,
     CreateLaboratoryComponent,
@@ -84,6 +81,7 @@ PlotlyModule.plotlyjs = PlotlyJS;
     LoadedSessionComponent,
     TimelineChartComponent,
     CodeActivationDialogComponent,
+    UploadOptionsDialogComponent,
     
   ],
   imports: [
