@@ -3,6 +3,7 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ToastrService } from 'ngx-toastr';
 import { AuthService } from '../../services/auth.service';
 import { Router } from '@angular/router';
+import { User } from '../../interfaces/user';
 
 @Component({
   selector: 'app-code-activation-dialog',
@@ -12,6 +13,8 @@ import { Router } from '@angular/router';
 export class CodeActivationDialogComponent {
   activationStatus: boolean = false;
   userId: string;
+  password:string;
+  email:string;
   @ViewChild('verificationForm') form!: ElementRef<HTMLFormElement>;
 
   constructor(
@@ -19,9 +22,11 @@ export class CodeActivationDialogComponent {
     private dialogRef: MatDialogRef<CodeActivationDialogComponent>,
     private authService: AuthService,
     private toastr: ToastrService,
-    @Inject(MAT_DIALOG_DATA) public data: { userId: string }
+    @Inject(MAT_DIALOG_DATA) public data: { userId: string, email: string, password: string }
   ) {
     this.userId = data.userId;
+    this.password = data.password;
+    this.email = data.email;
   }
 
   sendCode(): void {
@@ -33,21 +38,30 @@ export class CodeActivationDialogComponent {
       valueCode += input.value;
     });
 
-    console.log(valueCode)
     if (this.userId) {
       var params = {
         id: this.userId,
         verification_code: valueCode,
       };
 
-
       this.authService.activateAccount(params).subscribe({
         next: () => {
           this.toastr.success('Your account has been successfully activated.');
           this.activationStatus = true;
           localStorage.removeItem('user_id');
-          this.router.navigateByUrl('/');
-          this.dialogRef.close(true); // Cierra el diálogo al verificar con éxito
+          const user: User = {
+                  email: this.email,
+                  password: this.password,
+                };
+
+          this.authService.login(user).subscribe((response) => {
+            if (response != undefined) {
+              localStorage.setItem('token', response.body.token);
+              this.dialogRef.close(true)
+              this.router.navigateByUrl('/');
+            }
+          });
+         
         },
         error: () => {
           this.toastr.error('The verification code is invalid.');
@@ -56,6 +70,16 @@ export class CodeActivationDialogComponent {
       });
     } else {
       this.toastr.error('Verification code format is incorrect.');
+    }
+  }
+
+  checkReturnUrl() {
+    let params = new URLSearchParams(document.location.search);
+    let returnUrl = params.get('return-url');
+
+    if (returnUrl) this.router.navigateByUrl(returnUrl);
+    else {
+      this.router.navigateByUrl('');
     }
   }
 

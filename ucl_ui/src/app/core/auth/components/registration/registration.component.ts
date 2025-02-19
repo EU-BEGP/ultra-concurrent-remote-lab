@@ -72,21 +72,20 @@ export class RegistrationComponent implements OnInit {
     this.authService.signUp(user).subscribe((response) => {
       if (response.status !== null && response.status === 201) {
         localStorage.setItem('user_id', response.body.id.toString());
-        console.log(response)
         this.toastr.success(
           `Welcome ${user.name}`,
           'Successful registration',
         );
-        this.openActivationDialog(response.body.id);
+        this.openActivationDialog(response.body.id, user.email, user.password);
       }
     });
   }
 
-  openActivationDialog(userId: string): void {
+  openActivationDialog(userId: string, email: string, password: string | undefined): void {
     this.dialog.open(CodeActivationDialogComponent, {
       width: '40vw',
       disableClose: true, 
-      data: { userId }
+      data: {userId: userId, email:email, password: password}
     });
   }
 

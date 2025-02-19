@@ -501,7 +501,6 @@ export class CreateLaboratoryComponent implements OnInit {
       next: (_: any) => {
         this.createLabGuides()
         this.createLabParameters()
-        this.createLabExperiments()
         this.createLabActivities()
         this.toastr.success(
           'Now you will be redirected to your new Laboratory!',
@@ -568,6 +567,7 @@ export class CreateLaboratoryComponent implements OnInit {
         },
       });
     });
+    this.createLabExperiments()
   }
 
   createLabExperiments(): void {
