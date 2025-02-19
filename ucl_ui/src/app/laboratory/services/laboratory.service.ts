@@ -104,7 +104,8 @@ export class LaboratoryService {
     parameter.parameter_options!.forEach((option: any, index: number) => {
       formData.append(`parameter_options[${index}][id]`, option.id);
       formData.append(`parameter_options[${index}][value]`, option.value);
-
+      if (parameter.unit)   formData.append(`parameter_options[${index}][unit]`, parameter.unit!); 
+      
       // Check if there's an image file and append it
       if (option.image) {
         formData.append(`parameter_options[${index}][image]`, option.image); // Ensure this is the actual file object

@@ -34,12 +34,14 @@
                             </span>
                             <div>
                                 <span mat-caption
-                                    class="input-label header3 vertical-center">Configuration</span>
+                                    class="input-label header3 vertical-center">Experiment
+                                    Settings</span>
                             </div>
                             <div class="input-label body vertical-center">
                                 <ng-container
                                     *ngFor="let parameter of experiment.parameter_options; let last = last">
-                                    <span>{{ parameter.value }}</span>
+                                    <span>{{ parameter.value}}</span>
+                                    <span>{{ parameter.unit }}</span>
                                     <span *ngIf="!last"> - </span>
                                 </ng-container>
                             </div>
