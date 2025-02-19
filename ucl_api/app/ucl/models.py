@@ -144,6 +144,7 @@ class Parameter(models.Model):
 class Option(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     value = models.CharField(max_length=255)
+    unit = models.CharField(max_length=20, null=True, default=None)
     image = models.ImageField(
         default=None,
         null=True,

@@ -41,7 +41,7 @@ class ParameterAdmin(admin.ModelAdmin):
 
 class OptionAdmin(admin.ModelAdmin):
     ordering = ["id"]
-    list_display = ["id", "value", "image", "parameter"]
+    list_display = ["id", "value", "unit", "image", "parameter"]
 
 
 class ExperimentAdmin(admin.ModelAdmin):

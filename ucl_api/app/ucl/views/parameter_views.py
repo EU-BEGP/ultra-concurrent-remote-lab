@@ -46,6 +46,7 @@ class CreateParameterView(generics.CreateAPIView):
                     break  # No more options
 
                 option_value = request.data.get(f"parameter_options[{index}][value]")
+                option_unit = request.data.get(f"parameter_options[{index}][unit]")
                 image_file = request.FILES.get(f"parameter_options[{index}][image]")
 
                 # Validate option uuid
@@ -55,6 +56,7 @@ class CreateParameterView(generics.CreateAPIView):
                 option_instance = Option(
                     id=option_id,
                     value=option_value,
+                    unit=option_unit,
                     image=image_file,
                     parameter=parameter,
                 )

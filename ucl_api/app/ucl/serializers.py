@@ -39,7 +39,7 @@ class GuideSerializer(serializers.ModelSerializer):
 class OptionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Option
-        fields = ["id", "value", "image"]
+        fields = ["id", "value", "unit", "image"]
 
 
 class ParameterSerializer(serializers.ModelSerializer):
