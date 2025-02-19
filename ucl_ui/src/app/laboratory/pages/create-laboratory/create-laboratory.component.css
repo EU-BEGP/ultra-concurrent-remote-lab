@@ -98,6 +98,7 @@ img{
 }
 
 .video-card {
+    height: fit-content;
     width: 55vw;
     mat-form-field-wrapper{
         padding-bottom: 0px;

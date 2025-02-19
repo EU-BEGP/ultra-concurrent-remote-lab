@@ -9,7 +9,7 @@
 
         <mat-card-content>
             <form [formGroup]="newLaboratory" (ngSubmit)="onSubmit()">
-                <mat-stepper [linear]="true"
+                <mat-stepper [linear]="false"
                     [orientation]="(stepperOrientation | async)!">
                     <div formGroupName="info">
                         <mat-step label="Laboratory Info"
@@ -97,20 +97,20 @@
                                                 class="video-actions">
                                                 <div style="height: 36px;">
                                                     <button type="button"
-                                                        #file
-                                                        id="button"
-                                                        mat-button>
+                                                        id="button" mat-button
+                                                        (click)="openUploadOptions('intro_video')">
                                                         <mat-icon
                                                             class="bigger-icon accent">upload</mat-icon>
                                                     </button>
                                                     <div
-                                                        style="display: inline-block"
-                                                        matTooltip="Upload Video">
+                                                        style="display: inline-block">
                                                         <input id="myInput"
                                                             name="video"
                                                             type="file"
                                                             accept="video/*"
-                                                            (change)="onUpload($event,'video')" />
+                                                            hidden
+                                                            (change)="onUpload($event, 'video')"
+                                                            #intro_video_input />
                                                         <p
                                                             id="label">{{file}}</p>
                                                     </div>
@@ -480,26 +480,27 @@
                                                                 style="height: 36px;">
                                                                 <button
                                                                     type="button"
-                                                                    #file
                                                                     id="button"
-                                                                    mat-button>
+                                                                    mat-button
+                                                                    (click)="openUploadOptions('experiment_video', experiment_video_input,  i, videoIndex)">
                                                                     <mat-icon
-                                                                        class="accent bigger-icon">upload</mat-icon>
+                                                                        class="bigger-icon accent">upload</mat-icon>
                                                                 </button>
                                                                 <div
-                                                                    style="display: inline-block"
-                                                                    matTooltip="Upload Video">
+                                                                    style="display: inline-block">
                                                                     <input
                                                                         id="myInput"
                                                                         name="video"
                                                                         type="file"
                                                                         accept="video/*"
-                                                                        (change)="onUpload($event,'video', i,videoIndex)" />
+                                                                        hidden
+                                                                        (change)="onUpload($event, 'video', i, videoIndex)"
+                                                                        #experiment_video_input />
                                                                     <p
                                                                         id="label">{{file}}</p>
-
                                                                 </div>
                                                             </div>
+
                                                             <button
                                                                 type="button"
                                                                 mat-button

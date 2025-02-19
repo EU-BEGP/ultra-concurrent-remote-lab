@@ -8,11 +8,6 @@
     transform-origin: bottom left; /* Escala desde la esquina inferior izquierda */
   }
 
-  .youtube-container {
-    display: flex;
-    justify-content: center;
-  }
-
   .loader-container {
     position: absolute;
     top: 0;

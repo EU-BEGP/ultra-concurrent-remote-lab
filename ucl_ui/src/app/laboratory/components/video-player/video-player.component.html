@@ -1,7 +1,7 @@
-<div>
+<div #videoContainer class="video-container">
 
-    <div *ngIf="!isYouTubeVideo" class="video-container">
-        <!-- Video Normal -->
+    <!-- Video Normal -->
+    <div *ngIf="!isYouTubeVideo">
         <vg-player class="video-player">
             <vg-overlay-play></vg-overlay-play>
             <vg-buffering></vg-buffering>
@@ -20,10 +20,8 @@
                 <vg-fullscreen></vg-fullscreen>
             </vg-controls>
             <video [vgMedia]="$any(media)" #media id="singleVideo"
-                preload="auto"
-                [src]="videoSrc"></video>
+                preload="auto" [src]="videoSrc"></video>
         </vg-player>
-
     </div>
 
     <!-- YouTube Player -->
@@ -31,7 +29,9 @@
         <div *ngIf="isLoading" class="loader-container">
             <div class="loader"></div>
         </div>
-        <youtube-player class="video-container"
+        <youtube-player class="video-player"
+            [width]="playerWidth"
+            [height]="playerHeight"
             [videoId]="youtubeVideoId"
             (ready)="onYouTubeReady()">
         </youtube-player>

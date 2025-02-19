@@ -6,6 +6,7 @@ export interface Laboratory {
     description?: string;
     instructor: number;
     video?: any;
+    youtube_video?:string;
     image?:any;
   }
   

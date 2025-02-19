@@ -1,45 +1,68 @@
-import { Component, OnInit, Input, SimpleChanges } from '@angular/core';
+import { Component, OnInit, Input, SimpleChanges, ElementRef, ViewChild, AfterViewInit, OnChanges, ChangeDetectorRef } from '@angular/core';
 
 @Component({
   selector: 'app-video-player',
   templateUrl: './video-player.component.html',
   styleUrls: ['./video-player.component.css']
 })
-export class VideoPlayerComponent implements OnInit {
-
+export class VideoPlayerComponent implements OnInit, AfterViewInit, OnChanges {
+  
   @Input() videoSrc: string = '';
 
-  isLoading: boolean = true;
-  isYouTubeVideo: boolean = false;
-  youtubeVideoId: string = '';
+  @ViewChild('videoContainer', { static: false }) videoContainer!: ElementRef;
 
-  constructor() { }
+  isLoading: boolean = true;
+  isYouTubeVideo: boolean = true;
+  youtubeVideoId: string = '';
+  playerWidth: number = 640;
+  playerHeight: number = 360;
+
+  constructor(private cdRef: ChangeDetectorRef) {}
 
   ngOnInit(): void {
+    window.addEventListener('resize', this.updatePlayerSize.bind(this));
+  }
+
+  ngAfterViewInit(): void {
+    this.updatePlayerSize();
   }
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['videoSrc'] && changes['videoSrc'].currentValue) {
       this.isYouTubeVideo = this.isYouTube(this.videoSrc);
       this.youtubeVideoId = this.getYouTubeId(this.videoSrc);
+      
+      // Esperar el siguiente ciclo de renderizado para asegurar que el contenedor existe
+      setTimeout(() => {
+        this.updatePlayerSize();
+        this.cdRef.detectChanges(); // Forzar detección de cambios
+      });
     }
   }
 
+  ngOnDestroy(): void {
+    window.removeEventListener('resize', this.updatePlayerSize.bind(this));
+  }
+
+  updatePlayerSize(): void {
+    if (this.videoContainer) {
+      const containerWidth = this.videoContainer.nativeElement.clientWidth || 640;
+      this.playerWidth = containerWidth;
+      this.playerHeight = containerWidth * 9 / 16; // Mantener ratio 16:9
+      this.cdRef.detectChanges(); 
+    }
+  }
 
   isYouTube(url: string): boolean {
-    if (!url) return false;
     return url.includes('youtube.com') || url.includes('youtu.be');
   }
 
-  // Función que extrae el ID del video de YouTube de la URL
   getYouTubeId(url: string): string {
-    if (!url) return '';
-    const videoIdMatch = url.match(/(?:\/|%3D|v=|vi=)([0-9A-Za-z_-]{11})(?:[%#?&]|$)/);
-    return videoIdMatch ? videoIdMatch[1] : '';
+    const match = url.match(/(?:\/|%3D|v=|vi=)([0-9A-Za-z_-]{11})(?:[%#?&]|$)/);
+    return match ? match[1] : '';
   }
 
   onYouTubeReady(): void {
-    this.isLoading = false; // Ocultar loader cuando el video esté listo
+    this.isLoading = false;
   }
-
 }

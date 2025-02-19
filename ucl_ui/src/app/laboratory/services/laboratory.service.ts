@@ -80,7 +80,9 @@ export class LaboratoryService {
     formData.append('institution', lab.institution!);
     formData.append('instructor', String(lab.instructor));
     if (lab.image) formData.append('image', lab.image);
-    if (lab.video) formData.append('video', lab.video);
+    if (lab.youtube_video){
+      formData.append('youtube_video', lab.youtube_video);
+    }else  if (lab.video) formData.append('video', lab.video);
     return this.http.post<Laboratory>(`${config.api.baseUrl}ucl/laboratories/`, formData);
   }
 
@@ -125,7 +127,10 @@ export class LaboratoryService {
 
     experiment.experiment_videos!.forEach((video: any, index: number) => {
       formData.append(`experiment_videos[${index}][name]`, video.name);
-      if (video.video) {
+      if (video.youtube_video) {
+        formData.append(`experiment_videos[${index}][youtube_video]`, video.youtube_video); 
+      }
+      else if (video.video) {
         formData.append(`experiment_videos[${index}][video]`, video.file); 
       }
     });

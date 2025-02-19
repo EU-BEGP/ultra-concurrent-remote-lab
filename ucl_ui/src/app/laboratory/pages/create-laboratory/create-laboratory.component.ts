@@ -17,6 +17,8 @@ import { v4 as uuidv4 } from 'uuid';
 import { Experiment } from '../../interfaces/experiment';
 import { Activity } from '../../interfaces/activity';
 import { MatStepper } from '@angular/material/stepper';
+import { MatDialog } from '@angular/material/dialog';
+import { UploadOptionsDialogComponent } from '../../components/upload-options-dialog/upload-options-dialog.component';
 
 @Component({
   selector: 'app-create-laboratory',
@@ -26,6 +28,8 @@ import { MatStepper } from '@angular/material/stepper';
 export class CreateLaboratoryComponent implements OnInit {
   @ViewChild('videoPlayer') videoplayer!: ElementRef;
   @ViewChild(MatStepper) stepper!: MatStepper;
+  @ViewChild('intro_video_input') intro_video_input!: ElementRef<HTMLInputElement>;
+  @ViewChild('experiment_video_input') experiment_video_input!: ElementRef<HTMLInputElement>;
   stepperOrientation: Observable<StepperOrientation>
   breakpoint: any
   breakpointVideo: any
@@ -41,9 +45,16 @@ export class CreateLaboratoryComponent implements OnInit {
     { name: 'Hydraulic Energy' },
     { name: 'Other' },
   ];
+
   currentUserId: any = 0;
 
-  constructor(private builder: FormBuilder, private toastr: ToastrService, private router: Router, private userService: UserService, private labService: LaboratoryService) {
+  constructor(private builder: FormBuilder, 
+    private toastr: ToastrService, 
+    private router: Router, 
+    private userService: UserService, 
+    private labService: LaboratoryService,  
+    private dialogRef: MatDialog,
+  ) {
     const breakpointObserver = inject(BreakpointObserver);
     this.stepperOrientation = breakpointObserver
       .observe('(min-width: 800px)')
@@ -95,7 +106,8 @@ export class CreateLaboratoryComponent implements OnInit {
       }),
       introVideo: this.builder.group({
         video: [this.defaultVideo],
-        file: this.builder.control('', this.fileRequiredValidator())
+        file: this.builder.control('', this.fileRequiredValidator()),
+        youtube_video:['']
       }),
       guides: new FormArray([
         this.builder.group({
@@ -125,7 +137,8 @@ export class CreateLaboratoryComponent implements OnInit {
       videos: new FormArray([this.builder.group({
         name: this.builder.control('', Validators.required),
         video: [this.defaultVideo],
-        file: this.builder.control('', this.fileRequiredValidator())
+        file: this.builder.control('', this.fileRequiredValidator()),
+        youtube_video:['']
       })]),
       activities: new FormArray([
         this.builder.group({
@@ -269,6 +282,7 @@ export class CreateLaboratoryComponent implements OnInit {
         name:  this.builder.control('', Validators.required),
         video: [this.defaultVideo],
         file: this.builder.control('', this.fileRequiredValidator()),
+        youtube_video:['']
       })]),
       activities: new FormArray([
         this.builder.group({
@@ -312,7 +326,8 @@ export class CreateLaboratoryComponent implements OnInit {
     const videoFormGroup = this.builder.group({
       name:  this.builder.control('', Validators.required),
       video: [this.defaultVideo],
-      file: this.builder.control('', this.fileRequiredValidator())
+      file: this.builder.control('', this.fileRequiredValidator()),
+      youtube_video:['']
     })
     this.getVideos(index).push(videoFormGroup)
   }
@@ -417,6 +432,37 @@ export class CreateLaboratoryComponent implements OnInit {
     reader.readAsDataURL(file);
   }
 
+  openUploadOptions(video_type:string, video_input?:HTMLInputElement, experiment_index?:any, video_index?:any){
+    const dialogRef = this.dialogRef.open(UploadOptionsDialogComponent, {
+      width: '50vw'
+      })    
+      dialogRef.componentInstance.selectedOption.subscribe((parameters:any) => {
+        if(parameters.type == "File"){
+          if(video_type == "experiment_video"){
+            video_input!.click();
+          }else{//intro_video
+            this.intro_video_input.nativeElement.click();
+          }
+        } else if (parameters.type == "Youtube"){
+          if(video_type == "experiment_video"){
+            this.getVideos(experiment_index).at(video_index).patchValue({
+              video: parameters.url,
+              file: parameters.url,
+              youtube_video: parameters.url
+            });
+            this.getVideos(experiment_index).at(video_index).get('video')?.updateValueAndValidity();
+          }else{//intro_video
+            this.introVideo.patchValue({
+              video: parameters.url,
+              file: parameters.url,
+              youtube_video: parameters.url,
+            });
+            this.introVideo.get('video')?.updateValueAndValidity();
+          }
+        }
+    });
+  
+  }
 
   onSubmit(): void {
 
@@ -431,16 +477,26 @@ export class CreateLaboratoryComponent implements OnInit {
   }
 
   createLab(): void {
-    const labFields = {
+
+    const labFields: any = {
       'id': this.newLaboratory.value.id,
       'name': this.newLaboratory.value.info?.name,
       'institution': this.newLaboratory.value.info?.institution,
       'category': this.newLaboratory.value.info?.category,
       'instructor': this.newLaboratory.value.info?.instructor,
       'description': this.newLaboratory.value.introduction?.description,
-      'video': this.newLaboratory.value.introduction?.introVideo?.file,
       'image': this.newLaboratory.value.introduction?.introPhoto?.file
+    };
+    
+    const youtubeVideo = this.newLaboratory.value.introduction?.introVideo?.youtube_video;
+    const fileVideo = this.newLaboratory.value.introduction?.introVideo?.file;
+    
+    if (youtubeVideo && youtubeVideo.trim() !== '') {
+      labFields.youtube_video = youtubeVideo;
+    } else {
+      labFields.video = fileVideo;
     }
+
     this.labService.addLab(labFields as Laboratory).subscribe({
       next: (_: any) => {
         this.createLabGuides()
