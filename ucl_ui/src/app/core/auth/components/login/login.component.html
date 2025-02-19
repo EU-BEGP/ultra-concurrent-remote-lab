@@ -1,35 +1,51 @@
-<form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
-  <mat-form-field class="input-field" appearance="outline">
-    <mat-label>Email</mat-label>
-    <input matInput placeholder="user@mail.com" formControlName="email" />
-    <mat-icon matSuffix>email</mat-icon>
-    <mat-error *ngIf="emailControl.invalid">
-      {{ getEmailErrorMessage() }}
-    </mat-error>
-  </mat-form-field>
+<div>
+  <mat-card-title class="dialog-title center">
+    <span class="first-title header2">Ultra-Concurrent</span>
+    <span class="second-title header2">Remote Labs Builder</span>
+  </mat-card-title>
 
-  <mat-form-field class="input-field" appearance="outline">
-    <mat-label>Password</mat-label>
-    <input matInput [type]="hide ? 'password' : 'text'"
-      formControlName="password" autocomplete="on" />
-    <button type="button" mat-icon-button matSuffix (click)="hide = !hide"
-      [attr.aria-label]="'Hide password'"
-      [attr.aria-pressed]="hide" tabindex="-1">
-      <mat-icon>{{ hide ? "visibility_off" : "visibility" }}</mat-icon>
-    </button>
-    <mat-error *ngIf="passwordControl.invalid">
-      {{ getPasswordErrorMessage() }}
-    </mat-error>
-  </mat-form-field>
+  <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+    <div class="input-container">
+      <span class="body input-label">Email</span>
+      <mat-form-field class="input-field" appearance="outline">
+        <input matInput formControlName="email" />
+      </mat-form-field>
+    </div>
 
-  <p id="password-link">
-    <a class="mat-caption" [href]="passwordResetUrl" target="_blank">
-      Forgot Password?
-    </a>
-  </p>
+    <div class="input-container">
+      <span class="body input-label">Password</span>
+      <mat-form-field class="input-field" appearance="outline">
+        <input matInput formControlName="password"
+          [type]="hide ? 'password' : 'text'" />
+        <button type="button" mat-icon-button matSuffix (click)="hide = !hide"
+          [attr.aria-label]="'Hide password'"
+          [attr.aria-pressed]="hide" tabindex="-1">
+          <mat-icon>{{ hide ? "visibility_off" : "visibility" }}</mat-icon>
+        </button>
+        <mat-error *ngIf="passwordControl.invalid">
+          {{ getPasswordErrorMessage() }}
+        </mat-error>
+      </mat-form-field>
+    </div>
 
-  <button class="access-button buttons1" type="submit" mat-raised-button
-    color="primary">
-    Sign In
-  </button>
-</form>
+    <div class="center mt-8">
+      <span class="body">
+        <a class="clickable-text" [href]="passwordResetUrl">Forgot Password?</a>
+      </span>
+    </div>
+
+    <div class="button-container mt-32">
+      <button mat-raised-button color="primary" type="submit" class="header2">
+        Sign In
+      </button>
+    </div>
+
+    <div class="mt-32 center mb-8">
+      <span class="body">
+        Don't have an Account?
+        <a class="clickable-text">Register</a>
+      </span>
+    </div>
+
+  </form>
+</div>

@@ -1,89 +1,95 @@
-<form [formGroup]="registrationForm" (ngSubmit)="onSubmit()">
+<div>
+  <mat-card-title class="dialog-title center">
+    <span class="first-title header2">Ultra-Concurrent</span>
+    <span class="second-title header2">Remote Labs Builder</span>
+  </mat-card-title>
 
-  <mat-form-field class="input-field">
-    <mat-label>Name</mat-label>
-    <input matInput formControlName="name" />
-    <mat-error
-      *ngIf="nameControl?.invalid && (nameControl?.touched || nameControl?.dirty)">
-      <div *ngIf="nameControl?.hasError('required')">
-        Name field is required.
-      </div>
-    </mat-error>
-  </mat-form-field>
+  <form [formGroup]="registrationForm" (ngSubmit)="onSubmit()">
 
-  <mat-form-field class="input-field">
-    <mat-label>Last name</mat-label>
-    <input matInput formControlName="lastName" />
-    <mat-error
-      *ngIf="lastNameControl?.invalid && (lastNameControl?.touched || lastNameControl?.dirty)">
-      <div *ngIf="lastNameControl?.hasError('required')">
-        Last Name field is required.
-      </div>
-    </mat-error>
-  </mat-form-field>
+    <div class="input-container">
+      <span class="body input-label">Name</span>
+      <mat-form-field class="input-field" appearance="outline">
+        <input matInput formControlName="name" />
+      </mat-form-field>
+    </div>
 
-  <mat-form-field class="input-field">
-    <mat-label>Email</mat-label>
-    <input matInput placeholder="user@mail.com" formControlName="email" />
-    <mat-error
-      *ngIf="emailControl?.invalid && (emailControl?.touched || emailControl?.dirty)">
-      <div *ngIf="emailControl?.hasError('required')">
-        Email field is required
-      </div>
-      <div *ngIf="emailControl?.hasError('email')">
-        Invalid email address
-      </div>
-    </mat-error>
-  </mat-form-field>
+    <div class="input-container">
+      <span class="body input-label">Last Name</span>
+      <mat-form-field class="input-field" appearance="outline">
+        <input matInput formControlName="lastName" />
+      </mat-form-field>
+    </div>
 
-  <mat-form-field class="input-field">
-    <mat-label>Password</mat-label>
-    <input matInput [type]="hidePassword ? 'password' : 'text'"
-      formControlName="password" autocomplete="on" />
-    <button type="button" mat-icon-button matSuffix
-      (click)="hidePassword = !hidePassword"
-      [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hidePassword"
-      tabindex="-1">
-      <mat-icon>{{ hidePassword ? "visibility_off" : "visibility" }}</mat-icon>
-    </button>
-    <mat-error
-      *ngIf="passwordControl?.invalid && (passwordControl?.touched || passwordControl?.dirty)">
-      <div *ngIf="passwordControl?.hasError('required')">
-        Password field is required
-      </div>
-      <div *ngIf="passwordControl?.hasError('minlength')">
-        Password cannot have less than 8 characters.
-      </div>
-    </mat-error>
-  </mat-form-field>
+    <div class="input-container">
+      <span class="body input-label">Email</span>
+      <mat-form-field class="input-field" appearance="outline">
+        <input matInput formControlName="email" />
+      </mat-form-field>
+    </div>
 
-  <mat-form-field class="input-field">
-    <mat-label>Password Confirmation</mat-label>
-    <input matInput [type]="hidePasswordConfirmation ? 'password' : 'text'"
-      formControlName="passwordConfirmation"
-      autocomplete="on" />
-    <button mat-icon-button matSuffix type="button"
-      (click)="hidePasswordConfirmation = !hidePasswordConfirmation"
-      [attr.aria-label]="'Hide password confirmation'"
-      [attr.aria-pressed]="hidePasswordConfirmation" tabindex="-1">
-      <mat-icon>{{
-        hidePasswordConfirmation ? "visibility_off" : "visibility"
-        }}</mat-icon>
-    </button>
-    <mat-error
-      *ngIf="passwordConfirmationControl?.invalid && (passwordConfirmationControl?.touched || passwordConfirmationControl?.dirty)">
-      <div *ngIf="passwordConfirmationControl?.hasError('required')">
-        Password confirmation field is required.
-      </div>
-    </mat-error>
-  </mat-form-field>
+    <div class="input-container">
+      <span class="body input-label">Password</span>
+      <mat-form-field class="input-field" appearance="outline">
+        <input matInput [type]="hidePassword ? 'password' : 'text'"
+          formControlName="password" autocomplete="on" />
+        <button type="button" mat-icon-button matSuffix
+          (click)="hidePassword = !hidePassword"
+          [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hidePassword"
+          tabindex="-1">
+          <mat-icon>{{ hidePassword ? "visibility_off" : "visibility"
+            }}</mat-icon>
+        </button>
+        <mat-error
+          *ngIf="passwordControl?.invalid && (passwordControl?.touched || passwordControl?.dirty)">
+          <div *ngIf="passwordControl?.hasError('required')">
+            Password field is required
+          </div>
+          <div *ngIf="passwordControl?.hasError('minlength')">
+            Password cannot have less than 8 characters.
+          </div>
+        </mat-error>
+      </mat-form-field>
+    </div>
 
-  <mat-error class="mat-caption"
-    *ngIf="registrationForm.errors && registrationForm.errors['passwordsMismatch'] && registrationForm.touched">
-    * Password and password confirmation do not match.
-  </mat-error>
+    <div class="input-container">
+      <span class="body input-label">Password Confirmation</span>
+      <mat-form-field class="input-field" appearance="outline">
+        <input matInput [type]="hidePasswordConfirmation ? 'password' : 'text'"
+          formControlName="passwordConfirmation"
+          autocomplete="on" />
+        <button mat-icon-button matSuffix type="button"
+          (click)="hidePasswordConfirmation = !hidePasswordConfirmation"
+          [attr.aria-label]="'Hide password confirmation'"
+          [attr.aria-pressed]="hidePasswordConfirmation" tabindex="-1">
+          <mat-icon>{{
+            hidePasswordConfirmation ? "visibility_off" : "visibility"
+            }}</mat-icon>
+        </button>
+        <mat-error
+          *ngIf="passwordConfirmationControl?.invalid && (passwordConfirmationControl?.touched || passwordConfirmationControl?.dirty)">
+          <div *ngIf="passwordConfirmationControl?.hasError('required')">
+            Password confirmation field is required.
+          </div>
+        </mat-error>
 
-  <button class="access-button" type="submit" mat-raised-button color="primary">
-    Sign Up
-  </button>
-</form>
+      </mat-form-field>
+      <mat-error
+        *ngIf="registrationForm.errors && registrationForm.errors['passwordsMismatch'] && registrationForm.touched && (passwordConfirmationControl?.touched || passwordConfirmationControl?.dirty)">
+        Password and password confirmation do not match.
+      </mat-error>
+    </div>
+
+    <div class="button-container mt-16">
+      <button mat-raised-button color="primary" type="submit" class="header2">
+        Sign Up
+      </button>
+    </div>
+
+    <div class="mt-32 center mb-8">
+      <span class="body">
+        Already have an Account?
+        <a class="clickable-text">Sign In</a>
+      </span>
+    </div>
+  </form>
+</div>

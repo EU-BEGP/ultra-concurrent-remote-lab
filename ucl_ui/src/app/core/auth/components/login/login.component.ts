@@ -7,6 +7,7 @@ import { ToastrService } from 'ngx-toastr';
 import { AuthService } from '../../services/auth.service';
 import { User } from '../../interfaces/user';
 import config from 'src/app/config.json'
+import { MatDialogRef } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-login',
@@ -26,7 +27,8 @@ export class LoginComponent implements OnInit {
   constructor(
     private authService: AuthService,
     private toastr: ToastrService,
-    private router: Router
+    private router: Router,
+    private dialogRef: MatDialogRef<LoginComponent>,
   ) { }
 
   ngOnInit(): void { }
@@ -49,7 +51,7 @@ export class LoginComponent implements OnInit {
       this.authService.login(user).subscribe((response) => {
         if (response != undefined) {
           localStorage.setItem('token', response.body.token);
-          this.checkReturnUrl();
+          this.dialogRef.close(true)
           this.toastr.success(`Welcome back`);
         }
       });

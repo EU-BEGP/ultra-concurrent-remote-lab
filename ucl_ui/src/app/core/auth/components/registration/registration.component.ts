@@ -10,8 +10,9 @@ import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { AuthService } from '../../services/auth.service';
 import { User } from '../../interfaces/user';
-import { MatDialog } from '@angular/material/dialog';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { CodeActivationDialogComponent } from '../code-activation-dialog/code-activation-dialog.component';
+import { LoginComponent } from '../login/login.component';
 
 @Component({
   selector: 'app-registration',
@@ -40,7 +41,8 @@ export class RegistrationComponent implements OnInit {
     private toastr: ToastrService,
     private router: Router,
     private formBuilder: FormBuilder,
-    private dialog: MatDialog,
+    private dialogRef: MatDialog,
+    private dialogRefRegistration: MatDialogRef<RegistrationComponent>,
   ) { }
 
   ngOnInit(): void { }
@@ -82,11 +84,14 @@ export class RegistrationComponent implements OnInit {
   }
 
   openActivationDialog(userId: string, email: string, password: string | undefined): void {
-    this.dialog.open(CodeActivationDialogComponent, {
+    const dialogRef = this.dialogRef.open(CodeActivationDialogComponent, {
       width: '40vw',
       disableClose: true, 
       data: {userId: userId, email:email, password: password}
     });
+    dialogRef.afterClosed().subscribe((res: any) => {
+      this.dialogRefRegistration.close(true)
+    })
   }
 
   /*** Internal functions ***/

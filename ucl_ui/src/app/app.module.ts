@@ -19,7 +19,6 @@ import { RegistrationComponent } from './core/auth/components/registration/regis
 import { SpinnerComponent } from './core/layout/components/spinner/spinner.component';
 import { ScrollToTopComponent } from './core/layout/components/scroll-to-top/scroll-to-top.component';
 
-import { AccessComponent } from './core/auth/pages/access/access.component';
 import { NotFoundComponent } from './core/auth/pages/not-found/not-found.component';
 
 import { AuthInterceptorService } from './core/auth/services/auth-interceptor.service';
@@ -65,7 +64,6 @@ PlotlyModule.plotlyjs = PlotlyJS;
     FooterComponent,
     LoginComponent,
     RegistrationComponent,
-    AccessComponent,
     SpinnerComponent,
     ScrollToTopComponent,
     NotFoundComponent,

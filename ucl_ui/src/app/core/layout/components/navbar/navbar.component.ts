@@ -3,7 +3,7 @@ import {
   Breakpoints,
   BreakpointState,
 } from '@angular/cdk/layout';
-import { Component, OnInit, inject } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 
@@ -17,6 +17,8 @@ import { MatDialog } from '@angular/material/dialog';
 import { LaboratoriesDialogComponent } from 'src/app/laboratory/components/laboratories-dialog/laboratories-dialog.component';
 import { SessionsListDialogComponent } from 'src/app/laboratory/components/sessions-list-dialog/sessions-list-dialog.component';
 import { ProfileFormComponent } from 'src/app/core/auth/components/profile-form/profile-form.component';
+import { RegistrationComponent } from 'src/app/core/auth/components/registration/registration.component';
+import { LoginComponent } from 'src/app/core/auth/components/login/login.component';
 
 @Component({
   selector: 'app-navbar',
@@ -30,7 +32,7 @@ export class NavbarComponent implements OnInit {
 
   shownMenu = false;
   showLabsButton = false;
-  user: User = {name : "", last_name:"", email:''};
+  user: User = { name: "", last_name: "", email: '' };
 
   constructor(
     private router: Router,
@@ -38,35 +40,37 @@ export class NavbarComponent implements OnInit {
     private userService: UserService,
     private dialogRef: MatDialog,
     private matIconRegistry: MatIconRegistry,
-    private domSanitizer: DomSanitizer){
+    private domSanitizer: DomSanitizer,
+    private cdRef: ChangeDetectorRef // ✅ Inyectamos ChangeDetectorRef
+  ) {
     this.matIconRegistry.addSvgIcon(
-     "experiment",
+      "experiment",
       this.domSanitizer.bypassSecurityTrustResourceUrl("assets/experiment.svg")
     );
 
     this.matIconRegistry.addSvgIcon(
       "laboratories",
-       this.domSanitizer.bypassSecurityTrustResourceUrl("assets/laboratories.svg")
-     );
+      this.domSanitizer.bypassSecurityTrustResourceUrl("assets/laboratories.svg")
+    );
 
-     this.matIconRegistry.addSvgIcon(
+    this.matIconRegistry.addSvgIcon(
       "account",
-       this.domSanitizer.bypassSecurityTrustResourceUrl("assets/account.svg")
-     );
+      this.domSanitizer.bypassSecurityTrustResourceUrl("assets/account.svg")
+    );
 
-     this.matIconRegistry.addSvgIcon(
+    this.matIconRegistry.addSvgIcon(
       "add",
-       this.domSanitizer.bypassSecurityTrustResourceUrl("assets/add.svg")
-     );
+      this.domSanitizer.bypassSecurityTrustResourceUrl("assets/add.svg")
+    );
 
-     this.matIconRegistry.addSvgIcon(
+    this.matIconRegistry.addSvgIcon(
       "arrowdown",
-       this.domSanitizer.bypassSecurityTrustResourceUrl("assets/arrowdown.svg")
-     );
+      this.domSanitizer.bypassSecurityTrustResourceUrl("assets/arrowdown.svg")
+    );
   }
 
   ngOnInit(): void {
-    this.getUserData()
+    this.getUserData();
     const token = localStorage.getItem('token');
 
     if (token) {
@@ -75,10 +79,14 @@ export class NavbarComponent implements OnInit {
           user.groups!.forEach((group) => {
             if (group.name === Group.Instructors) this.showLabsButton = true;
           });
+          this.shownMenu = true;
+          this.cdRef.detectChanges(); 
         },
-        (err) => (this.shownMenu = false)
+        (err) => {
+          this.shownMenu = false;
+          this.cdRef.detectChanges(); 
+        }
       );
-      this.shownMenu = true;
     } else {
       this.shownMenu = false;
       this.showLabsButton = false;
@@ -87,7 +95,8 @@ export class NavbarComponent implements OnInit {
 
   getUserData() {
     this.userService.getUserData().subscribe((response) => {
-      this.user=response
+      this.user = response;
+      this.cdRef.detectChanges(); 
     });
   }
 
@@ -95,48 +104,72 @@ export class NavbarComponent implements OnInit {
     this.router.navigateByUrl('/');
   }
 
-  goToMyProfile(): void {
-    this.router.navigateByUrl('/profile');
-  }
-
-  goToLogin(): void {
-    this.router.navigateByUrl('/access');
-  }
-
-  goToCreateLab(){
+  goToCreateLab() {
     this.router.navigateByUrl('/create-lab');
   }
 
-  openLaboratories(){
+  openLaboratories() {
     const dialogRef = this.dialogRef.open(LaboratoriesDialogComponent, {
       width: '75vw'
-     })
-     dialogRef.afterClosed().subscribe((res: any) => {
-     })
+    });
+    dialogRef.afterClosed().subscribe();
   }
 
-  openSessions(){
+  openSessions() {
     const dialogRef = this.dialogRef.open(SessionsListDialogComponent, {
       width: '75vw'
-     })
-     dialogRef.afterClosed().subscribe((res: any) => {
-     })
+    });
+    dialogRef.afterClosed().subscribe();
   }
 
-  openProfile(){
+  openProfile() {
     const dialogRef = this.dialogRef.open(ProfileFormComponent, {
       width: '40vw'
-     })
-     dialogRef.afterClosed().subscribe((res: any) => {
-     })
+    });
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) { 
+        this.getUserData(); 
+        this.shownMenu = true;
+        this.cdRef.detectChanges(); 
+      }
+    });
   }
 
+  openLogin() {
+    const dialogWidth = window.innerWidth < 1000 ? '75vw' : '35vw'; 
+    const dialogRef = this.dialogRef.open(LoginComponent, {
+      width: dialogWidth
+    });
 
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) { 
+        this.getUserData(); 
+        this.shownMenu = true;
+        this.cdRef.detectChanges(); 
+      }
+    });
+  }
+
+  openSignUp() {
+    const dialogWidth = window.innerWidth < 1000 ? '75vw' : '35vw'; 
+    const dialogRef = this.dialogRef.open(RegistrationComponent, {
+      width: dialogWidth
+    });
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) { 
+        this.getUserData(); 
+        this.shownMenu = true;
+        this.cdRef.detectChanges(); 
+      }
+    });
+  }
 
   logout(): void {
     localStorage.removeItem('token');
-    this.goToHome();
+    this.user = { name: "", last_name: "", email: '' };
     this.shownMenu = false;
     this.showLabsButton = false;
+    this.cdRef.detectChanges(); 
+    this.goToHome();
   }
 }

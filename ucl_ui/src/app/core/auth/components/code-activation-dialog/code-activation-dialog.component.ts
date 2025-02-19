@@ -11,7 +11,6 @@ import { User } from '../../interfaces/user';
   styleUrls: ['./code-activation-dialog.component.css']
 })
 export class CodeActivationDialogComponent {
-  activationStatus: boolean = false;
   userId: string;
   password:string;
   email:string;
@@ -47,7 +46,6 @@ export class CodeActivationDialogComponent {
       this.authService.activateAccount(params).subscribe({
         next: () => {
           this.toastr.success('Your account has been successfully activated.');
-          this.activationStatus = true;
           localStorage.removeItem('user_id');
           const user: User = {
                   email: this.email,
@@ -58,28 +56,16 @@ export class CodeActivationDialogComponent {
             if (response != undefined) {
               localStorage.setItem('token', response.body.token);
               this.dialogRef.close(true)
-              this.router.navigateByUrl('/');
             }
           });
          
         },
         error: () => {
           this.toastr.error('The verification code is invalid.');
-          this.activationStatus = false;
         },
       });
     } else {
       this.toastr.error('Verification code format is incorrect.');
-    }
-  }
-
-  checkReturnUrl() {
-    let params = new URLSearchParams(document.location.search);
-    let returnUrl = params.get('return-url');
-
-    if (returnUrl) this.router.navigateByUrl(returnUrl);
-    else {
-      this.router.navigateByUrl('');
     }
   }
 

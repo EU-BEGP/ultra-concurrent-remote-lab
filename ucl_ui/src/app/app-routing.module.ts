@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { AccessComponent } from './core/auth/pages/access/access.component';
 import { NotFoundComponent } from './core/auth/pages/not-found/not-found.component';
 import { HomeComponent } from './laboratory/pages/home/home.component';
 import { AuthGuard } from './core/auth/services/guards/auth.guard';
@@ -19,11 +18,7 @@ const routes: Routes = [
     redirectTo: 'ultra-concurrent-rl/',
     pathMatch: 'full' 
   },
-  {
-    path: 'access',
-    component: AccessComponent,
-    canActivate: [AuthGuard],
-  },
+
   {
     path: 'create-lab',
     component: CreateLaboratoryComponent,
