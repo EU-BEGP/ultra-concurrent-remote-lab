@@ -54,6 +54,7 @@ import { PlotlyModule } from 'angular-plotly.js'; // Importa el módulo de Plotl
 import * as PlotlyJS from 'plotly.js-dist-min';
 import { CodeActivationDialogComponent } from './core/auth/components/code-activation-dialog/code-activation-dialog.component';
 import { UploadOptionsDialogComponent } from './laboratory/components/upload-options-dialog/upload-options-dialog.component';
+import { ConfirmationDialogComponent } from './laboratory/components/confirmation-dialog/confirmation-dialog.component';
 
 PlotlyModule.plotlyjs = PlotlyJS;
 
@@ -80,6 +81,7 @@ PlotlyModule.plotlyjs = PlotlyJS;
     TimelineChartComponent,
     CodeActivationDialogComponent,
     UploadOptionsDialogComponent,
+    ConfirmationDialogComponent,
     
   ],
   imports: [

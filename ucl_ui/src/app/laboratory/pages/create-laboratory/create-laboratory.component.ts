@@ -19,6 +19,7 @@ import { Activity } from '../../interfaces/activity';
 import { MatStepper } from '@angular/material/stepper';
 import { MatDialog } from '@angular/material/dialog';
 import { UploadOptionsDialogComponent } from '../../components/upload-options-dialog/upload-options-dialog.component';
+import { BookingService } from '../../services/booking.service';
 
 @Component({
   selector: 'app-create-laboratory',
@@ -54,6 +55,7 @@ export class CreateLaboratoryComponent implements OnInit {
     private userService: UserService, 
     private labService: LaboratoryService,  
     private dialogRef: MatDialog,
+    private bookingService: BookingService
   ) {
     const breakpointObserver = inject(BreakpointObserver);
     this.stepperOrientation = breakpointObserver
@@ -502,6 +504,7 @@ export class CreateLaboratoryComponent implements OnInit {
         this.createLabGuides()
         this.createLabParameters()
         this.createLabActivities()
+        //this.createLabBook4RL()
         this.toastr.success(
           'Now you will be redirected to your new Laboratory!',
           this.newLaboratory.value.info?.name + ' Successfully Created!'
@@ -515,6 +518,36 @@ export class CreateLaboratoryComponent implements OnInit {
         );
       },
     });
+  }
+
+  createLabBook4RL(): void {
+   
+      const labFields: any = {
+        'name': this.newLaboratory.value.info?.name,
+        'instructor': this.newLaboratory.value.info?.instructor,
+        'university': this.newLaboratory.value.info?.institution,
+        'course': this.newLaboratory.value.info?.category,
+        'type': "Ultra Concurrent",
+        'image': this.newLaboratory.value.introduction?.introPhoto?.file,
+        'url':"http://localhost:4200/ultra-concurrent-rl/"+this.newLaboratory.value.id,
+        'description': this.newLaboratory.value.introduction?.description,
+        'visible': "1",
+        'notify_owner':"0"
+      };
+
+      console.log(labFields)
+
+      this.bookingService.addLab(labFields as Guide).subscribe({
+        next: (_: any) => {
+
+        },
+        error: (e: any) => {
+          console.log(e)
+          this.toastr.error(
+            'There was an error creating the lab in Book4RL. Please try later.'
+          );
+        },
+      });
   }
 
   createLabGuides(): void {

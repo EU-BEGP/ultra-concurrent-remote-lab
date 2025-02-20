@@ -1,0 +1,22 @@
+<mat-card-title class="dialog-title">
+    <span class="first-title header2">Required</span>
+    <span class="second-title header2">Confirmation</span>
+</mat-card-title>
+
+<mat-dialog-content>
+    <div class="mt-16">
+        <span class="body" [innerHTML]="message"></span>
+    </div>
+
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+    <button type="button"
+        mat-raised-button
+        (click)="cancel()"
+        class="header2 secondary-button">Cancel</button>
+    <button
+        mat-raised-button
+        class="header2"
+        (click)="confirm()">Confirm</button>
+</mat-dialog-actions>

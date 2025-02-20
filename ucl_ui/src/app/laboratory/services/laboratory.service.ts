@@ -39,6 +39,10 @@ export class LaboratoryService {
     return this.http.get<Laboratory>(`${config.api.baseUrl}ucl/laboratories/${id}/`);
   }
 
+  deleteLab(id: string): Observable<any> {
+    return this.http.delete<Laboratory>(`${config.api.baseUrl}ucl/laboratories/${id}/`);
+  }
+
   getLabGuides(id: string): Observable<any> {
     return this.http.get<Guide[]>(`${config.api.baseUrl}ucl/laboratories/${id}/guides/`);
   }

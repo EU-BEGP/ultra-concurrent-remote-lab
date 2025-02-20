@@ -32,13 +32,18 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-
-    this.labId = this.route.snapshot.params['id'];
-    if(this.labId){
-      this.loadLabInfo();
-    }
+    this.route.params.subscribe(params => {
+      this.labId = params['id']; // Obtener el nuevo ID de la URL
+      if (this.labId) {
+        this.loadLabInfo();
+      } else {
+        this.laboratory = undefined; // Limpiar datos si no hay ID
+      }
+    });
+  
     this.breakpoint = (window.innerWidth <= 580) ? 2 : 1;
   }
+  
 
   onResize(event : any):void {
     this.breakpoint = (window.innerWidth <= 580) ? 2 : 1;

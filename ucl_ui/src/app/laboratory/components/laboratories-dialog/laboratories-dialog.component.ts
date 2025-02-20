@@ -10,6 +10,8 @@ import { Laboratory } from '../../interfaces/laboratory';
 import { User } from 'src/app/core/auth/interfaces/user';
 import { UserService } from 'src/app/core/auth/services/user.service';
 import { Group } from 'src/app/core/auth/enums/group';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { ConfirmationDialogComponent } from '../confirmation-dialog/confirmation-dialog.component';
 
 export interface LaboratoryData {
   id: string,
@@ -33,6 +35,7 @@ export class LaboratoriesDialogComponent implements OnInit {
   displayedColumns: string[] = ['name', 'institution', 'category', 'actions'];
   displayedColumns_my_labs: string[] = ['name', 'url', 'actions'];
   breakpoint: any
+  
 
 
   @ViewChild(MatPaginator)
@@ -55,7 +58,9 @@ export class LaboratoriesDialogComponent implements OnInit {
     private toastr: ToastrService,
     private router: Router,
     private laboratoryService: LaboratoryService,
-    private userService: UserService)
+    private userService: UserService,
+    private dialogRef: MatDialog,
+  private thisDialogRef: MatDialogRef<LaboratoriesDialogComponent>)
     //private clipboard: Clipboard) 
     {
       this.getLaboratories()
@@ -114,6 +119,50 @@ export class LaboratoriesDialogComponent implements OnInit {
   goToCreateLab(){
     this.router.navigateByUrl('/create-lab');
   }
+
+  openConfirmationDialog(id:string, name:string) {
+    const dialogRef = this.dialogRef.open(ConfirmationDialogComponent, {
+      width: '40vw',
+      data: { 
+        message: `Please confirm that you want to delete the laboratory <b>${name}</b>. The data will be lost forever.` 
+      }
+    });
+    dialogRef.afterClosed().subscribe((result: boolean) => {
+      if (result) { 
+       this.deleteLab(id)
+       this.thisDialogRef.close(true)
+
+       const currentUrl = this.router.url;
+
+       // Verificar si la URL actual es la del laboratorio eliminado
+       if (currentUrl.includes(id)) {
+         this.router.navigateByUrl('/ultra-concurrent-rl'); 
+       }
+       
+      }
+    });
+  }
+
+  deleteLab(id:string){
+
+    this.laboratoryService.deleteLab(id).subscribe({
+      next: (_: any) => {
+        this.toastr.success(
+          'Laboratory Deleted'
+        );
+      },
+      error: (e: any) => {
+        console.log(e)
+        this.toastr.error(
+          'There was an error deleting the Lab. Please try later.'
+        );
+      },
+    });
+  }
+
+  updateLab(id:string){
+    this.router.navigate(['create-lab/'+id]);
+   }
 
 
   redirectTo(id: string) {

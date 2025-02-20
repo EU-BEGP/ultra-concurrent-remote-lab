@@ -10,15 +10,23 @@ body {
 }
 
 .info{
-  color: #006DD3
+  color: #006DD3 !important
 }
 .accent{
-  color: #f3ae20;
+  color: #f3ae20 !important;
 }
 
 .primary{
-  color: #203587;
+  color: #203587 !important;
 }
+
+.error{
+  color: #f44336 !important; 
+}
+.success{
+  color: green !important;
+}
+
 
 .main-container {
   display: flex;
@@ -348,7 +356,7 @@ mat-dialog-actions{
 }
 
 .mat-raised-button {
-  background-color: #203587;
+  background-color: #203587 ;
   color: white;
   padding: 8px 16px;
   cursor: pointer;
@@ -409,12 +417,6 @@ mat-dialog-actions{
   color: #f44336;
   margin-top: 8px !important;
   margin-bottom: 0px !important; 
-}
-.error{
-  color: #f44336;
-}
-.success{
-  color: green
 }
 
 .error-border {

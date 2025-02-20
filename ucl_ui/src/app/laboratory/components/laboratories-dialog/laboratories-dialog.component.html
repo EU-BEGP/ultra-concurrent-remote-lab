@@ -124,14 +124,30 @@
 
         <ng-container matColumnDef="actions">
             <th mat-header-cell *matHeaderCellDef class="header3 table-header">
-                Access</th>
-            <td mat-cell *matCellDef="let element" class="actions-column">
-                <button mat-menu-item (click)="redirectTo(element.id)"
+
+            </th>
+
+            <td mat-cell *matCellDef="let element"
+                class="buttons-cell actions-column">
+
+                <button mat-menu-item (click)="updateLab(element.id)"
+                    matTooltip="Update Laboratory"
                     mat-dialog-close>
-                    <span class="header3"> Go to Remote Lab</span>
+                    <span class="header3">
+                        Update</span>
                     <mat-icon
-                        class="accent bigger-icon ml-24">open_in_new</mat-icon>
+                        class="info bigger-icon ml-24">update</mat-icon>
                 </button>
+
+                <button mat-menu-item
+                    (click)="openConfirmationDialog(element.id, element.name)"
+                    matTooltip="Delete Laboratory">
+                    <span class="header3">
+                        Delete</span>
+                    <mat-icon
+                        class="error bigger-icon ml-24">close</mat-icon>
+                </button>
+
             </td>
         </ng-container>
 

@@ -1,17 +1,29 @@
 .demo-table {
     width: 100%;
+    white-space: nowrap; /* No permite múltiples líneas */
+    overflow: hidden; /* Oculta el contenido que se desborda */
+    text-overflow: ellipsis; /* Agrega '...' cuando el texto no cabe */
   }
 
-  .dialog-title{
-    margin-bottom: 16px;
-  }
-  
-  
-  .mat-menu-item .mat-icon-no-color{
-    color: #f3ae20;
-  }
-  .table-header{
-    border-bottom: 3px solid currentColor;
-  }
+.demo-table td, 
+.demo-table th {
+  padding: 8px 12px; /* Ajusta el padding según sea necesario */
+}
 
-  
+.dialog-title{
+  margin-bottom: 16px;
+}
+
+
+.mat-menu-item .mat-icon-no-color{
+  color: #f3ae20;
+}
+.table-header{
+  border-bottom: 3px solid currentColor;
+}
+.buttons-cell  {
+  display: flex;
+  justify-content: center; /* Centra horizontalmente */
+  align-items: center; /* Alinea verticalmente */
+  gap: 10px; /* Espaciado entre botones */
+}
