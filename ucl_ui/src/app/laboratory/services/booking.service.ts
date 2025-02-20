@@ -24,9 +24,6 @@ import { Laboratory } from '../interfaces/laboratory';
 
 
     addLab(lab: any): Observable<any> {
-
-        console.log("Creating Lab in BOOK4RL")
-
         const formData = new FormData();
         formData.append('name', lab.name!);
         formData.append('instructor', lab.instructor!);
@@ -40,8 +37,6 @@ import { Laboratory } from '../interfaces/laboratory';
         formData.append('allowed_emails', String(lab.allowed_emails));
         formData.append('enabled', '1');
         formData.append('type', String(lab.type!));
-
-        console.log(formData)
 
     return this.http.post<Laboratory>(this.urlBooking, formData);
       }

@@ -158,6 +158,14 @@ export class LaboratoryService {
 
     if(activity.experiment) formData.append('experiment', activity.experiment!);
 
+    if(activity.procedures.length > 0) {
+      activity.procedures.forEach((procedure: any, index: number) => {
+        formData.append(`procedures[${index}][name]`, 'nombre');
+        formData.append(`procedures[${index}][data_type]`, procedure.data_type);
+        formData.append(`procedures[${index}][data]`, JSON.stringify(procedure.data));
+      });
+    }
+
 
     return this.http.post<Activity>(`${config.api.baseUrl}ucl/activities/`, formData);
   }
@@ -178,6 +186,14 @@ export class LaboratoryService {
     
 
     if(activity.experiment) formData.append('experiment', activity.experiment!);
+
+    if(activity.procedures.length > 0) {
+      activity.procedures.forEach((procedure: any, index: number) => {
+        formData.append(`procedures[${index}][name]`, 'nombre');
+        formData.append(`procedures[${index}][data_type]`, procedure.data_type);
+        formData.append(`procedures[${index}][data]`, JSON.stringify(procedure.data));
+      });
+    }
 
 
     return this.http.post<Activity>(`${config.api.baseUrl}ucl/activities/`, formData);

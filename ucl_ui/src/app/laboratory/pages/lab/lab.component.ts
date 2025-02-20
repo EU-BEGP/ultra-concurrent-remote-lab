@@ -120,33 +120,6 @@ export class LabComponent implements OnInit {
     this.createActivitiesArray()
   }
 
-  addExperiment() {
-
-    const newTabIndex = this.experiments.controls.length;
-
-    const experimentArray = this.studentSession.get('experiments') as FormArray;
-
-    const optionsLength = this.optionsList.length || 3; 
-
-    const experimentGroup = this.builder.group({
-      optionsGroup: this.builder.group({
-        selectedOptions: this.createOptionsArray(optionsLength)
-      }),
-      experimentFound: [false], 
-      experimentNotFound: [false], 
-      experimentDetailsGroup: this.builder.group({
-        id: [''],
-        experiment_activities: this.builder.array([]),
-        experiment_videos: [[]],
-        data_file: ['']
-      })
-    });
-
-    experimentArray.push(experimentGroup);
-    setTimeout(() => {
-      this.selectedTabIndex = newTabIndex 
-    });
-  }
 
   loadLabInfo():void{
     this.id = this.route.snapshot.params['id'];
@@ -198,6 +171,35 @@ export class LabComponent implements OnInit {
       },
     });
 
+  }
+
+
+  addExperiment() {
+
+    const newTabIndex = this.experiments.controls.length;
+
+    const experimentArray = this.studentSession.get('experiments') as FormArray;
+
+    const optionsLength = this.optionsList.length || 3; 
+
+    const experimentGroup = this.builder.group({
+      optionsGroup: this.builder.group({
+        selectedOptions: this.createOptionsArray(optionsLength)
+      }),
+      experimentFound: [false], 
+      experimentNotFound: [false], 
+      experimentDetailsGroup: this.builder.group({
+        id: [''],
+        experiment_activities: this.builder.array([]),
+        experiment_videos: [[]],
+        data_file: ['']
+      })
+    });
+
+    experimentArray.push(experimentGroup);
+    setTimeout(() => {
+      this.selectedTabIndex = newTabIndex 
+    });
   }
 
   async onOptionChange(experiment: AbstractControl, experimentIndex: number) {
@@ -297,7 +299,14 @@ export class LabComponent implements OnInit {
           statement: [activity.statement],
           expected_result: [activity.expected_result],
           result: [''],  
-          procedures: this.builder.array([]),
+          procedures: this.builder.array(  
+            activity.procedures 
+              ? activity.procedures.map((procedure: any) => this.builder.group({
+                  data: [JSON.parse(procedure.data)],
+                  data_type: [procedure.data_type]
+                })) 
+              : [] 
+          ),
           result_unit: [activity.result_unit]
         }));
       });
@@ -333,21 +342,30 @@ export class LabComponent implements OnInit {
     return optionsArray;
   }
 
- async createActivitiesArray(){
+  async createActivitiesArray() {
     const activityArray = this.studentSession.get('finalActivities') as FormArray;
-    activityArray.clear(); // Clear existing activities
+    activityArray.clear(); // Limpia las actividades actuales
     this.labActivities = await this.getLabActivities();
+    
     this.labActivities.forEach((activity: any) => {
       activityArray.push(this.builder.group({
         id: [activity.id],
         statement: [activity.statement],
         expected_result: [activity.expected_result],
         result: [''],
-        procedures: this.builder.array([]),
+        procedures: this.builder.array(  
+          activity.procedures 
+            ? activity.procedures.map((procedure: any) => this.builder.group({
+                data: [JSON.parse(procedure.data)],
+                data_type: [procedure.data_type]
+              })) 
+            : [] 
+        ),
         result_unit: [activity.result_unit]
       }));
-    })
-  }
+    });
+}
+
 
   getLabActivities(): Promise<any> {
   return new Promise((resolve, reject) => {
@@ -384,6 +402,85 @@ export class LabComponent implements OnInit {
   getFinalActivityProcedures(activityIndex: number) {
     return this.finalActivities.at(activityIndex).get('procedures') as FormArray;
   }
+
+  addProcedureTable(activityIndex: number, data_type:string) {
+    const procedureArray = this.finalActivities.at(activityIndex).get('procedures') as FormArray;
+    
+    procedureArray.push(this.builder.group({
+      data: [Handsontable.helper.createSpreadsheetData(5, 2)], 
+      data_type: data_type
+    }));
+  }
+
+  onTableDataChange(activityIndex: number, procedureIndex: number, newData: any) {
+    const procedure = this.getFinalActivityProcedures(activityIndex).at(procedureIndex);
+    if (procedure) {
+      procedure.get('data')?.setValue(JSON.parse(JSON.stringify(newData)));
+      this.cdr.detectChanges();  // Fuerza la actualización del gráfico
+    }
+  }
+
+  addExperimentProcedureTable(experiment: AbstractControl, activityIndex: number, data_type: string) {
+    const procedureArray = this.getActivities(experiment).at(activityIndex).get('procedures') as FormArray;
+    
+    procedureArray.push(this.builder.group({
+      data: [Handsontable.helper.createSpreadsheetData(5, 2)], 
+      data_type: data_type
+    }));
+  }
+
+  onExperimentTableDataChange(experiment: AbstractControl, activityIndex: number, procedureIndex: number, newData: any) {
+    const procedure = this.getExperimentActivityProcedures(experiment, activityIndex).at(procedureIndex)
+    if (procedure) {
+      procedure.get('data')?.setValue(JSON.parse(JSON.stringify(newData)));
+      this.cdr.detectChanges();  // Fuerza la actualización del gráfico
+    }
+  }
+
+  getExperimentActivityProcedures(experiment: AbstractControl,activityIndex: number) {
+    return this.getActivities(experiment).at(activityIndex).get('procedures') as FormArray;
+  }
+
+  removeProcedure(activityIndex: number, procedureIndex: number) {
+    const procedures = this.finalActivities.at(activityIndex).get('procedures') as FormArray;
+    procedures.removeAt(procedureIndex);
+  }
+
+  removeExperimentActivityProcedure(experiment: AbstractControl, activityIndex: number, procedureIndex: number) {
+    const procedures = this.getActivities(experiment).at(activityIndex).get('procedures') as FormArray;
+    procedures.removeAt(procedureIndex);
+  }
+
+  openProcedures(data : any){
+    const dialogRef = this.dialogRef.open(ProcedureToolsDialogComponent, {
+      width: '50vw'
+     })    
+     dialogRef.componentInstance.selectedOption.subscribe((selectedType:string) => {
+      this.addSelectedProcedure(data, selectedType)
+    });
+  
+  }
+
+  addSelectedProcedure (data:any, selectedProcedureType:String) {
+    if(data.experiment){ //if its a Experiment Activity
+      if(selectedProcedureType == "Time-Line"){
+        this.addExperimentProcedureTable(data.experiment,data.activityIndex, "chart")
+      }
+      else if(selectedProcedureType == "Dynamic Tables"){
+        this.addExperimentProcedureTable(data.experiment,data.activityIndex, "table")
+      }
+    }else{ //if its a Final Activity
+      if(selectedProcedureType == "Time-Line"){
+        this.addProcedureTable(data.activityIndex, "chart")
+      } else if(selectedProcedureType == "Dynamic Tables"){
+        this.addProcedureTable(data.activityIndex, "table")
+      }
+    }
+  }
+
+  trackByFn(index: number, item: AbstractControl) {
+    return item.value?.id || index;
+}
   
 
   onResize(event : any):void {
@@ -472,83 +569,4 @@ export class LabComponent implements OnInit {
     });
   }
 
-
-  addProcedureTable(activityIndex: number, data_type:string) {
-    const procedureArray = this.finalActivities.at(activityIndex).get('procedures') as FormArray;
-    
-    procedureArray.push(this.builder.group({
-      data: [Handsontable.helper.createSpreadsheetData(5, 2)], 
-      data_type: data_type
-    }));
-  }
-
-  onTableDataChange(activityIndex: number, procedureIndex: number, newData: any) {
-    const procedure = this.getFinalActivityProcedures(activityIndex).at(procedureIndex);
-    if (procedure) {
-      procedure.get('data')?.setValue(JSON.parse(JSON.stringify(newData)));
-      this.cdr.detectChanges();  // Fuerza la actualización del gráfico
-    }
-  }
-
-  addExperimentProcedureTable(experiment: AbstractControl, activityIndex: number, data_type: string) {
-    const procedureArray = this.getActivities(experiment).at(activityIndex).get('procedures') as FormArray;
-    
-    procedureArray.push(this.builder.group({
-      data: [Handsontable.helper.createSpreadsheetData(5, 2)], 
-      data_type: data_type
-    }));
-  }
-
-  onExperimentTableDataChange(experiment: AbstractControl, activityIndex: number, procedureIndex: number, newData: any) {
-    const procedure = this.getExperimentActivityProcedures(experiment, activityIndex).at(procedureIndex)
-    if (procedure) {
-      procedure.get('data')?.setValue(JSON.parse(JSON.stringify(newData)));
-      this.cdr.detectChanges();  // Fuerza la actualización del gráfico
-    }
-  }
-
-  getExperimentActivityProcedures(experiment: AbstractControl,activityIndex: number) {
-    return this.getActivities(experiment).at(activityIndex).get('procedures') as FormArray;
-  }
-
-  removeProcedure(activityIndex: number, procedureIndex: number) {
-    const procedures = this.finalActivities.at(activityIndex).get('procedures') as FormArray;
-    procedures.removeAt(procedureIndex);
-  }
-
-  removeExperimentActivityProcedure(experiment: AbstractControl, activityIndex: number, procedureIndex: number) {
-    const procedures = this.getActivities(experiment).at(activityIndex).get('procedures') as FormArray;
-    procedures.removeAt(procedureIndex);
-  }
-
-  openProcedures(data : any){
-    const dialogRef = this.dialogRef.open(ProcedureToolsDialogComponent, {
-      width: '50vw'
-     })    
-     dialogRef.componentInstance.selectedOption.subscribe((selectedType:string) => {
-      this.addSelectedProcedure(data, selectedType)
-    });
-  
-  }
-
-  addSelectedProcedure (data:any, selectedProcedureType:String) {
-    if(data.experiment){ //if its a Experiment Activity
-      if(selectedProcedureType == "Time-Line"){
-        this.addExperimentProcedureTable(data.experiment,data.activityIndex, "chart")
-      }
-      else if(selectedProcedureType == "Dynamic Tables"){
-        this.addExperimentProcedureTable(data.experiment,data.activityIndex, "table")
-      }
-    }else{ //if its a Final Activity
-      if(selectedProcedureType == "Time-Line"){
-        this.addProcedureTable(data.activityIndex, "chart")
-      } else if(selectedProcedureType == "Dynamic Tables"){
-        this.addProcedureTable(data.activityIndex, "table")
-      }
-    }
-  }
-
-  trackByFn(index: number, item: AbstractControl) {
-    return item.value?.id || index;
-}
 }

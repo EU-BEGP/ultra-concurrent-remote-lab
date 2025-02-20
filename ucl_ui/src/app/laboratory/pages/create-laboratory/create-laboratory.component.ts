@@ -1,5 +1,5 @@
 import { BreakpointObserver } from '@angular/cdk/layout';
-import { Component, OnInit, Inject, inject, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, Inject, inject, ViewChild, ElementRef, ChangeDetectorRef } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators, ValidatorFn, AbstractControl } from '@angular/forms';
 import { Guide } from '../../interfaces/guide';
 import { Laboratory } from '../../interfaces/laboratory';
@@ -20,6 +20,8 @@ import { MatStepper } from '@angular/material/stepper';
 import { MatDialog } from '@angular/material/dialog';
 import { UploadOptionsDialogComponent } from '../../components/upload-options-dialog/upload-options-dialog.component';
 import { BookingService } from '../../services/booking.service';
+import { ProcedureToolsDialogComponent } from '../../components/procedure-tools-dialog/procedure-tools-dialog.component';
+import Handsontable from 'handsontable';
 
 @Component({
   selector: 'app-create-laboratory',
@@ -55,7 +57,8 @@ export class CreateLaboratoryComponent implements OnInit {
     private userService: UserService, 
     private labService: LaboratoryService,  
     private dialogRef: MatDialog,
-    private bookingService: BookingService
+    private bookingService: BookingService,
+    private cdr: ChangeDetectorRef
   ) {
     const breakpointObserver = inject(BreakpointObserver);
     this.stepperOrientation = breakpointObserver
@@ -146,6 +149,7 @@ export class CreateLaboratoryComponent implements OnInit {
         this.builder.group({
           id: [uuidv4()],
           statement:  this.builder.control('', Validators.required),
+          procedures: this.builder.array([]),
           result: [''],
           result_unit: ['']
         })
@@ -156,6 +160,7 @@ export class CreateLaboratoryComponent implements OnInit {
       this.builder.group({
         id: [uuidv4()],
         statement:  this.builder.control('', Validators.required),
+        procedures: this.builder.array([]),
         result: [''],
         result_unit: ['']
       })
@@ -290,6 +295,7 @@ export class CreateLaboratoryComponent implements OnInit {
         this.builder.group({
           statement:  this.builder.control('', Validators.required),
           result: [''],
+          procedures: this.builder.array([]),
           result_unit: ['']
         })
       ]),
@@ -345,6 +351,7 @@ export class CreateLaboratoryComponent implements OnInit {
   addExperimentActivity(index: number): void {
     const activityFormGroup = this.builder.group({
       statement:  this.builder.control('', Validators.required),
+      procedures: this.builder.array([]),
       result: [''],
       result_unit: ['']
     })
@@ -367,16 +374,95 @@ export class CreateLaboratoryComponent implements OnInit {
     const activityFormGroup = this.builder.group({
       statement:  this.builder.control('', Validators.required),
       result: [''],
+      procedures: this.builder.array([]),
       result_unit: ['']
     })
     this.activities.push(activityFormGroup)
+  }
+
+  getExperimentActivityProcedures(experimentIndex:number ,activityIndex: number) {
+    return this.getExperimentActivites(experimentIndex).at(activityIndex).get('procedures') as FormArray;
+  }
+
+  addExperimentProcedureTable(experimentIndex: number, activityIndex: number, data_type: string) {
+    const procedureArray = this.getExperimentActivityProcedures(experimentIndex, activityIndex);
+    
+    procedureArray.push(this.builder.group({
+      data: [Handsontable.helper.createSpreadsheetData(5, 2)], 
+      data_type: data_type
+    }));
+
+  }
+
+  onExperimentTableDataChange(experimentIndex: number, activityIndex: number, procedureIndex: number, newData: any) {
+    const procedure = this.getExperimentActivityProcedures(experimentIndex, activityIndex).at(procedureIndex)
+    if (procedure) {
+      procedure.get('data')?.setValue(JSON.parse(JSON.stringify(newData)));
+      this.cdr.detectChanges();  // Fuerza la actualización del gráfico
+    }
+  }
+
+  removeExperimentActivityProcedure(experimentIndex: number, activityIndex: number, procedureIndex: number) {
+    const procedures = this.getExperimentActivityProcedures(experimentIndex, activityIndex);
+    procedures.removeAt(procedureIndex);
+  }
+
+  openProcedures(data : any){
+    const dialogRef = this.dialogRef.open(ProcedureToolsDialogComponent, {
+      width: '50vw'
+      })    
+      dialogRef.componentInstance.selectedOption.subscribe((selectedType:string) => {
+      this.addSelectedProcedure(data, selectedType)
+    });
+  
+  }
+
+  addSelectedProcedure (data:any, selectedProcedureType:String) {
+    if (data.experiment_index !== undefined && data.experiment_index !== null) {//if its a Experiment Activity
+      if(selectedProcedureType == "Time-Line"){
+        this.addExperimentProcedureTable(data.experiment_index,data.activityIndex, "chart")
+      }
+      else if(selectedProcedureType == "Dynamic Tables"){
+        this.addExperimentProcedureTable(data.experiment_index,data.activityIndex, "table")
+      }
+    }else{ //if its a Final Activity
+      if(selectedProcedureType == "Time-Line"){
+        this.addProcedureTable(data.activityIndex, "chart")
+      } else if(selectedProcedureType == "Dynamic Tables"){
+        this.addProcedureTable(data.activityIndex, "table")
+      }
+    }
+  }
+
+  addProcedureTable(activityIndex: number, data_type:string) {
+    const procedureArray = this.activities.at(activityIndex).get('procedures') as FormArray;
+    
+    procedureArray.push(this.builder.group({
+      data: [Handsontable.helper.createSpreadsheetData(5, 2)], 
+      data_type: data_type
+    }));
   }
 
   getDataFile(index: number) {
     return this.experiments.at(index).get('data_file') as FormControl
   }
 
+  onTableDataChange(activityIndex: number, procedureIndex: number, newData: any) {
+    const procedure = this.getFinalActivityProcedures(activityIndex).at(procedureIndex);
+    if (procedure) {
+      procedure.get('data')?.setValue(JSON.parse(JSON.stringify(newData)));
+      this.cdr.detectChanges();  // Fuerza la actualización del gráfico
+    }
+  }
 
+  getFinalActivityProcedures(activityIndex: number) {
+    return this.activities.at(activityIndex).get('procedures') as FormArray;
+  }
+  
+  removeProcedure(activityIndex: number, procedureIndex: number) {
+    const procedures = this.getFinalActivityProcedures(activityIndex);
+    procedures.removeAt(procedureIndex);
+  }
 
   onUpload(event: any, field?: string, parameterIndex?: number, index?: number): void {
     if (event.target.files.length > 0) {
@@ -390,7 +476,9 @@ export class CreateLaboratoryComponent implements OnInit {
     }
   }
 
-
+  trackByFn(index: number, item: AbstractControl) {
+    return item.value?.id || index;
+}
 
   async getUrl(file: File, parameterIndex?: number, index?: number, field?: string) {
     const reader = new FileReader();
@@ -535,8 +623,6 @@ export class CreateLaboratoryComponent implements OnInit {
         'notify_owner':"0"
       };
 
-      console.log(labFields)
-
       this.bookingService.addLab(labFields as Guide).subscribe({
         next: (_: any) => {
 
@@ -620,6 +706,7 @@ export class CreateLaboratoryComponent implements OnInit {
           experiment.activities.forEach((activity: any) => {
             const activityFields = {
                 'statement': activity.statement,
+                'procedures': activity.procedures,
                 'expected_result': activity.result,
                 'result_unit': activity.result_unit,
                 'experiment': experiment.id
@@ -652,6 +739,7 @@ export class CreateLaboratoryComponent implements OnInit {
     this.activities.value.forEach((activity: any) => {
       const activityFields = {
         'statement': activity.statement,
+         'procedures': activity.procedures,
         'expected_result': activity.result,
         'result_unit': activity.result_unit,
         'laboratory': this.newLaboratory.value.id,
