@@ -85,7 +85,7 @@
     </div>
 
     <div *ngIf="no_labs_data" class="center">
-        <span class="body center mb-16"> There is not any available Lab
+        <span class="header3 center mb-16"> There is not any available Lab
         </span>
     </div>
 
@@ -159,7 +159,7 @@
     <mat-paginator *ngIf="is_instructor && !no_my_labs_data"
         [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
     <div *ngIf="is_instructor && no_my_labs_data" class="center">
-        <span class="body center mb-16"> You does
+        <span class="header3 center mb-16"> You does
             not
             have any Labs, create one!
         </span>

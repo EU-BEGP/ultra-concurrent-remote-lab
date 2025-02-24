@@ -73,9 +73,10 @@ loadLabInfo():void{
     if(this.labId){
       this.router.navigateByUrl('/laboratory/'+this.labId);
     }
-    else{
-      this.openLaboratories()
-    }
+  }
+
+  createRemoteLab(): void {
+    this.router.navigateByUrl('/create-lab');
   }
 
   openLaboratories(){

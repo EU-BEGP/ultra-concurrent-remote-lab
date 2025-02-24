@@ -22,6 +22,7 @@ import { UploadOptionsDialogComponent } from '../../components/upload-options-di
 import { BookingService } from '../../services/booking.service';
 import { ProcedureToolsDialogComponent } from '../../components/procedure-tools-dialog/procedure-tools-dialog.component';
 import Handsontable from 'handsontable';
+import { forkJoin } from 'rxjs';
 
 @Component({
   selector: 'app-create-laboratory',
@@ -662,36 +663,36 @@ export class CreateLaboratoryComponent implements OnInit {
   }
 
   createLabParameters(): void {
-    this.parameters.value.forEach((parameter: Parameter) => {
-      var options_array: { id: string; value: string; image: any; }[] = []
-      parameter.parameter_options.forEach((option: Option) => {
-        const option_fields = {
-          'id': option.id,
-          'value': option.value,
-          'image': option.file,
-        }
-        options_array.push(option_fields)
-      })
+    const requests = this.parameters.value.map((parameter: Parameter) => {
+      const options_array = parameter.parameter_options.map((option: Option) => ({
+        id: option.id,
+        value: option.value,
+        image: option.file
+      }));
+
       const parameterFields = {
-        'name': parameter.name,
-        'unit': parameter.unit,
-        'laboratory': this.newLaboratory.value.id,
-        'parameter_options': options_array
-      }
-      this.labService.addLabParameter(parameterFields).subscribe({
-        next: (_: any) => {
-          //Added Parameter
-        },
-        error: (e: any) => {
-          console.log(e)
-          this.toastr.error(
-            'There was an error creating the Lab Parameters. Please try later.'
-          );
-        },
-      });
+        name: parameter.name,
+        unit: parameter.unit,
+        laboratory: this.newLaboratory.value.id,
+        parameter_options: options_array
+      };
+
+      return this.labService.addLabParameter(parameterFields); 
     });
-    this.createLabExperiments()
-  }
+
+    forkJoin(requests).subscribe({
+      next: (_results) => {
+        
+        this.createLabExperiments(); 
+      },
+      error: (e) => {
+        console.log(e);
+        this.toastr.error(
+          'There was an error creating the Lab Parameters. Please try later.'
+        );
+      }
+    });
+}
 
   createLabExperiments(): void {
     this.experiments.value.forEach((experiment: Experiment) => {

@@ -14,9 +14,14 @@
                 <span *ngIf="laboratory" class="institution">by
                     {{laboratory.institution}}</span>
 
-                <button mat-raised-button color="primary"
+                <button *ngIf="laboratory" mat-raised-button color="primary"
                     (click)="goToRemoteLab()" class="buttonsHome">
                     Go to Remote Lab
+                </button>
+
+                <button *ngIf="!laboratory" mat-raised-button color="primary"
+                    (click)="createRemoteLab()" class="buttonsHome">
+                    Create a Remote Lab
                 </button>
             </div>
         </mat-card-content>
