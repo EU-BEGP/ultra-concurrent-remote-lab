@@ -172,21 +172,16 @@ mat-card-actions{
 
 @media (min-width: 1024px) {
   .procedure-grid {
-    grid-template-columns: repeat(3, 1fr);
-  }
-}
-
-@media (min-width: 768px) and (max-width: 1023px) {
-  .procedure-grid {
     grid-template-columns: repeat(2, 1fr);
   }
 }
 
-@media (max-width: 767px) {
+@media (max-width: 1023px) {
   .procedure-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns:  1fr;
   }
 }
+
 
 
 ::ng-deep .mat-option.mat-selected:not(.mat-option-multiple):not(.mat-option-disabled){

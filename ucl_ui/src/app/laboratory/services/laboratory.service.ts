@@ -162,6 +162,7 @@ export class LaboratoryService {
       activity.procedures.forEach((procedure: any, index: number) => {
         formData.append(`procedures[${index}][name]`, 'nombre');
         formData.append(`procedures[${index}][data_type]`, procedure.data_type);
+        formData.append(`procedures[${index}][data_headers]`, JSON.stringify(procedure.data_headers));
         formData.append(`procedures[${index}][data]`, JSON.stringify(procedure.data));
       });
     }
@@ -191,6 +192,7 @@ export class LaboratoryService {
       activity.procedures.forEach((procedure: any, index: number) => {
         formData.append(`procedures[${index}][name]`, 'nombre');
         formData.append(`procedures[${index}][data_type]`, procedure.data_type);
+        formData.append(`procedures[${index}][data_headers]`, JSON.stringify(procedure.data_headers));
         formData.append(`procedures[${index}][data]`, JSON.stringify(procedure.data));
       });
     }

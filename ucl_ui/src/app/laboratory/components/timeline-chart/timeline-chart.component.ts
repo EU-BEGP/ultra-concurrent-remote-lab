@@ -6,7 +6,8 @@ import { Component, Input, OnInit, SimpleChanges } from '@angular/core';
   styleUrls: ['./timeline-chart.component.css']
 })
 export class TimelineChartComponent implements OnInit {
-  @Input() data: any[] = [];  // Aquí recibirás el array de arrays
+  @Input() data: any[] = [];  
+  @Input() headers: any[] = [];  
   public graph: any;
 
   ngOnInit(): void {
@@ -14,29 +15,34 @@ export class TimelineChartComponent implements OnInit {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes['data']) {
-      this.generateChart();  // Regeneramos el gráfico cuando los datos cambian
+    if (changes['data'] || changes['headers']) {
+      this.headers = [...(this.headers || ['X-Axis', 'Y-Axis'])];  // Clonar para forzar la detección de cambios
+      this.generateChart();
     }
   }
+  
 
   generateChart(): void {
-    // Transformar el array de arrays en el formato esperado para el gráfico
+    const xTitle = this.headers?.[0] || 'X-Axis';  
+    const yTitle = this.headers?.[1] || 'Y-Axis';
+  
     const dataSeries = this.transformData(this.data);
+  
     this.graph = {
       data: dataSeries.map(series => ({
-        x: series.values.x, // Fechas o tiempo en X
-        y: series.values.y, // Valores en Y
-        type: 'scatter', // Tipo de gráfico
-        mode: 'lines+markers', // Líneas con marcadores
-        name: series.name, // Nombre de la serie
+        x: series.values.x, 
+        y: series.values.y, 
+        type: 'scatter',
+        mode: 'lines+markers',
+        name: series.name,
       })),
       layout: {
         autosize: true,
         showlegend: false,
         height: 300,
         width: 300,
-        xaxis: { title: 'A' },
-        yaxis: { title: 'B' },
+        xaxis: { title: xTitle },
+        yaxis: { title: yTitle },
         margin: {
           l: 0,
           r: 0,
@@ -46,15 +52,16 @@ export class TimelineChartComponent implements OnInit {
       }
     };
   }
+  
 
-  // Función que transforma el array de arrays en el formato adecuado
+
   transformData(data: any[]): { name: string; values: { x: any[]; y: any[] } }[] {
-    // Asumimos que solo hay una serie de datos para simplificar
+    
     const xValues = data.map(item => item[0]);
     const yValues = data.map(item => item[1]);
 
     return [{
-      name: 'Serie 1',  // Nombre de la serie
+      name: 'Serie 1',  
       values: {
         x: xValues,
         y: yValues,

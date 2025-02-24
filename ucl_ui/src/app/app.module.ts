@@ -55,6 +55,7 @@ import * as PlotlyJS from 'plotly.js-dist-min';
 import { CodeActivationDialogComponent } from './core/auth/components/code-activation-dialog/code-activation-dialog.component';
 import { UploadOptionsDialogComponent } from './laboratory/components/upload-options-dialog/upload-options-dialog.component';
 import { ConfirmationDialogComponent } from './laboratory/components/confirmation-dialog/confirmation-dialog.component';
+import { SimpleInputDialogComponent } from './laboratory/components/simple-input-dialog/simple-input-dialog.component';
 
 PlotlyModule.plotlyjs = PlotlyJS;
 
@@ -82,6 +83,7 @@ PlotlyModule.plotlyjs = PlotlyJS;
     CodeActivationDialogComponent,
     UploadOptionsDialogComponent,
     ConfirmationDialogComponent,
+    SimpleInputDialogComponent,
     
   ],
   imports: [

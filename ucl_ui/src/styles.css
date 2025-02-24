@@ -368,6 +368,10 @@ mat-dialog-actions{
   cursor: pointer;
 }
 
+.disable-backdrop-click {
+  pointer-events: all !important;
+}
+
 .bigger-icon{
   transform: scale(1.5);
   height: 36px;
@@ -376,6 +380,8 @@ mat-dialog-actions{
 .secondary-button {
   background-color: white;
   color: #203587;
+  border: 1px solid #203587 !important;
+
 }
 
 .mat-dialog-container {

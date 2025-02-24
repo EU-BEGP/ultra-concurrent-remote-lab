@@ -601,7 +601,8 @@
                                                                 class="procedure-item"
                                                                 *ngIf="procedureStep.get('data_type')?.value == 'chart'">
                                                                 <app-timeline-chart
-                                                                    [data]="procedureStep.get('data')?.value">
+                                                                    [data]="procedureStep.get('data')?.value"
+                                                                    [headers]="procedureStep.get('data_headers')?.value || ['C 1', 'C 2']">
                                                                 </app-timeline-chart>
                                                             </div>
 
@@ -748,7 +749,8 @@
                                                 class="procedure-item center"
                                                 *ngIf="procedureStep.get('data_type')?.value == 'chart'">
                                                 <app-timeline-chart
-                                                    [data]="procedureStep.get('data')?.value">
+                                                    [data]="procedureStep.get('data')?.value"
+                                                    [headers]="procedureStep.get('data_headers')?.value || ['C 1', 'C 2']">
                                                 </app-timeline-chart>
                                             </div>
 

@@ -303,6 +303,7 @@ export class LabComponent implements OnInit {
             activity.procedures 
               ? activity.procedures.map((procedure: any) => this.builder.group({
                   data: [JSON.parse(procedure.data)],
+                  data_headers:[JSON.parse(procedure.data_headers)],
                   data_type: [procedure.data_type]
                 })) 
               : [] 
@@ -357,6 +358,7 @@ export class LabComponent implements OnInit {
           activity.procedures 
             ? activity.procedures.map((procedure: any) => this.builder.group({
                 data: [JSON.parse(procedure.data)],
+                data_headers:[JSON.parse(procedure.data_headers)],
                 data_type: [procedure.data_type]
               })) 
             : [] 
@@ -408,14 +410,16 @@ export class LabComponent implements OnInit {
     
     procedureArray.push(this.builder.group({
       data: [Handsontable.helper.createSpreadsheetData(5, 2)], 
-      data_type: data_type
+      data_headers:[['C 1', 'C 2']],
+      data_type: data_type,
     }));
   }
 
   onTableDataChange(activityIndex: number, procedureIndex: number, newData: any) {
     const procedure = this.getFinalActivityProcedures(activityIndex).at(procedureIndex);
     if (procedure) {
-      procedure.get('data')?.setValue(JSON.parse(JSON.stringify(newData)));
+      procedure.get('data')?.setValue(JSON.parse(JSON.stringify(newData.data)));
+      procedure.get('data_headers')?.setValue(JSON.parse(JSON.stringify(newData.headers)));
       this.cdr.detectChanges();  // Fuerza la actualización del gráfico
     }
   }
@@ -424,7 +428,8 @@ export class LabComponent implements OnInit {
     const procedureArray = this.getActivities(experiment).at(activityIndex).get('procedures') as FormArray;
     
     procedureArray.push(this.builder.group({
-      data: [Handsontable.helper.createSpreadsheetData(5, 2)], 
+      data: [Handsontable.helper.createSpreadsheetData(5, 2)],
+      data_headers:[['C 1', 'C 2']], 
       data_type: data_type
     }));
   }
@@ -432,7 +437,8 @@ export class LabComponent implements OnInit {
   onExperimentTableDataChange(experiment: AbstractControl, activityIndex: number, procedureIndex: number, newData: any) {
     const procedure = this.getExperimentActivityProcedures(experiment, activityIndex).at(procedureIndex)
     if (procedure) {
-      procedure.get('data')?.setValue(JSON.parse(JSON.stringify(newData)));
+      procedure.get('data')?.setValue(JSON.parse(JSON.stringify(newData.data)));
+      procedure.get('data_headers')?.setValue(JSON.parse(JSON.stringify(newData.headers)));
       this.cdr.detectChanges();  // Fuerza la actualización del gráfico
     }
   }

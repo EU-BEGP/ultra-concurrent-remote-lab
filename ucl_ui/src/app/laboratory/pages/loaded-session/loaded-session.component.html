@@ -86,6 +86,7 @@
                                                 <div>
                                                     <app-dynamic-table
                                                         [data]="procedure.data"
+                                                        [headers]="procedure.data_headers"
                                                         [read_only]="true">
                                                     </app-dynamic-table>
                                                 </div>
@@ -94,7 +95,8 @@
                                                 <div class="procedure-item"
                                                     *ngIf="procedure.data_type == 'chart'">
                                                     <app-timeline-chart
-                                                        [data]="procedure.data">
+                                                        [data]="procedure.data"
+                                                        [headers]="procedure.data_headers">
                                                     </app-timeline-chart>
                                                 </div>
 
@@ -163,6 +165,7 @@
                                         <div>
                                             <app-dynamic-table
                                                 [data]="procedure.data"
+                                                [headers]="procedure.data_headers"
                                                 [read_only]="true">
                                             </app-dynamic-table>
                                         </div>
@@ -171,7 +174,8 @@
                                         <div class="procedure-item"
                                             *ngIf="procedure.data_type == 'chart'">
                                             <app-timeline-chart
-                                                [data]="procedure.data">
+                                                [data]="procedure.data"
+                                                [headers]="procedure.data_headers">
                                             </app-timeline-chart>
                                         </div>
 

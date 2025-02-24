@@ -1,4 +1,5 @@
 import { NgModule } from '@angular/core';
+import {A11yModule} from '@angular/cdk/a11y';
 import { MatButtonModule } from '@angular/material/button';
 import { MatStepperModule } from '@angular/material/stepper';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -53,6 +54,7 @@ const MaterialComponents = [
   MatSortModule,
   MatSliderModule,
   MatSlideToggleModule,
+  A11yModule
 ];
 
 @NgModule({

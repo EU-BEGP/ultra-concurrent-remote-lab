@@ -94,9 +94,10 @@ export class LoadedSessionComponent implements OnInit {
             ...activity,
             solved: {
               ...solved,
-              procedures: solved?.procedures.map((procedure: { data: string; }) => ({
+              procedures: solved?.procedures.map((procedure: { data: string; data_headers:string }) => ({
                 ...procedure,
-                data: JSON.parse(procedure.data) // Convertimos el string en array/objeto
+                data: JSON.parse(procedure.data),
+                data_headers: JSON.parse(procedure.data_headers)
               })) || []
             }
           };
@@ -146,7 +147,8 @@ export class LoadedSessionComponent implements OnInit {
                   ...solvedActivity,
                   procedures: solvedActivity.procedures.map((procedure: any) => ({
                     ...procedure,
-                    data: JSON.parse(procedure.data) // Convertimos el campo data a JSON
+                    data: JSON.parse(procedure.data),
+                    data_headers: JSON.parse(procedure.data_headers)
                   }))
                 };
               }

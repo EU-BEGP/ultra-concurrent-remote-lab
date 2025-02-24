@@ -279,6 +279,7 @@
                                                                 [formGroupName]="procedureIndex">
                                                                 <app-dynamic-table
                                                                     [read_only]="false"
+                                                                    [headers]="procedureStep.get('data_headers')?.value"
                                                                     [data]="procedureStep.get('data')?.value"
                                                                     (dataChange)="onExperimentTableDataChange(experiment, activityIndex, procedureIndex, $event)"
                                                                     (deleteProcedure)="removeExperimentActivityProcedure(experiment, activityIndex, procedureIndex)">
@@ -290,7 +291,8 @@
                                                                 class="procedure-item"
                                                                 *ngIf="procedureStep.get('data_type')?.value == 'chart'">
                                                                 <app-timeline-chart
-                                                                    [data]="procedureStep.get('data')?.value">
+                                                                    [data]="procedureStep.get('data')?.value"
+                                                                    [headers]="procedureStep.get('data_headers')?.value || ['C 1', 'C 2']">
                                                                 </app-timeline-chart>
                                                             </div>
 
@@ -385,6 +387,7 @@
                                                 <app-dynamic-table
                                                     [read_only]="false"
                                                     [data]="procedureStep.get('data')?.value"
+                                                    [headers]="procedureStep.get('data_headers')?.value"
                                                     (dataChange)="onTableDataChange(activityIndex, procedureIndex, $event)"
                                                     (deleteProcedure)="removeProcedure(activityIndex, procedureIndex)">
                                                 </app-dynamic-table>
@@ -395,7 +398,8 @@
                                                 class="procedure-item center"
                                                 *ngIf="procedureStep.get('data_type')?.value == 'chart'">
                                                 <app-timeline-chart
-                                                    [data]="procedureStep.get('data')?.value">
+                                                    [data]="procedureStep.get('data')?.value"
+                                                    [headers]="procedureStep.get('data_headers')?.value || ['C 1', 'C 2']">
                                                 </app-timeline-chart>
                                             </div>
 

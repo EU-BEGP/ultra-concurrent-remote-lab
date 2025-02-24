@@ -389,6 +389,7 @@ export class CreateLaboratoryComponent implements OnInit {
     
     procedureArray.push(this.builder.group({
       data: [Handsontable.helper.createSpreadsheetData(5, 2)], 
+      data_headers: [['C 1', 'C 2']],
       data_type: data_type
     }));
 
@@ -397,8 +398,9 @@ export class CreateLaboratoryComponent implements OnInit {
   onExperimentTableDataChange(experimentIndex: number, activityIndex: number, procedureIndex: number, newData: any) {
     const procedure = this.getExperimentActivityProcedures(experimentIndex, activityIndex).at(procedureIndex)
     if (procedure) {
-      procedure.get('data')?.setValue(JSON.parse(JSON.stringify(newData)));
-      this.cdr.detectChanges();  // Fuerza la actualización del gráfico
+      procedure.get('data')?.setValue(JSON.parse(JSON.stringify(newData.data)));
+      procedure.get('data_headers')?.setValue(JSON.parse(JSON.stringify(newData.headers)));
+      this.cdr.detectChanges(); 
     }
   }
 
@@ -439,6 +441,7 @@ export class CreateLaboratoryComponent implements OnInit {
     
     procedureArray.push(this.builder.group({
       data: [Handsontable.helper.createSpreadsheetData(5, 2)], 
+      data_headers: [['C 1', 'C 2']],
       data_type: data_type
     }));
   }
@@ -450,8 +453,9 @@ export class CreateLaboratoryComponent implements OnInit {
   onTableDataChange(activityIndex: number, procedureIndex: number, newData: any) {
     const procedure = this.getFinalActivityProcedures(activityIndex).at(procedureIndex);
     if (procedure) {
-      procedure.get('data')?.setValue(JSON.parse(JSON.stringify(newData)));
-      this.cdr.detectChanges();  // Fuerza la actualización del gráfico
+      procedure.get('data')?.setValue(JSON.parse(JSON.stringify(newData.data)));
+      procedure.get('data_headers')?.setValue(JSON.parse(JSON.stringify(newData.headers)));
+      this.cdr.detectChanges(); 
     }
   }
 
@@ -739,7 +743,7 @@ export class CreateLaboratoryComponent implements OnInit {
     this.activities.value.forEach((activity: any) => {
       const activityFields = {
         'statement': activity.statement,
-         'procedures': activity.procedures,
+        'procedures': activity.procedures,
         'expected_result': activity.result,
         'result_unit': activity.result_unit,
         'laboratory': this.newLaboratory.value.id,
