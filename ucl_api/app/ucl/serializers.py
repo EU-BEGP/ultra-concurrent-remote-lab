@@ -92,6 +92,7 @@ class ProcedureSerializer(serializers.ModelSerializer):
         fields = [
             "id",
             "data_type",
+            "data_headers",
             "data",
             "solved_activity",
             "activity",

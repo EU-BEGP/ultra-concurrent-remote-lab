@@ -87,7 +87,14 @@ class SolvedActivityAdmin(admin.ModelAdmin):
 
 class ProcedureAdmin(admin.ModelAdmin):
     ordering = ["id"]
-    list_display = ["id", "data_type", "data", "solved_activity", "activity"]
+    list_display = [
+        "id",
+        "data",
+        "data_type",
+        "data_headers",
+        "solved_activity",
+        "activity",
+    ]
 
 
 admin.site.register(Laboratory, LaboratoryAdmin)

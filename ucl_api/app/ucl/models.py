@@ -272,8 +272,9 @@ class SolvedActivity(models.Model):
 
 class Procedure(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    data = models.CharField(max_length=5000)
     data_type = models.CharField(max_length=100)
-    data = models.CharField(max_length=2500)
+    data_headers = models.CharField(max_length=2000, null=True, default=None)
 
     activity = models.ForeignKey(
         Activity,
