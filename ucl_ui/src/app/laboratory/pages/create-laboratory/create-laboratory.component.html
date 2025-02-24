@@ -646,7 +646,7 @@
                                 <div class="row">
                                     <span mat-caption
                                         class="input-label header3 mt-16 vertical-center">
-                                        Upload an Excel or CSV File for
+                                        Upload an Excel, CSV or DAT File for
                                         Experiment
                                         {{i+1}} (Optional)
                                     </span>
@@ -655,7 +655,7 @@
                                         <ngx-mat-file-input
                                             formControlName="data_file"
                                             (change)="onUpload($event, 'file', i,0)"
-                                            accept=".xlsx, .xls, .csv">
+                                            accept=".xlsx, .xls, .csv, .dat">
                                             <mat-icon ngxMatFileInputIcon
                                                 class="accent bigger-icon">upload</mat-icon>
                                         </ngx-mat-file-input>
