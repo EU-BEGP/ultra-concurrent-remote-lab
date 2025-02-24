@@ -23,4 +23,10 @@ color: #f3ae20;
 border-bottom: 3px solid currentColor;
 }
 
+.buttons-cell  {
+  display: flex;
+  justify-content: center; /* Centra horizontalmente */
+  align-items: center; /* Alinea verticalmente */
+  gap: 10px; /* Espaciado entre botones */
+}
   

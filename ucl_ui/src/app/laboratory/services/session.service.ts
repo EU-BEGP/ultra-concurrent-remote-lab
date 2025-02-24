@@ -63,4 +63,9 @@ import { SolvedActivity } from '../interfaces/solvedActivity';
         }
         return this.http.post<SolvedActivity>(`${config.api.baseUrl}ucl/solved-activities/`, formData);
     }
+
+    deleteSession(id: string): Observable<any> {
+      return this.http.delete<Session>(`${config.api.baseUrl}ucl/sessions/${id}/`);
+    }
+  
   }  

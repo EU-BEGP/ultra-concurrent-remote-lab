@@ -12,6 +12,8 @@ import { UserService } from 'src/app/core/auth/services/user.service';
 import { Group } from 'src/app/core/auth/enums/group';
 import { LaboratoryService } from '../../services/laboratory.service';
 import { catchError, forkJoin, map, of } from 'rxjs';
+import { ConfirmationDialogComponent } from '../confirmation-dialog/confirmation-dialog.component';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 
 export interface LaboratoryData {
   id: string,
@@ -49,7 +51,9 @@ export class SessionsListDialogComponent implements OnInit {
     private router: Router,
     private sessionService: SessionService,
     private userService: UserService,
-    private laboratoryService: LaboratoryService)
+    private laboratoryService: LaboratoryService,
+   private dialogRef: MatDialog,
+   private thisDialogRef: MatDialogRef<SessionsListDialogComponent>)
     {
     }
 
@@ -168,5 +172,47 @@ export class SessionsListDialogComponent implements OnInit {
   onResize(event : any):void {
     this.breakpoint = (window.innerWidth <= 1100) ? 1 : 2;
   }
+
+
+   openConfirmationDialog(id:string, name:string) {
+      const dialogRef = this.dialogRef.open(ConfirmationDialogComponent, {
+        width: '40vw',
+        data: { 
+          message: `Please confirm that you want to delete the Session. The data will be lost forever.` 
+        }
+      });
+      dialogRef.afterClosed().subscribe((result: boolean) => {
+        if (result) { 
+         this.deleteSession(id)
+         this.thisDialogRef.close(true)
+  
+         const currentUrl = this.router.url;
+  
+         // Verificar si la URL actual es la del laboratorio eliminado
+         if (currentUrl.includes(id)) {
+           this.router.navigateByUrl('/ultra-concurrent-rl'); 
+         }
+         
+        }
+      });
+    }
+
+    deleteSession(id:string){
+
+      this.sessionService.deleteSession(id).subscribe({
+        next: (_: any) => {
+          this.toastr.success(
+            'Session Deleted'
+          );
+        },
+        error: (e: any) => {
+          console.log(e)
+          this.toastr.error(
+            'There was an error deleting the Lab. Please try later.'
+          );
+        },
+      });
+    }
+  
 
 }
