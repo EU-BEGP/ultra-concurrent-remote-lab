@@ -1,4 +1,5 @@
 from rest_framework import serializers
+from users.serializers import UserSerializer
 from ucl.models import (
     Activity,
     Laboratory,
@@ -84,6 +85,18 @@ class SessionSerializer(serializers.ModelSerializer):
         model = Session
         fields = ["id", "name", "user", "laboratory", "registration_date"]
         read_only_fields = ["user"]
+
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        # Serialize the related User instance
+        user = instance.user
+        representation["user"] = {
+            "id": user.id,
+            "name": user.name,
+            "last_name": user.last_name,
+            "email": user.email,
+        }
+        return representation
 
 
 class ProcedureSerializer(serializers.ModelSerializer):
