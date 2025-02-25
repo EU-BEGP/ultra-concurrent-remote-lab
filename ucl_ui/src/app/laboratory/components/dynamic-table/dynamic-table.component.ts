@@ -172,7 +172,7 @@ export class DynamicTableComponent implements OnInit {
 
   openRenameDialog(colIndex: number) {
     const dialogRef = this.dialog.open(SimpleInputDialogComponent, {
-      data: { title: 'Column', label: 'Column Name', value: this.headers[colIndex] },
+      data: { title: 'Rename Column', label: 'Column Name', value: this.headers[colIndex] },
       disableClose: true, 
       autoFocus: true,    
       width: '300px',     

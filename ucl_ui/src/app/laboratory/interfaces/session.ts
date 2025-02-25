@@ -3,5 +3,6 @@ export interface Session {
     user?: number | undefined;
     laboratory?: string;
     registration_date?:string;
+    name?:string;
 }
   

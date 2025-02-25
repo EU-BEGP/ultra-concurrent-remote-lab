@@ -33,7 +33,7 @@ export class SessionsListDialogComponent implements OnInit {
 
   dataSource!: MatTableDataSource<Laboratory>;
   id = '';
-  displayedColumns: string[] = ['laboratory', 'registration_date', 'registration_time', 'actions'];
+  displayedColumns: string[] = ['name', 'laboratory', 'registration_date', 'registration_time', 'actions'];
   breakpoint: any
 
 

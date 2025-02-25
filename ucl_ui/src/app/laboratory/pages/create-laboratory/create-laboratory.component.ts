@@ -33,7 +33,7 @@ export class CreateLaboratoryComponent implements OnInit {
   @ViewChild('videoPlayer') videoplayer!: ElementRef;
   @ViewChild(MatStepper) stepper!: MatStepper;
   @ViewChild('intro_video_input') intro_video_input!: ElementRef<HTMLInputElement>;
-  @ViewChild('experiment_video_input') experiment_video_input!: ElementRef<HTMLInputElement>;
+  @ViewChild('experiment_media_input') experiment_media_input!: ElementRef<HTMLInputElement>;
   stepperOrientation: Observable<StepperOrientation>
   breakpoint: any
   breakpointVideo: any
@@ -533,13 +533,13 @@ export class CreateLaboratoryComponent implements OnInit {
       })    
       dialogRef.componentInstance.selectedOption.subscribe((parameters:any) => {
         if(parameters.type == "File"){
-          if(video_type == "experiment_video"){
+          if(video_type == "experiment_media"){
             video_input!.click();
           }else{//intro_video
             this.intro_video_input.nativeElement.click();
           }
         } else if (parameters.type == "Youtube"){
-          if(video_type == "experiment_video"){
+          if(video_type == "experiment_media"){
             this.getVideos(experiment_index).at(video_index).patchValue({
               video: parameters.url,
               file: parameters.url,
@@ -702,7 +702,7 @@ export class CreateLaboratoryComponent implements OnInit {
         'name': experiment.name,
         'laboratory': this.newLaboratory.value.id,
         'parameter_options': experiment.selectedOptions,
-        'experiment_videos': experiment.videos,
+        'experiment_media': experiment.videos,
         'data_file':experiment.data_file
       }
       this.labService.addLabExperiment(experimentFields).subscribe({

@@ -24,6 +24,7 @@ import { Session } from '../../interfaces/session';
 import { UserService } from 'src/app/core/auth/services/user.service';
 import { User } from 'src/app/core/auth/interfaces/user';
 import { ChangeDetectorRef } from '@angular/core';
+import { SimpleInputDialogComponent } from '../../components/simple-input-dialog/simple-input-dialog.component';
 
 @Component({
   selector: 'app-lab',
@@ -65,6 +66,7 @@ export class LabComponent implements OnInit {
   paginator!: MatPaginator;
   @ViewChild(MatSort)
   sort!: MatSort;
+  sessionName:string | undefined
 
   constructor(private route: ActivatedRoute, 
     private http: HttpClient,
@@ -75,7 +77,8 @@ export class LabComponent implements OnInit {
     private dialogRef: MatDialog,
     private sessionService: SessionService,
     private userService: UserService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private dialog: MatDialog
   ) 
 
   { const breakpointObserver = inject(BreakpointObserver);
@@ -191,7 +194,7 @@ export class LabComponent implements OnInit {
       experimentDetailsGroup: this.builder.group({
         id: [''],
         experiment_activities: this.builder.array([]),
-        experiment_videos: [[]],
+        experiment_media: [[]],
         data_file: ['']
       })
     });
@@ -281,7 +284,7 @@ export class LabComponent implements OnInit {
     const experimentDetailsGroup = experiment.get('experimentDetailsGroup') as FormGroup;
     experimentDetailsGroup.patchValue({
       id: experimentData.id,
-      experiment_videos: experimentData.experiment_videos,
+      experiment_media: experimentData.experiment_media,
       data_file: experimentData.data_file,
       experiment_activities:experimentData.experiment_activities
     });
@@ -501,10 +504,26 @@ export class LabComponent implements OnInit {
     window.open(link)
   }
 
+   openNameDialog() {
+      const dialogRef = this.dialog.open(SimpleInputDialogComponent, {
+        data: { title: 'Enter a Name for the Session', label: 'Session Name', value: "Session 1" },
+        autoFocus: true,    
+        width: '400px',     
+      });
+  
+      dialogRef.afterClosed().subscribe((result) => {
+        if (result !== undefined) {
+          this.sessionName=result
+          this.saveSession()
+        }
+      });
+      
+    }
+
 
   onSubmit(): void {
     if (this.studentSession.valid) {
-    this.saveSession()
+    this.openNameDialog()
     } else {
       this.toastr.error(
         'Please, complete the required Information',
@@ -517,11 +536,11 @@ export class LabComponent implements OnInit {
     const sessionFields = {
       'id': this.studentSession.value.id,
       'laboratory': this.id,
-      'user': this.userId
+      'user': this.userId,
+      'name':this.sessionName
     }
     this.sessionService.addSession(sessionFields as Session).subscribe({
       next: (_: any) => {
-
        this.createSolvedFinalActivities()
        this.createSolvedExperimentActivities()
         this.toastr.success("Session Saved")

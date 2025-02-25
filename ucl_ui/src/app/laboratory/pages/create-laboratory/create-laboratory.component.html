@@ -482,7 +482,7 @@
                                                                     type="button"
                                                                     id="button"
                                                                     mat-button
-                                                                    (click)="openUploadOptions('experiment_video', experiment_video_input,  i, videoIndex)">
+                                                                    (click)="openUploadOptions('experiment_media', experiment_media_input,  i, videoIndex)">
                                                                     <mat-icon
                                                                         class="bigger-icon accent">upload</mat-icon>
                                                                 </button>
@@ -495,7 +495,7 @@
                                                                         accept="video/*"
                                                                         hidden
                                                                         (change)="onUpload($event, 'video', i, videoIndex)"
-                                                                        #experiment_video_input />
+                                                                        #experiment_media_input />
                                                                     <p
                                                                         id="label">{{file}}</p>
                                                                 </div>

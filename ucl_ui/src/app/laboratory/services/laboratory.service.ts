@@ -130,13 +130,13 @@ export class LaboratoryService {
       formData.append(`parameter_options[${index}]`, optionId);
     });
 
-    experiment.experiment_videos!.forEach((video: any, index: number) => {
-      formData.append(`experiment_videos[${index}][name]`, video.name);
+    experiment.experiment_media!.forEach((video: any, index: number) => {
+      formData.append(`experiment_media[${index}][name]`, video.name);
       if (video.youtube_video) {
-        formData.append(`experiment_videos[${index}][youtube_video]`, video.youtube_video); 
+        formData.append(`experiment_media[${index}][youtube_video]`, video.youtube_video); 
       }
       else if (video.video) {
-        formData.append(`experiment_videos[${index}][video]`, video.file); 
+        formData.append(`experiment_media[${index}][video]`, video.file); 
       }
     });
     return this.http.post<Experiment>(`${config.api.baseUrl}ucl/experiments/`, formData);

@@ -44,6 +44,7 @@ import { SolvedActivity } from '../interfaces/solvedActivity';
         formData.append('id', session.id!)
         formData.append('laboratory', session.laboratory!)
         formData.append('user', String(session.user!))
+        formData.append('name',session.name!)
         return this.http.post<Session>(`${config.api.baseUrl}ucl/sessions/`, formData);
       }
 
