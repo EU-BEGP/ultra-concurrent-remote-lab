@@ -9,7 +9,7 @@ from ucl.models import (
     Procedure,
     Session,
     SolvedActivity,
-    VideoExperiment,
+    MediaExperiment,
 )
 
 
@@ -57,14 +57,14 @@ class ExperimentAdmin(admin.ModelAdmin):
     ]
 
 
-class VideoExperimentAdmin(admin.ModelAdmin):
+class MediaExperimentAdmin(admin.ModelAdmin):
     ordering = ["id"]
-    list_display = ["id", "name", "video", "youtube_url", "experiment"]
+    list_display = ["id", "name", "video", "youtube_url", "image", "experiment"]
 
 
 class SessionAdmin(admin.ModelAdmin):
     ordering = ["id"]
-    list_display = ["id", "user", "laboratory", "registration_date"]
+    list_display = ["id", "name", "user", "laboratory", "registration_date"]
 
 
 class ActivityAdmin(admin.ModelAdmin):
@@ -102,7 +102,7 @@ admin.site.register(Guide, GuideAdmin)
 admin.site.register(Parameter, ParameterAdmin)
 admin.site.register(Option, OptionAdmin)
 admin.site.register(Experiment, ExperimentAdmin)
-admin.site.register(VideoExperiment, VideoExperimentAdmin)
+admin.site.register(MediaExperiment, MediaExperimentAdmin)
 admin.site.register(Session, SessionAdmin)
 admin.site.register(Activity, ActivityAdmin)
 admin.site.register(SolvedActivity, SolvedActivityAdmin)

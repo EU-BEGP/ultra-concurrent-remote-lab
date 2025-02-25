@@ -27,9 +27,7 @@ def generate_unique_filename_file(instance, filename):
         instance_content = instance.data_file.read()
         field_name = "experiment_data_files"
     else:
-        raise ValueError(
-            "Instance must pertain to a model that have valid image or file fields."
-        )
+        raise ValueError("Instance must pertain to a model that have valid file field.")
 
     md5_hash = hashlib.md5(instance_content).hexdigest()
     _, ext = os.path.splitext(filename)
@@ -41,12 +39,12 @@ def generate_unique_filename_video(instance, filename):
     if isinstance(instance, Laboratory):
         instance_content = instance.video.read()
         field_name = "laboratory_videos"
-    elif isinstance(instance, VideoExperiment):
+    elif isinstance(instance, MediaExperiment):
         instance_content = instance.video.read()
-        field_name = "experiment_videos"
+        field_name = "experiment_media_videos"
     else:
         raise ValueError(
-            "Instance must pertain to a model that have valid image or file fields."
+            "Instance must pertain to a model that have valid file (video) field."
         )
 
     md5_hash = hashlib.md5(instance_content).hexdigest()
@@ -62,9 +60,12 @@ def generate_unique_filename_image(instance, filename):
     elif isinstance(instance, Option):
         instance_content = instance.image.read()
         field_name = "option_images"
+    elif isinstance(instance, MediaExperiment):
+        instance_content = instance.image.read()
+        field_name = "experiment_media_images"
     else:
         raise ValueError(
-            "Instance must pertain to a model that have valid image or file fields."
+            "Instance must pertain to a model that have valid image field."
         )
 
     md5_hash = hashlib.md5(instance_content).hexdigest()
@@ -80,17 +81,17 @@ class Laboratory(models.Model):
     category = models.CharField(max_length=100)
     institution = models.CharField(max_length=100)
     video = models.FileField(
-        default=None,
         null=True,
         blank=True,
+        default=None,
         upload_to=generate_unique_filename_video,
         storage=UniqueFilenameStorage,
     )
     youtube_video = models.URLField(null=True, default=None)
     image = models.ImageField(
-        default=None,
         null=True,
         blank=True,
+        default=None,
         upload_to=generate_unique_filename_image,
         storage=UniqueFilenameStorage,
     )
@@ -162,6 +163,7 @@ class Experiment(models.Model):
     name = models.CharField(max_length=100)
     data_file = models.FileField(
         null=True,
+        blank=True,
         default=None,
         upload_to=generate_unique_filename_file,
         storage=UniqueFilenameStorage,
@@ -181,22 +183,30 @@ class Experiment(models.Model):
         return ", ".join(po.value for po in self.parameter_options.all())
 
 
-class VideoExperiment(models.Model):
+class MediaExperiment(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     name = models.CharField(max_length=100)
     video = models.FileField(
+        null=True,
+        blank=True,
+        default=None,
         upload_to=generate_unique_filename_video,
         storage=UniqueFilenameStorage,
-        null=True,
-        default=None,
     )
-    youtube_video = models.URLField(null=True, default=None)
+    youtube_video = models.URLField(null=True, blank=True, default=None)
+    image = models.ImageField(
+        null=True,
+        blank=True,
+        default=None,
+        upload_to=generate_unique_filename_image,
+        storage=UniqueFilenameStorage,
+    )
     experiment = models.ForeignKey(
-        Experiment, related_name="experiment_videos", on_delete=models.CASCADE
+        Experiment, related_name="experiment_media", on_delete=models.CASCADE
     )
 
     class Meta:
-        verbose_name_plural = "VideoExperiments"
+        verbose_name_plural = "MediaExperiments"
 
     def youtube_url(self):
         youtube_video = self.youtube_video
@@ -235,6 +245,7 @@ class Activity(models.Model):
 
 class Session(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    name = models.CharField(max_length=100)
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         related_name="user_sessions",

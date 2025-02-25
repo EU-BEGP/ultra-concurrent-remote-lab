@@ -1,20 +1,20 @@
 from rest_framework import generics
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
-from ucl.models import VideoExperiment
+from ucl.models import MediaExperiment
 from ucl.permissions import ApplicationPermissionManager
-from ucl.serializers import VideoExperimentSerializer
+from ucl.serializers import MediaExperimentSerializer
 
 
-class RetrieveUpdateDestroyVideoExperimentView(generics.RetrieveUpdateDestroyAPIView):
+class RetrieveUpdateDestroyMediaExperimentView(generics.RetrieveUpdateDestroyAPIView):
     """
-    RETRIEVE, UPDATE or DESTROY a specific video experiment
+    RETRIEVE, UPDATE or DESTROY a specific media experiment
     """
 
-    serializer_class = VideoExperimentSerializer
+    serializer_class = MediaExperimentSerializer
     authentication_classes = (TokenAuthentication,)
     permission_classes = (
         IsAuthenticated,
         ApplicationPermissionManager,
     )
-    queryset = VideoExperiment.objects.all()
+    queryset = MediaExperiment.objects.all()

@@ -6,7 +6,7 @@ from rest_framework.authentication import TokenAuthentication
 from rest_framework.exceptions import NotFound, ValidationError
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
-from ucl.models import Activity, Experiment, Option, VideoExperiment
+from ucl.models import Activity, Experiment, Option, MediaExperiment
 from ucl.permissions import ApplicationPermissionManager
 from ucl.serializers import ActivitySerializer, ExperimentSerializer
 import uuid
@@ -64,29 +64,33 @@ class ExperimentCreateView(generics.CreateAPIView):
 
                 index += 1
 
-            # Handle experiment videos
+            # Handle experiment media
             while True:
-                video_name = request.data.get(f"experiment_videos[{index}][name]", None)
-                youtube_video = request.data.get(
-                    f"experiment_videos[{index}][youtube_video]", None
-                )
+                name = request.data.get(f"experiment_media[{index}][name]", None)
                 video_file = request.FILES.get(
-                    f"experiment_videos[{index}][video]", None
+                    f"experiment_media[{index}][video]", None
+                )
+                youtube_video = request.data.get(
+                    f"experiment_media[{index}][youtube_video]", None
+                )
+                image_file = request.FILES.get(
+                    f"experiment_media[{index}][image]", None
                 )
 
-                if not video_name and not (video_file or youtube_video):
+                if not name and not (video_file or youtube_video or image_file):
                     index = 0
                     break
 
-                # Create video
-                video_experiment_instance = VideoExperiment(
-                    name=video_name,
+                # Create media experiment
+                media_experiment_instance = MediaExperiment(
+                    name=name,
                     video=video_file,
                     youtube_video=youtube_video,
+                    image=image_file,
                     experiment=experiment,
                 )
-                video_experiment_instance.save()
-                created_entities.append(video_experiment_instance)
+                media_experiment_instance.save()
+                created_entities.append(media_experiment_instance)
 
                 index += 1
 

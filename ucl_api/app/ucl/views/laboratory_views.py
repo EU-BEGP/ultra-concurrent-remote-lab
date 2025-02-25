@@ -4,7 +4,7 @@ from rest_framework.authentication import TokenAuthentication
 from rest_framework.exceptions import ValidationError
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
-from ucl.models import Activity, Experiment, Laboratory, Guide, Parameter
+from ucl.models import Activity, Experiment, Laboratory, Guide, Parameter, Session
 from ucl.permissions import ApplicationPermissionManager
 from ucl.serializers import (
     ActivitySerializer,
@@ -12,6 +12,7 @@ from ucl.serializers import (
     GuideSerializer,
     LaboratorySerializer,
     ParameterSerializer,
+    SessionSerializer,
 )
 from ucl.views.common import validate_uuid, handle_validation_error
 
@@ -138,3 +139,18 @@ class ListLaboratoryActivitiesView(generics.ListAPIView):
         laboratory_id = self.kwargs.get("pk")
         activities = Activity.objects.filter(laboratory=laboratory_id)
         return activities
+
+
+class ListLaboratorySessionsView(generics.ListAPIView):
+    """
+    LIST all the existing sessions from a laboratory
+    """
+
+    serializer_class = SessionSerializer
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = (IsAuthenticated,)
+
+    def get_queryset(self):
+        laboratory_id = self.kwargs.get("pk")
+        sessions = Session.objects.filter(laboratory=laboratory_id)
+        return sessions

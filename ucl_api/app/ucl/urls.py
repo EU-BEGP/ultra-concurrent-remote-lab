@@ -9,7 +9,7 @@ from ucl.views import (
     procedure_views,
     session_views,
     solved_activity_views,
-    video_experiment_views,
+    media_experiment_views,
 )
 
 app_name = "ucl"
@@ -44,6 +44,11 @@ urlpatterns = [
         "laboratories/<uuid:pk>/activities/",
         laboratory_views.ListLaboratoryActivitiesView.as_view(),
         name="laboratory_activities",
+    ),
+    path(
+        "laboratories/<uuid:pk>/sessions/",
+        laboratory_views.ListLaboratorySessionsView.as_view(),
+        name="laboratory_sessions",
     ),
     path(
         "guides/",
@@ -91,9 +96,9 @@ urlpatterns = [
         name="option_detail",
     ),
     path(
-        "experiments/videos/<uuid:pk>/",
-        video_experiment_views.RetrieveUpdateDestroyVideoExperimentView.as_view(),
-        name="option_detail",
+        "experiments/media/<uuid:pk>/",
+        media_experiment_views.RetrieveUpdateDestroyMediaExperimentView.as_view(),
+        name="experiment_media",
     ),
     path(
         "activities/",

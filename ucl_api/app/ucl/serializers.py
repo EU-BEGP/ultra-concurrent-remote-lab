@@ -9,7 +9,7 @@ from ucl.models import (
     Procedure,
     Session,
     SolvedActivity,
-    VideoExperiment,
+    MediaExperiment,
 )
 
 
@@ -50,14 +50,14 @@ class ParameterSerializer(serializers.ModelSerializer):
         fields = ["id", "name", "unit", "laboratory", "parameter_options"]
 
 
-class VideoExperimentSerializer(serializers.ModelSerializer):
+class MediaExperimentSerializer(serializers.ModelSerializer):
     class Meta:
-        model = VideoExperiment
-        fields = ["id", "name", "video", "youtube_video", "experiment"]
+        model = MediaExperiment
+        fields = ["id", "name", "video", "youtube_video", "image", "experiment"]
 
 
 class ExperimentSerializer(serializers.ModelSerializer):
-    experiment_videos = VideoExperimentSerializer(many=True)
+    experiment_media = MediaExperimentSerializer(many=True)
 
     class Meta:
         model = Experiment
@@ -67,7 +67,7 @@ class ExperimentSerializer(serializers.ModelSerializer):
             "data_file",
             "laboratory",
             "parameter_options",
-            "experiment_videos",
+            "experiment_media",
             "registration_date",
         )
 
@@ -82,7 +82,7 @@ class ExperimentSerializer(serializers.ModelSerializer):
 class SessionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Session
-        fields = ["id", "user", "laboratory", "registration_date"]
+        fields = ["id", "name", "user", "laboratory", "registration_date"]
         read_only_fields = ["user"]
 
 
