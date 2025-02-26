@@ -508,7 +508,7 @@ export class LabComponent implements OnInit {
       const dialogRef = this.dialog.open(SimpleInputDialogComponent, {
         data: { title: 'Enter a Name for the Session', label: 'Session Name', value: "Session 1" },
         autoFocus: true,    
-        width: '400px',     
+        width: '500px',     
       });
   
       dialogRef.afterClosed().subscribe((result) => {
