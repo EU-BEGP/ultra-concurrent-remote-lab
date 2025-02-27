@@ -120,6 +120,10 @@ export class LaboratoriesDialogComponent implements OnInit {
     this.router.navigateByUrl('/create-lab');
   }
 
+  goToManageLab(id:string){
+    this.router.navigateByUrl('/manage-lab/'+id);
+  }
+
   openConfirmationDialog(id:string, name:string) {
     const dialogRef = this.dialogRef.open(ConfirmationDialogComponent, {
       width: '40vw',
@@ -161,7 +165,8 @@ export class LaboratoriesDialogComponent implements OnInit {
   }
 
   updateLab(id:string){
-    this.router.navigate(['create-lab/'+id]);
+    this.toastr.info("Not Implemented yet")
+    //this.router.navigate(['create-lab/'+id]);
    }
 
 

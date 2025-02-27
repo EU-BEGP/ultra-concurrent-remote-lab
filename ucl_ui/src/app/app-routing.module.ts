@@ -6,6 +6,7 @@ import { AuthGuard } from './core/auth/services/guards/auth.guard';
 import { LabComponent } from './laboratory/pages/lab/lab.component';
 import { CreateLaboratoryComponent } from './laboratory/pages/create-laboratory/create-laboratory.component';
 import { LoadedSessionComponent } from './laboratory/pages/loaded-session/loaded-session.component';
+import { ManageLabComponent } from './laboratory/pages/manage-lab/manage-lab.component';
 
 const routes: Routes = [
   { path: 'ultra-concurrent-rl',
@@ -24,6 +25,7 @@ const routes: Routes = [
     component: CreateLaboratoryComponent,
   },
   {path: 'laboratory/:id', component: LabComponent},
+  {path: 'manage-lab/:id', component: ManageLabComponent},
   {path: 'session/:id', component: LoadedSessionComponent},
   {
     path: '**',

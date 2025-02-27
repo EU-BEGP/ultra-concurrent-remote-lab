@@ -56,6 +56,7 @@ import { CodeActivationDialogComponent } from './core/auth/components/code-activ
 import { UploadOptionsDialogComponent } from './laboratory/components/upload-options-dialog/upload-options-dialog.component';
 import { ConfirmationDialogComponent } from './laboratory/components/confirmation-dialog/confirmation-dialog.component';
 import { SimpleInputDialogComponent } from './laboratory/components/simple-input-dialog/simple-input-dialog.component';
+import { ManageLabComponent } from './laboratory/pages/manage-lab/manage-lab.component';
 
 PlotlyModule.plotlyjs = PlotlyJS;
 
@@ -84,6 +85,7 @@ PlotlyModule.plotlyjs = PlotlyJS;
     UploadOptionsDialogComponent,
     ConfirmationDialogComponent,
     SimpleInputDialogComponent,
+    ManageLabComponent,
     
   ],
   imports: [

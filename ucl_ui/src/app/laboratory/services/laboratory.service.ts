@@ -51,6 +51,10 @@ export class LaboratoryService {
     return this.http.get<Parameter[]>(`${config.api.baseUrl}ucl/laboratories/${id}/parameters/`);
   }
 
+  getLabSessions(id: string): Observable<any> {
+    return this.http.get<Parameter[]>(`${config.api.baseUrl}ucl/laboratories/${id}/sessions/`);
+  }
+
   getActivitiesByExperimentId(id: string): Observable<any> {
     return this.http.get<Activity[]>(`${config.api.baseUrl}ucl/experiments/${id}/activities/`);
   }
