@@ -17,10 +17,10 @@ check_docker_compose() {
 
 docker_compose_cmd=$(check_docker_compose)
 
-echo -e "\nBuilding docker image...\n"
+echo -e "\n[BUILDING DOCKER IMAGE]\n"
 $docker_compose_cmd build
 
-echo -e "\nRunning database migrations...\n"
+echo -e "\n[RUNNING DATABASE MIGRATIONS]\n"
 $docker_compose_cmd run --rm app python manage.py makemigrations
 $docker_compose_cmd run --rm app python manage.py migrate
 
@@ -31,24 +31,5 @@ if [ ! -d "$STATICFILES_DIR" ]; then
   $docker_compose_cmd run --rm app python manage.py collectstatic
 fi
 
-while true; do
-  read -p $'\n[?] Do you want to create a superuser? (yes/no) [default: no]: ' superuser
-  superuser=${superuser:-no}                                  # Default to 'no'
-  superuser=$(echo "$superuser" | tr '[:upper:]' '[:lower:]') # Convert the options to lowercase
-
-  case "$superuser" in
-  yes)
-    $docker_compose_cmd run --rm app python manage.py createsuperuser
-    break
-    ;;
-  no)
-    break
-    ;;
-  *)
-    echo "Invalid choice. Please enter 'yes' or 'no'."
-    ;;
-  esac
-done
-
-echo -e "\nRunning the application...\n"
+echo -e "\n[RUNNING THE APPLICATION]\n"
 $docker_compose_cmd up
