@@ -221,8 +221,20 @@
                                                 </ng-template>
                                                 <div
                                                     class="visualization-video-card">
+
                                                     <app-video-player
-                                                        [videoSrc]="video.youtube_video || video.video"></app-video-player>
+                                                        *ngIf="isVideo(video.media) ||  isVideo(video.youtube_video)"
+                                                        [videoSrc]="video.youtube_video || video.media">
+                                                    </app-video-player>
+
+                                                    <!-- Renderiza la imagen si es una imagen -->
+                                                    <div
+                                                        class="video-container">
+                                                        <img
+                                                            *ngIf="isImage(video.media)"
+                                                            [src]="video.media"
+                                                            class="video-player auto-height">
+                                                    </div>
 
                                                 </div>
                                             </mat-tab>

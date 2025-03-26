@@ -40,7 +40,7 @@ export class CreateLaboratoryComponent implements OnInit {
   breakpointOption: any
   videoRowHeight: any
   defaultImg = 'assets/emptyimage.jpeg';
-  defaultVideo = 'assets/empty_video.mp4';
+  defaultVideo = 'assets/emptyimage.jpeg';
   categories = [
     { name: 'Photovoltaic Energy' },
     { name: 'Thermal Energy' },
@@ -142,9 +142,9 @@ export class CreateLaboratoryComponent implements OnInit {
       selectedOptions: new FormArray([this.builder.control('', Validators.required)]),
       videos: new FormArray([this.builder.group({
         name: this.builder.control('', Validators.required),
-        video: [this.defaultVideo],
+        media: [this.defaultImg],
         file: this.builder.control('', this.fileRequiredValidator()),
-        youtube_video:['']
+        youtube_video:[''],
       })]),
       activities: new FormArray([
         this.builder.group({
@@ -173,6 +173,15 @@ export class CreateLaboratoryComponent implements OnInit {
       const file = control.value;
       return file ? null : { required: true };
     };
+  }
+
+  isVideo(media: any): boolean {
+    
+    return media && ( media.match(/\.(mp4|mov|avi|mkv)$/i) || media.startsWith('data:video/') || media.includes('youtube.com') || media.includes('youtu.be'));
+  }
+  
+  isImage(media: any): boolean {
+    return media && ( media.match(/\.(jpg|jpeg|png|gif)$/i) || media.startsWith('data:image/'));
   }
 
   copyActivity(experimentIndex: number, activityIndex: number) {
@@ -288,9 +297,9 @@ export class CreateLaboratoryComponent implements OnInit {
       selectedOptions: selectedOptionsArray,
       videos: new FormArray([this.builder.group({
         name:  this.builder.control('', Validators.required),
-        video: [this.defaultVideo],
+        media: [this.defaultImg],
         file: this.builder.control('', this.fileRequiredValidator()),
-        youtube_video:['']
+        youtube_video:[''],
       })]),
       activities: new FormArray([
         this.builder.group({
@@ -334,9 +343,9 @@ export class CreateLaboratoryComponent implements OnInit {
   addVideo(index: number): void {
     const videoFormGroup = this.builder.group({
       name:  this.builder.control('', Validators.required),
-      video: [this.defaultVideo],
+      media: [this.defaultImg],
       file: this.builder.control('', this.fileRequiredValidator()),
-      youtube_video:['']
+      youtube_video:[''],
     })
     this.getVideos(index).push(videoFormGroup)
   }
@@ -469,12 +478,12 @@ export class CreateLaboratoryComponent implements OnInit {
     procedures.removeAt(procedureIndex);
   }
 
-  onUpload(event: any, field?: string, parameterIndex?: number, index?: number): void {
+  onUpload(event: any, parameterIndex?: number, index?: number, source?: string): void {
     if (event.target.files.length > 0) {
       const file = event.target.files[0] as File;
       const file_size = file.size;
       if (file_size <= 75000000) {
-        this.getUrl(file, parameterIndex, index, field);
+        this.getUrl(file, parameterIndex, index, source);
       } else {
         this.toastr.error('File size must be 75MB or smaller.');
       }
@@ -485,47 +494,66 @@ export class CreateLaboratoryComponent implements OnInit {
     return item.value?.id || index;
 }
 
-  async getUrl(file: File, parameterIndex?: number, index?: number, field?: string) {
-    const reader = new FileReader();
-    reader.onload = (event: any) => {
-      const result = event.target.result;
+async getUrl(file: File, parameterIndex?: number, index?: number, source?: string) {
+  const reader = new FileReader();
 
-      if (field === 'image' && parameterIndex !== undefined && index !== undefined) {
-        this.getOptions(parameterIndex).at(index).patchValue({
-          image: result,
+  reader.onload = (event: any) => {
+    const result = event.target.result;
+
+    // Detectar el tipo de archivo
+    const fileType = file.type;
+    const fileName = file.name.toLowerCase();
+
+    const isImage = fileType.startsWith('image/');
+    const isVideo = fileType.startsWith('video/');
+    const isDataFile = /\.(dat|csv|xls|xlsx)$/i.test(fileName);
+
+    // Función para actualizar un FormArray
+    const patchFormArray = (formArray: any, key: string) => {
+      if (parameterIndex !== undefined && index !== undefined) {
+        formArray(parameterIndex).at(index).patchValue({
+          [key]: result,
           file: file
         });
-        this.getOptions(parameterIndex).at(index).get('image')?.updateValueAndValidity();
-      } else if (field === 'video' && parameterIndex !== undefined && index !== undefined) {
-        this.getVideos(parameterIndex).at(index).patchValue({
-          video: result,
-          file: file
-        });
-        this.getVideos(parameterIndex).at(index).get('video')?.updateValueAndValidity();
-      } else if (field === 'file' && index !== undefined) { //dataFile
-        this.experiments.at(index).get('data_file')?.patchValue({ data_file: file });
-        this.experiments.at(index).get('data_file')?.updateValueAndValidity();
-      } else if (field === 'video' && parameterIndex === undefined && index === undefined) { //introVideo
-        this.introVideo.patchValue({
-          video: result,
-          file: file
-        });
-        this.introVideo.get('video')?.updateValueAndValidity();
+        formArray(parameterIndex).at(index).get(key)?.updateValueAndValidity();
       }
-      else if (field === 'image' && parameterIndex === undefined && index === undefined) { //introPhoto
-        this.introPhoto.patchValue({
-          image: result,
-          file: file
-        });
+    };
+
+    if (isImage) {
+      if (parameterIndex === undefined && index === undefined) {
+        // introPhoto
+        this.introPhoto.patchValue({ image: result, file: file });
         this.introPhoto.get('image')?.updateValueAndValidity();
+      } else if (source === 'options') {
+        // Si proviene de options
+        patchFormArray(this.getOptions.bind(this), 'image');
+      } else if (source === 'videos') {
+        // Si proviene de videos
+        patchFormArray(this.getVideos.bind(this), 'media');
       }
-    };
+    } else if (isVideo) {
+      if (parameterIndex === undefined && index === undefined) {
+        // introVideo
+        this.introVideo.patchValue({ video: result, file: file });
+        this.introVideo.get('video')?.updateValueAndValidity();
+      } else {
+        // Media en experiments
+        patchFormArray(this.getVideos.bind(this), 'media');
+      }
+    } else if (isDataFile && index !== undefined) {
+      // data_file en experiments
+      this.experiments.at(index).get('data_file')?.patchValue({ data_file: file });
+      this.experiments.at(index).get('data_file')?.updateValueAndValidity();
+    }
+  };
 
-    reader.onerror = (event: any) => {
-      console.log('File could not be read: ' + event.target.error.code);
-    };
-    reader.readAsDataURL(file);
-  }
+  reader.onerror = (event: any) => {
+    console.error('File could not be read: ' + event.target.error.code);
+  };
+
+  reader.readAsDataURL(file);
+}
+
 
   openUploadOptions(video_type:string, video_input?:HTMLInputElement, experiment_index?:any, video_index?:any){
     const dialogRef = this.dialogRef.open(UploadOptionsDialogComponent, {
@@ -541,7 +569,7 @@ export class CreateLaboratoryComponent implements OnInit {
         } else if (parameters.type == "Youtube"){
           if(video_type == "experiment_media"){
             this.getVideos(experiment_index).at(video_index).patchValue({
-              video: parameters.url,
+              media: parameters.url,
               file: parameters.url,
               youtube_video: parameters.url
             });

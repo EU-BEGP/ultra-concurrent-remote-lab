@@ -139,8 +139,8 @@ export class LaboratoryService {
       if (video.youtube_video) {
         formData.append(`experiment_media[${index}][youtube_video]`, video.youtube_video); 
       }
-      else if (video.video) {
-        formData.append(`experiment_media[${index}][video]`, video.file); 
+      else if (video.media) {
+        formData.append(`experiment_media[${index}][media]`, video.file); 
       }
     });
     return this.http.post<Experiment>(`${config.api.baseUrl}ucl/experiments/`, formData);

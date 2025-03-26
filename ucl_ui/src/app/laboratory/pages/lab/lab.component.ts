@@ -504,6 +504,16 @@ export class LabComponent implements OnInit {
     window.open(link)
   }
 
+  isVideo(media: any): boolean {
+    
+    return media && ( media.match(/\.(mp4|mov|avi|mkv)$/i) || media.startsWith('data:video/') || media.includes('youtube.com') || media.includes('youtu.be'));
+  }
+  
+  isImage(media: any): boolean {
+    return media && ( media.match(/\.(jpg|jpeg|png|gif)$/i) || media.startsWith('data:image/'));
+  }
+
+
    openNameDialog() {
       const dialogRef = this.dialog.open(SimpleInputDialogComponent, {
         data: { title: 'Enter a Name for the Session', label: 'Session Name', value: "Session 1" },
