@@ -59,7 +59,7 @@ class ExperimentAdmin(admin.ModelAdmin):
 
 class MediaExperimentAdmin(admin.ModelAdmin):
     ordering = ["id"]
-    list_display = ["id", "name", "video", "youtube_url", "image", "experiment"]
+    list_display = ["id", "name", "media", "youtube_url", "experiment"]
 
 
 class SessionAdmin(admin.ModelAdmin):

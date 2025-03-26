@@ -54,7 +54,7 @@ class ParameterSerializer(serializers.ModelSerializer):
 class MediaExperimentSerializer(serializers.ModelSerializer):
     class Meta:
         model = MediaExperiment
-        fields = ["id", "name", "video", "youtube_video", "image", "experiment"]
+        fields = ["id", "name", "media", "youtube_video", "experiment"]
 
 
 class ExperimentSerializer(serializers.ModelSerializer):
