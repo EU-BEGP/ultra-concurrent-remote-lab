@@ -9,7 +9,7 @@
 
         <mat-card-content>
             <form [formGroup]="newLaboratory" (ngSubmit)="onSubmit()">
-                <mat-stepper [linear]="false"
+                <mat-stepper [linear]="true"
                     [orientation]="(stepperOrientation | async)!">
                     <div formGroupName="info">
                         <mat-step label="Laboratory Info"
@@ -431,12 +431,12 @@
                                         <span mat-caption
                                             class="input-label header3 vertical-center">
                                             Add
-                                            Video(s)
+                                            Video(s) / Image(s)
                                             for Experiment {{i+1}}
                                             <button type="button" mat-button
                                                 (click)="addVideo(i)">
                                                 <mat-icon class="add-new"
-                                                    matTooltip="New Video">library_add</mat-icon>
+                                                    matTooltip="New Media">library_add</mat-icon>
                                             </button>
                                         </span>
                                         <mat-grid-list
@@ -460,10 +460,9 @@
 
                                                     <!-- Renderiza la imagen si es una imagen -->
                                                     <div
+                                                        *ngIf="isImage(video.value.media)"
                                                         class="video-container">
-                                                        <img
-                                                            *ngIf="isImage(video.value.media)"
-                                                            mat-card-image
+                                                        <img mat-card-image
                                                             [src]="video.value.media"
                                                             class="video-player auto-height">
                                                     </div>
@@ -477,7 +476,7 @@
                                                         </p>
                                                         <mat-label
                                                             class="body mt-8">Video
-                                                            Name</mat-label>
+                                                            Media</mat-label>
                                                         <mat-form-field
                                                             class="input-field"
                                                             appearance="outline">

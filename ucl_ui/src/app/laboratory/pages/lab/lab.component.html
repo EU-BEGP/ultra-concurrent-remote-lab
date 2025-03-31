@@ -229,9 +229,9 @@
 
                                                     <!-- Renderiza la imagen si es una imagen -->
                                                     <div
+                                                        *ngIf="isImage(video.media)"
                                                         class="video-container">
                                                         <img
-                                                            *ngIf="isImage(video.media)"
                                                             [src]="video.media"
                                                             class="video-player auto-height">
                                                     </div>
