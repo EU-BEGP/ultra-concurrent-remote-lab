@@ -74,7 +74,7 @@ mat-grid-tile{
     margin: 0px 0px;
 }
 img{ 
-    object-fit: cover; 
+    object-fit: scale-down; 
     height: 140px; 
 }
 .parameter-title{

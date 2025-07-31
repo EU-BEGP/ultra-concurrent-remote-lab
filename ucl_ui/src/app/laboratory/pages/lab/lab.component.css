@@ -34,7 +34,7 @@
 }
 
 img{ 
-    object-fit: cover; 
+    object-fit: scale-down; 
     height: 140px; 
 }
 

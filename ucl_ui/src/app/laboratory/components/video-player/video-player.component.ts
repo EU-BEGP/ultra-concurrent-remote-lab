@@ -31,8 +31,6 @@ export class VideoPlayerComponent implements OnInit, AfterViewInit, OnChanges {
     if (changes['videoSrc'] && changes['videoSrc'].currentValue) {
       this.isYouTubeVideo = this.isYouTube(this.videoSrc);
       this.youtubeVideoId = this.getYouTubeId(this.videoSrc);
-
-      console.log(this.videoSrc)
       
       // Esperar el siguiente ciclo de renderizado para asegurar que el contenedor existe
       setTimeout(() => {
