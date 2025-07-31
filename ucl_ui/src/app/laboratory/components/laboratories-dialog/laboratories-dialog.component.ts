@@ -97,6 +97,12 @@ export class LaboratoriesDialogComponent implements OnInit {
       this.dataSource = new MatTableDataSource(response);
       this.dataSource.paginator = this.paginator;
       this.dataSource.sort = this.sort;
+
+       // Ordenar por 'institution' de forma ascendente al inicio
+      this.sort.active = 'institution';
+      this.sort.direction = 'desc';
+      this.sort.sortChange.emit(); // Notifica que hubo un cambio de orden
+
    }
     else{
       this.no_labs_data = true
