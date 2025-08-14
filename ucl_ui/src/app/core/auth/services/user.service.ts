@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, BehaviorSubject, tap } from 'rxjs';
 
 import { User } from '../interfaces/user';
 import config from 'src/app/config.json';
@@ -10,6 +10,10 @@ import config from 'src/app/config.json';
 })
 export class UserService {
   private httpOptions = <any>{};
+
+  // Nuevo: BehaviorSubject para el usuario
+  private currentUserSubject = new BehaviorSubject<User | null>(null);
+  public currentUser$ = this.currentUserSubject.asObservable();
 
   constructor(private httpClient: HttpClient) {
     this.httpOptions = {
@@ -22,11 +26,20 @@ export class UserService {
 
   getUserData(): Observable<User> {
     const URL: string = `${config.api.baseUrl}${config.api.users.me}`;
-    return this.httpClient.get<User>(URL);
+    return this.httpClient.get<User>(URL).pipe(
+      tap(user => this.currentUserSubject.next(user)) // actualizamos el BehaviorSubject
+    );
   }
 
   updateUserData(user: User): Observable<any> {
     const URL: string = `${config.api.baseUrl}${config.api.users.me}`;
-    return this.httpClient.patch(URL, user, this.httpOptions);
+    return this.httpClient.patch(URL, user, this.httpOptions).pipe(
+      tap(() => this.currentUserSubject.next(user)) // también actualizamos aquí
+    );
   }
+  logout() {
+    localStorage.removeItem('token');
+    this.currentUserSubject.next(null); // actualiza el observable
+  }
+
 }

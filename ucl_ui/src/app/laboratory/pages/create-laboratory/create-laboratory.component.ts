@@ -23,6 +23,7 @@ import { BookingService } from '../../services/booking.service';
 import { ProcedureToolsDialogComponent } from '../../components/procedure-tools-dialog/procedure-tools-dialog.component';
 import Handsontable from 'handsontable';
 import { forkJoin } from 'rxjs';
+import { Group } from 'src/app/core/auth/enums/group';
 
 @Component({
   selector: 'app-create-laboratory',
@@ -77,7 +78,16 @@ export class CreateLaboratoryComponent implements OnInit {
     this.parameters.valueChanges.subscribe(() => {
       this.syncSelectedOptionsWithParameters();
     });
-    this.getCurrentUserId();
+    this.userService.currentUser$.subscribe(user => {
+      if (!user || !(user.groups?.some(g => g.name === Group.Instructors))) {
+        this.toastr.info(
+        'You are not authorized to create a laboratory'
+      );
+      this.router.navigateByUrl('');
+      } else {
+        this.getCurrentUserId();
+      }
+    });
   }
 
   getCurrentUserId() {

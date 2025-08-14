@@ -30,7 +30,8 @@ def generate_unique_filename_file(instance, filename):
         instance_content = instance.media.read()
         field_name = "experiment_media"
     else:
-        raise ValueError("Instance must pertain to a model that have valid file field.")
+        raise ValueError(
+            "Instance must pertain to a model that have valid file field.")
 
     md5_hash = hashlib.md5(instance_content).hexdigest()
     _, ext = os.path.splitext(filename)
@@ -113,7 +114,7 @@ class Laboratory(models.Model):
 
 class Guide(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    title = models.CharField(max_length=50)
+    title = models.CharField(max_length=100)
     url = models.URLField(default=None)
     file = models.FileField(
         default=None,

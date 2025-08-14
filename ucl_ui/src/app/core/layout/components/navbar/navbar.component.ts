@@ -37,7 +37,7 @@ export class NavbarComponent implements OnInit {
   constructor(
     private router: Router,
     private breakPointObserver: BreakpointObserver,
-    private userService: UserService,
+    public userService: UserService,
     private dialogRef: MatDialog,
     private matIconRegistry: MatIconRegistry,
     private domSanitizer: DomSanitizer,
@@ -69,30 +69,19 @@ export class NavbarComponent implements OnInit {
     );
   }
 
-  ngOnInit(): void {
-    this.getUserData();
-    const token = localStorage.getItem('token');
-
-    if (token) {
-      this.userService.getUserData().subscribe(
-        (user) => {
-          user.groups!.forEach((group) => {
-            if (group.name === Group.Instructors) this.showLabsButton = true;
-          });
-          this.shownMenu = true;
-          this.cdRef.detectChanges(); 
-        },
-        (err) => {
-          this.shownMenu = false;
-          this.cdRef.detectChanges(); 
-        }
-      );
-    } else {
-      this.shownMenu = false;
-      this.showLabsButton = false;
-    }
+ngOnInit(): void {
+  const token = localStorage.getItem('token');
+  if (token) {
+    this.userService.getUserData().subscribe(); // solo para actualizar el BehaviorSubject al inicio
   }
 
+  this.userService.currentUser$.subscribe(user => {
+    this.user = user ?? { name: "", last_name: "", email: '' };
+    this.showLabsButton = user?.groups?.some(g => g.name === Group.Instructors) ?? false;
+    this.shownMenu = !!user;
+    this.cdRef.detectChanges();
+  });
+}
   getUserData() {
     this.userService.getUserData().subscribe((response) => {
       this.user = response;
@@ -165,11 +154,10 @@ export class NavbarComponent implements OnInit {
   }
 
   logout(): void {
-    localStorage.removeItem('token');
-    this.user = { name: "", last_name: "", email: '' };
-    this.shownMenu = false;
-    this.showLabsButton = false;
-    this.cdRef.detectChanges(); 
-    this.goToHome();
-  }
+  this.userService.logout();
+  this.user = { name: "", last_name: "", email: '' }; // opcional, solo para la variable local
+  this.shownMenu = false;
+  this.showLabsButton = false;
+  this.goToHome();
+}
 }

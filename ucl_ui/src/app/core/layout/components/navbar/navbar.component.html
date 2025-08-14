@@ -26,7 +26,7 @@
   <!-- Web menu -->
   <div *ngIf="shownMenu; else loginButtons">
 
-    <button mat-button class="navbar-button"
+    <button mat-button class="navbar-button" *ngIf="showLabsButton"
       (click)="goToCreateLab()">
       <mat-icon class="icon"
         svgIcon="add"
@@ -51,9 +51,9 @@
         matTooltip="My Profile"></mat-icon>
     </button>
 
-    <span *ngIf="!(isHandset | async)!.matches" mat-caption
-      class="vertical-center body1">
-      {{user.name || "" }}{{' ' + user.last_name || "" }}
+    <span *ngIf="!(isHandset | async)?.matches">
+      {{ (userService.currentUser$ | async)?.name }}
+      {{ (userService.currentUser$ | async)?.last_name }}
     </span>
 
     <button *ngIf="!(isHandset | async)!.matches" mat-button
