@@ -94,6 +94,13 @@ export class RegistrationComponent implements OnInit {
     })
   }
 
+  openSignIn(): void {
+    this.dialogRef.closeAll(); // Cierra el login
+    const dialogWidth = window.innerWidth < 1000 ? '75vw' : '35vw';
+    this.dialogRef.open(LoginComponent, { width: dialogWidth });
+  }
+  
+
   /*** Internal functions ***/
 
   /* Form manipulation */

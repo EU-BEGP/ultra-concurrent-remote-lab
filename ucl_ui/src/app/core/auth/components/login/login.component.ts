@@ -8,6 +8,8 @@ import { AuthService } from '../../services/auth.service';
 import { User } from '../../interfaces/user';
 import config from 'src/app/config.json'
 import { MatDialogRef } from '@angular/material/dialog';
+import { RegistrationComponent } from '../registration/registration.component';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-login',
@@ -29,6 +31,7 @@ export class LoginComponent implements OnInit {
     private toastr: ToastrService,
     private router: Router,
     private dialogRef: MatDialogRef<LoginComponent>,
+    private dialogRefChange: MatDialog,
   ) { }
 
   ngOnInit(): void { }
@@ -88,5 +91,11 @@ export class LoginComponent implements OnInit {
     else {
       this.router.navigateByUrl('');
     }
+  }
+
+  openSignUp(): void {
+    this.dialogRefChange.closeAll(); 
+    const dialogWidth = window.innerWidth < 1000 ? '75vw' : '35vw';
+    this.dialogRefChange.open(RegistrationComponent, { width: dialogWidth });
   }
 }
