@@ -6,6 +6,8 @@ import { LaboratoriesDialogComponent } from '../../components/laboratories-dialo
 import { MatDialog } from '@angular/material/dialog';
 import { LaboratoryService } from '../../services/laboratory.service';
 import { Laboratory } from '../../interfaces/laboratory';
+import { UserService } from 'src/app/core/auth/services/user.service';
+import { LoginComponent } from 'src/app/core/auth/components/login/login.component';
 
 @Component({
   selector: 'app-home',
@@ -20,6 +22,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     private toastr: ToastrService,
     private dialogRef: MatDialog,
+    private userService: UserService,
     private labService: LaboratoryService
   ) { 
   }
@@ -32,15 +35,32 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.route.params.subscribe(params => {
-      this.labId = params['id']; // Obtener el nuevo ID de la URL
+   this.route.params.subscribe(params => {
+    this.labId = params['id'];
+
+    if(this.labId){
+      const token = localStorage.getItem('token');
+    if (!token) {
+      this.toastr.info("You must log in to enter the Laboratory");
+       this.openLogin(); 
+      return;
+    }
+
+    this.userService.getUserData().subscribe(user => {
+      if (!user) {
+        this.toastr.info("You must log in to enter the Laboratory");
+         this.openLogin(); 
+        return;
+      }
       if (this.labId) {
         this.loadLabInfo();
       } else {
-        this.laboratory = undefined; // Limpiar datos si no hay ID
+        this.laboratory = undefined;
       }
+      });
+    }
+    
     });
-  
     this.breakpoint = (window.innerWidth <= 580) ? 2 : 1;
   }
   
@@ -85,5 +105,22 @@ loadLabInfo():void{
      })
      dialogRef.afterClosed().subscribe((res: any) => {
      })
+  }
+
+  openLogin() {
+  const dialogWidth = window.innerWidth < 1000 ? '75vw' : '35vw';
+  const dialogRef = this.dialogRef.open(LoginComponent, {
+    width: dialogWidth
+  });
+
+    dialogRef.afterClosed().subscribe((result) => {
+    if (result) { 
+      this.userService.getUserData().subscribe(user => {
+        if (user && this.labId) {
+          this.loadLabInfo(); 
+        }
+      });
+    }
+  });
   }
 }
