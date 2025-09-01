@@ -25,6 +25,7 @@ import Handsontable from 'handsontable';
 import { forkJoin } from 'rxjs';
 import { Group } from 'src/app/core/auth/enums/group';
 
+
 @Component({
   selector: 'app-create-laboratory',
   templateUrl: './create-laboratory.component.html',
@@ -70,30 +71,33 @@ export class CreateLaboratoryComponent implements OnInit {
   }
 
   ngOnInit(): void {
-
-    this.videoRowHeight = window.innerWidth <= 600 ? 340 : 380
-    this.breakpoint = Math.floor(window.innerWidth / 260);
-    this.breakpointVideo = Math.floor((window.innerWidth / 400) / 2);
-    this.breakpointOption = Math.floor(window.innerWidth / 400);
-    this.parameters.valueChanges.subscribe(() => {
-      this.syncSelectedOptionsWithParameters();
-    });
+  this.videoRowHeight = window.innerWidth <= 600 ? 340 : 380;
+  this.breakpoint = Math.floor(window.innerWidth / 260);
+  this.breakpointVideo = Math.floor((window.innerWidth / 400) / 2);
+  this.breakpointOption = Math.floor(window.innerWidth / 400);
+  this.parameters.valueChanges.subscribe(() => {
+    this.syncSelectedOptionsWithParameters();
+  });
+  
+  this.userService.getUserData().subscribe(() => {
     this.userService.currentUser$.subscribe(user => {
-      if (!user || !(user.groups?.some(g => g.name === Group.Instructors))) {
-        this.toastr.info(
-        'You are not authorized to create a laboratory'
-      );
-      this.router.navigateByUrl('');
+      if (!user) return; // 👈 ignorar el null inicial
+
+      if (!(user.groups?.some(g => g.name === Group.Instructors))) {
+        this.toastr.info('You are not authorized to create a laboratory');
+        this.router.navigateByUrl('');
       } else {
         this.getCurrentUserId();
       }
     });
-  }
+  });
+}
 
   getCurrentUserId() {
-    this.userService.getUserData().subscribe((response: User) => {
-      this.newLaboratory.get('info')?.get('instructor')?.setValue(response.id!);
-    });
+    const user = this.userService['currentUserSubject'].value; // valor actual del BehaviorSubject
+    if (user?.id) {
+      this.newLaboratory.get('info')?.get('instructor')?.setValue(user.id);
+    }
   }
   
   onResize(event: any): void {

@@ -4,6 +4,7 @@ import { Observable, BehaviorSubject, tap } from 'rxjs';
 
 import { User } from '../interfaces/user';
 import config from 'src/app/config.json';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root',
@@ -14,7 +15,7 @@ export class UserService {
   private currentUserSubject = new BehaviorSubject<User | null>(null);
   public currentUser$ = this.currentUserSubject.asObservable();
 
-  constructor(private httpClient: HttpClient) {
+  constructor(private httpClient: HttpClient,  private router: Router) {
     this.httpOptions = {
       headers: new HttpHeaders({
         'Content-Type': 'application/json',
@@ -37,9 +38,11 @@ export class UserService {
     );
   }
   logout() {
-    localStorage.removeItem('token');
-    this.currentUserSubject.next(null); 
-    window.location.href = '/';
+     localStorage.removeItem('token');
+    this.currentUserSubject.next(null);
+    this.router.navigate(['/']).then(() => {
+      window.location.reload();
+    });
   }
 
 }
