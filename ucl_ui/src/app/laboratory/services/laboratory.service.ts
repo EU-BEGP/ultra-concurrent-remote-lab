@@ -67,6 +67,11 @@ export class LaboratoryService {
     return this.http.get<Experiment[]>(`${config.api.baseUrl}ucl/laboratories/${id}/experiments/`);
   }
 
+
+   getExperimentCombinations(laboratoryId: string): Observable<any> {
+    return this.http.get(`${config.api.baseUrl}ucl/laboratories/${laboratoryId}/experiments/combinations/`);
+  }
+
   getExperimentByOptions(id_array: any, labId:string): Observable<any> {
     let params = new HttpParams();
     params = params.append('laboratory', labId)

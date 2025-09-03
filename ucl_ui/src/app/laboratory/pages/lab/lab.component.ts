@@ -29,7 +29,7 @@ import { SimpleInputDialogComponent } from '../../components/simple-input-dialog
 @Component({
   selector: 'app-lab',
   templateUrl: './lab.component.html',
-  styleUrls: ['./lab.component.css']
+  styleUrls: ['./lab.component.css'],
 })
 export class LabComponent implements OnInit {
 
@@ -45,11 +45,12 @@ export class LabComponent implements OnInit {
   laboratory_guides!: Guide[]
   labActivities!:any[]
   defaultImg = 'assets/emptyimage.jpeg';
-
+  availableExperimentsOpenState = false;
   userId :number | undefined 
   studentSession!: FormGroup;
   optionsList: any[] = []; 
   duplicateExperimentMessage = ''; 
+  experimentCombinations: any[] = [];
 
   timeSeriesData = [
     {
@@ -121,6 +122,27 @@ export class LabComponent implements OnInit {
     this.breakpoint = Math.floor(window.innerWidth / 200);
     this.breakpointParameter =  Math.floor(window.innerWidth / 400);
     this.createActivitiesArray()
+    this.loadExperimentCombinations()
+  }
+
+  loadExperimentCombinations() {
+     this.labService.getExperimentCombinations(this.id).subscribe({
+      next: (data) => {
+        this.experimentCombinations = data.map((exp: any) => {
+          const combinationLabel = exp.parameter_options
+            .map((opt: any) => `${opt.value}${opt.unit ? ' ' + opt.unit : ''}`)
+            .join(' - ');
+
+          return {
+            ...exp,
+            label: combinationLabel, // agregamos un string listo para mostrar
+          };
+        });
+      },
+      error: (err) => {
+        console.error('Error al obtener combinaciones', err);
+      }
+    });
   }
 
 
@@ -175,6 +197,15 @@ export class LabComponent implements OnInit {
     });
 
   }
+
+  openAvailableExperiments(){
+    this.availableExperimentsOpenState = true
+  }
+
+  getOptionValue(exp: any, parameterId: string): string {
+  const opt = exp.parameter_options.find((o: any) => o.parameter === parameterId);
+  return opt ? opt.value : '-';
+}
 
 
   addExperiment() {

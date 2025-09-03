@@ -126,6 +126,11 @@ mat-card-actions{
   transform: scale(1.2);
 }
 
+.info-icon{
+  color:#007CC3;
+  transform: scale(1.2);
+}
+
 .label{
   display: flex;
   align-items: center; 
@@ -159,6 +164,18 @@ mat-card-actions{
   margin-bottom: 0px; 
 }
 
+::ng-deep .mat-expansion-panel {
+  box-shadow: none !important;
+}
+
+::ng-deep .mat-expansion-panel-header {
+  padding: 0 !important;  
+}
+
+::ng-deep .mat-expansion-panel-body {
+  padding: 0 !important;  
+}
+
 .procedure-grid {
   display: grid;
   gap: 16px; 
@@ -186,4 +203,23 @@ mat-card-actions{
 
 ::ng-deep .mat-option.mat-selected:not(.mat-option-multiple):not(.mat-option-disabled){
   background: rgba(0, 0, 0, 0.5);
+}
+
+.experiment-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr); /* 3 columnas */
+  gap: 12px; /* espacio entre columnas/filas */
+}
+
+.experiment-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+}
+
+.experiment-table th,
+.experiment-table td {
+  border: 1px solid #ccc;
+  padding: 8px;
+  text-align: left;
 }

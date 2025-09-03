@@ -66,7 +66,8 @@ class ExperimentCreateView(generics.CreateAPIView):
 
             # Handle experiment media
             while True:
-                name = request.data.get(f"experiment_media[{index}][name]", None)
+                name = request.data.get(
+                    f"experiment_media[{index}][name]", None)
                 media_file = request.FILES.get(
                     f"experiment_media[{index}][media]", None
                 )
@@ -133,6 +134,20 @@ class ExperimentDetailView(generics.RetrieveUpdateDestroyAPIView):
         ]
     )
 )
+class ExperimentListByLaboratoryView(generics.ListAPIView):
+    """
+    LIST all existing experiments for a given laboratory
+    """
+
+    serializer_class = ExperimentSerializer
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = (IsAuthenticated,)
+
+    def get_queryset(self):
+        laboratory_id = self.kwargs.get("pk")
+        return Experiment.objects.filter(laboratory=laboratory_id)
+
+
 class ExperimentRetrieveByOptionIdsView(generics.RetrieveAPIView):
     """
     RETRIEVE an experiment based on the combination of options ids
@@ -159,7 +174,8 @@ class ExperimentRetrieveByOptionIdsView(generics.RetrieveAPIView):
         try:
             id_set = {uuid.UUID(id) for id in ids}
         except ValueError:
-            raise ValidationError("One or more provided option IDs are invalid.")
+            raise ValidationError(
+                "One or more provided option IDs are invalid.")
 
         experiments = Experiment.objects.filter(laboratory=laboratory)
         matching_experiment = None

@@ -124,10 +124,68 @@
 
                                     </ng-template>
 
-                                    <span mat-caption
-                                        class="input-label header3 mt-16 accent">
-                                        Experiment Settings </span>
-                                    <div formGroupName=optionsGroup>
+                                    <mat-expansion-panel hideToggle>
+                                        <mat-expansion-panel-header>
+                                            <mat-panel-title>
+                                                <span mat-caption
+                                                    class="label header3 mt-16 mb-16 accent">
+                                                    Experiment Settings <button
+                                                        type="button"
+                                                        mat-button
+                                                        class="center"
+                                                        (click)="openAvailableExperiments()">
+                                                        <mat-icon
+                                                            class="info-icon"
+                                                            matTooltip="Available Experiments">info</mat-icon>
+                                                    </button>
+                                                </span>
+                                            </mat-panel-title>
+
+                                        </mat-expansion-panel-header>
+                                        <div>
+                                            <mat-label
+                                                class="header3">Available
+                                                Experiments:</mat-label>
+                                            <table
+                                                class="experiment-table mt-16 mb-16">
+                                                <thead>
+                                                    <tr class="header3 primary">
+                                                        <th>#</th>
+                                                        <th>Experiment</th>
+                                                        <th>#</th>
+                                                        <th>Experiment</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <ng-container
+                                                        *ngFor="let exp of experimentCombinations; let i = index">
+                                                        <tr *ngIf="i % 2 === 0"
+                                                            class="header3">
+                                                            <!-- Primera columna -->
+                                                            <td>{{ i + 1 }}</td>
+                                                            <td>{{
+                                                                experimentCombinations[i].label
+                                                                }}</td>
+
+                                                            <!-- Segunda columna, solo si existe -->
+                                                            <td
+                                                                *ngIf="experimentCombinations[i + 1]">{{
+                                                                i + 2 }}</td>
+                                                            <td
+                                                                *ngIf="experimentCombinations[i + 1]">
+                                                                {{
+                                                                experimentCombinations[i
+                                                                + 1].label }}
+                                                            </td>
+                                                        </tr>
+                                                    </ng-container>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </mat-expansion-panel>
+
+                                    <div formGroupName=optionsGroup
+                                        class="mt-16">
                                         <mat-grid-list
                                             [cols]="breakpointParameter"
                                             [gutterSize]="'16px'"

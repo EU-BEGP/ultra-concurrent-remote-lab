@@ -58,6 +58,8 @@ import { ConfirmationDialogComponent } from './laboratory/components/confirmatio
 import { SimpleInputDialogComponent } from './laboratory/components/simple-input-dialog/simple-input-dialog.component';
 import { ManageLabComponent } from './laboratory/pages/manage-lab/manage-lab.component';
 
+import {MatExpansionModule} from '@angular/material/expansion';
+
 PlotlyModule.plotlyjs = PlotlyJS;
 
 @NgModule({
@@ -115,7 +117,8 @@ PlotlyModule.plotlyjs = PlotlyJS;
     NgxMatFileInputModule,
     HotTableModule,
     PlotlyModule,
-    YouTubePlayerModule
+    YouTubePlayerModule,
+    MatExpansionModule
   ],
   providers: [
     CookieService,

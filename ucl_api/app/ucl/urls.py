@@ -91,6 +91,11 @@ urlpatterns = [
         name="experiment_activities",
     ),
     path(
+        "laboratories/<uuid:pk>/experiments/combinations/",
+        experiment_views.ExperimentListByLaboratoryView.as_view(),
+        name="experiment-combinations",
+    ),
+    path(
         "options/<uuid:pk>/",
         option_views.RetrieveUpdateDestroyOptionView.as_view(),
         name="option_detail",
