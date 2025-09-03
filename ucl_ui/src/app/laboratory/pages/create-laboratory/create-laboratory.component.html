@@ -451,7 +451,7 @@
                                                 <mat-card
                                                     class="video-card mat-elevation-z4"
                                                     [formGroupName]="videoIndex"
-                                                    [ngClass]="{'error-border': video.get('file')?.hasError('required') && (video.get('video')?.touched || video.get('video')?.dirty)}">
+                                                    [ngClass]="{'error-border': video.get('file')?.hasError('required') && (video.get('media')?.touched || video.get('media')?.dirty)}">
                                                     <!-- Renderiza el video si es un video -->
                                                     <app-video-player
                                                         *ngIf="isVideo(video.value.media)"
@@ -469,7 +469,7 @@
                                                     <mat-card-content
                                                         class="mt-8">
                                                         <p
-                                                            *ngIf="video.get('file')?.hasError('required') && (video.get('video')?.touched || video.get('video')?.dirty)"
+                                                            *ngIf="video.get('file')?.hasError('required') && (video.get('media')?.touched || video.get('media')?.dirty)"
                                                             class="error-message">
                                                             Please upload a
                                                             video file.

@@ -53,7 +53,8 @@
                             <div
                                 *ngFor="let activity of experiment.activities; index as activityIndex">
                                 <span mat-caption
-                                    class="input-label header3 primary">
+                                    class="input-label header3 primary"
+                                    style="word-wrap: break-word; white-space: normal;">
                                     {{ activityIndex + 1 }}.{{ ' ' +
                                     activity.statement }}
                                 </span>
@@ -146,7 +147,8 @@
                             *ngFor="let activity of mergedLabActivities; index as activityIndex"
                             class="mt-24">
                             <span mat-caption
-                                class="input-label header3 accent">
+                                class="input-label header3 primary"
+                                style="word-wrap: break-word; white-space: normal;">
                                 {{ activityIndex + 1 }}.{{ ' ' +
                                 activity.statement }}
                             </span>
