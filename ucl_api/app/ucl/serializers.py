@@ -34,7 +34,8 @@ class LaboratorySerializer(serializers.ModelSerializer):
 class GuideSerializer(serializers.ModelSerializer):
     class Meta:
         model = Guide
-        fields = ["id", "title", "url", "file", "laboratory", "registration_date"]
+        fields = ["id", "title", "url", "file",
+                  "laboratory", "registration_date"]
 
 
 class OptionSerializer(serializers.ModelSerializer):
@@ -122,6 +123,7 @@ class ActivitySerializer(serializers.ModelSerializer):
             "statement",
             "expected_result",
             "result_unit",
+            "possible_answers",
             "registration_date",
             "experiment",
             "laboratory",

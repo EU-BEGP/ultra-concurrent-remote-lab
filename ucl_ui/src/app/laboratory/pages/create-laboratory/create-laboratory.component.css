@@ -206,6 +206,10 @@ img{
       grid-template-columns:  1fr;
     }
   }
+
+:host ::ng-deep .my-custom-field .mat-form-field-wrapper {
+  padding-bottom: 0 !important;
+}
   
 
 

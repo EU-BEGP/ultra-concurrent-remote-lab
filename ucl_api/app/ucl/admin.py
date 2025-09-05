@@ -31,7 +31,8 @@ class LaboratoryAdmin(admin.ModelAdmin):
 
 class GuideAdmin(admin.ModelAdmin):
     ordering = ["id"]
-    list_display = ["id", "title", "URL", "file", "laboratory", "registration_date"]
+    list_display = ["id", "title", "URL", "file",
+                    "laboratory", "registration_date"]
 
 
 class ParameterAdmin(admin.ModelAdmin):
@@ -76,6 +77,7 @@ class ActivityAdmin(admin.ModelAdmin):
         "result_unit",
         "experiment",
         "laboratory",
+        "possible_answers",
         "registration_date",
     ]
 

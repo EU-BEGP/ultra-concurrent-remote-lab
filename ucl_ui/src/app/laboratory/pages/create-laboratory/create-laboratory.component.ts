@@ -165,6 +165,7 @@ export class CreateLaboratoryComponent implements OnInit {
           id: [uuidv4()],
           statement:  this.builder.control('', Validators.required),
           procedures: this.builder.array([]),
+          possible_answers: this.builder.array([]),
           result: [''],
           result_unit: ['']
         })
@@ -176,6 +177,7 @@ export class CreateLaboratoryComponent implements OnInit {
         id: [uuidv4()],
         statement:  this.builder.control('', Validators.required),
         procedures: this.builder.array([]),
+        possible_answers: this.builder.array([]),
         result: [''],
         result_unit: ['']
       })
@@ -320,6 +322,7 @@ export class CreateLaboratoryComponent implements OnInit {
           statement:  this.builder.control('', Validators.required),
           result: [''],
           procedures: this.builder.array([]),
+          possible_answers: this.builder.array([]),
           result_unit: ['']
         })
       ]),
@@ -376,6 +379,7 @@ export class CreateLaboratoryComponent implements OnInit {
     const activityFormGroup = this.builder.group({
       statement:  this.builder.control('', Validators.required),
       procedures: this.builder.array([]),
+      possible_answers: this.builder.array([]),
       result: [''],
       result_unit: ['']
     })
@@ -399,6 +403,7 @@ export class CreateLaboratoryComponent implements OnInit {
       statement:  this.builder.control('', Validators.required),
       result: [''],
       procedures: this.builder.array([]),
+      possible_answers: this.builder.array([]),
       result_unit: ['']
     })
     this.activities.push(activityFormGroup)
@@ -419,6 +424,20 @@ export class CreateLaboratoryComponent implements OnInit {
 
   }
 
+  
+  addExperimentActivityPossibleAnswer(experimentIndex: number, activityIndex: number) {
+    const possible_answers_array = this.getExperimentActivityPossibleAnswers(experimentIndex, activityIndex);
+    
+    possible_answers_array.push(this.builder.control('', Validators.required),)
+
+  }
+
+  
+  getExperimentActivityPossibleAnswers(experimentIndex:number ,activityIndex: number) {
+    return this.getExperimentActivites(experimentIndex).at(activityIndex).get('possible_answers') as FormArray;
+  }
+
+
   onExperimentTableDataChange(experimentIndex: number, activityIndex: number, procedureIndex: number, newData: any) {
     const procedure = this.getExperimentActivityProcedures(experimentIndex, activityIndex).at(procedureIndex)
     if (procedure) {
@@ -431,6 +450,11 @@ export class CreateLaboratoryComponent implements OnInit {
   removeExperimentActivityProcedure(experimentIndex: number, activityIndex: number, procedureIndex: number) {
     const procedures = this.getExperimentActivityProcedures(experimentIndex, activityIndex);
     procedures.removeAt(procedureIndex);
+  }
+
+   removeExperimentActivityPossibleAnswers(experimentIndex: number, activityIndex: number, answerIndex: number) {
+    const answers = this.getExperimentActivityPossibleAnswers(experimentIndex, activityIndex);
+    answers.removeAt(answerIndex);
   }
 
   openProcedures(data : any){
@@ -470,6 +494,12 @@ export class CreateLaboratoryComponent implements OnInit {
     }));
   }
 
+   addPossibleAnswer(activityIndex: number) {
+    const answers = this.activities.at(activityIndex).get('possible_answers') as FormArray;
+    
+    answers.push(this.builder.control('', Validators.required),);
+  }
+
   getDataFile(index: number) {
     return this.experiments.at(index).get('data_file') as FormControl
   }
@@ -485,6 +515,15 @@ export class CreateLaboratoryComponent implements OnInit {
 
   getFinalActivityProcedures(activityIndex: number) {
     return this.activities.at(activityIndex).get('procedures') as FormArray;
+  }
+
+   getFinalActivityPossibleAnswers(activityIndex: number) {
+    return this.activities.at(activityIndex).get('possible_answers') as FormArray;
+  }
+
+  removePossibleAnswer(activityIndex: number, answerIndex: number) {
+    const possible_answers = this.getFinalActivityPossibleAnswers(activityIndex);
+    possible_answers.removeAt(answerIndex);
   }
   
   removeProcedure(activityIndex: number, procedureIndex: number) {
@@ -754,6 +793,7 @@ async getUrl(file: File, parameterIndex?: number, index?: number, source?: strin
             const activityFields = {
                 'statement': activity.statement,
                 'procedures': activity.procedures,
+                'possible_answers': activity.possible_answers,
                 'expected_result': activity.result,
                 'result_unit': activity.result_unit,
                 'experiment': experiment.id
@@ -787,6 +827,7 @@ async getUrl(file: File, parameterIndex?: number, index?: number, source?: strin
       const activityFields = {
         'statement': activity.statement,
         'procedures': activity.procedures,
+        'possible_answers': activity.possible_answers,
         'expected_result': activity.result,
         'result_unit': activity.result_unit,
         'laboratory': this.newLaboratory.value.id,

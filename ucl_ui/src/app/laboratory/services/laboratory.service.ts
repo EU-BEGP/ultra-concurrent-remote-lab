@@ -176,6 +176,10 @@ export class LaboratoryService {
       });
     }
 
+    if (activity.possible_answers && activity.possible_answers.length > 0) {
+
+    formData.append('possible_answers', JSON.stringify(activity.possible_answers));
+    }
 
     return this.http.post<Activity>(`${config.api.baseUrl}ucl/activities/`, formData);
   }
@@ -204,6 +208,12 @@ export class LaboratoryService {
         formData.append(`procedures[${index}][data_headers]`, JSON.stringify(procedure.data_headers));
         formData.append(`procedures[${index}][data]`, JSON.stringify(procedure.data));
       });
+    }
+
+     if (activity.possible_answers && activity.possible_answers.length > 0) {
+
+
+    formData.append('possible_answers', JSON.stringify(activity.possible_answers));
     }
 
 

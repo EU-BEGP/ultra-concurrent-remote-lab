@@ -215,6 +215,8 @@ class Activity(models.Model):
     result_unit = models.CharField(max_length=20, null=True, default=None)
     registration_date = models.DateTimeField(auto_now_add=True)
 
+    possible_answers = models.JSONField(default=list, blank=True, null=True)
+
     experiment = models.ForeignKey(
         Experiment,
         related_name="experiment_activities",

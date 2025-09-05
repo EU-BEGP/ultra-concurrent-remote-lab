@@ -9,7 +9,7 @@
 
         <mat-card-content>
             <form [formGroup]="newLaboratory" (ngSubmit)="onSubmit()">
-                <mat-stepper [linear]="true"
+                <mat-stepper [linear]="false"
                     [orientation]="(stepperOrientation | async)!">
                     <div formGroupName="info">
                         <mat-step label="Laboratory Info"
@@ -625,8 +625,45 @@
                                                 </div>
 
                                                 <span mat-caption
+                                                    class="input-label header3 vertical-center">
+                                                    Possible Answers (Optional)
+                                                    <button
+                                                        type="button"
+                                                        mat-button
+                                                        (click)="addExperimentActivityPossibleAnswer(i, activityIndex)">
+                                                        <mat-icon
+                                                            class="add-new bigger-icon"
+                                                            matTooltip="Add Option">add_circle</mat-icon>
+                                                    </button>
+                                                </span>
+                                                <div
+                                                    formArrayName="possible_answers">
+
+                                                    <div style="display: flex"
+                                                        class="mb-16"
+                                                        *ngFor="let answer of getExperimentActivityPossibleAnswers(i, activityIndex).controls; index as answerIndex">
+                                                        <mat-form-field
+                                                            class="my-custom-field input-field"
+                                                            appearance="outline">
+                                                            <input matInput
+                                                                placeholder="Answer"
+                                                                [formControlName]="answerIndex"
+                                                                required>
+
+                                                        </mat-form-field>
+                                                        <button type="button"
+                                                            mat-button
+                                                            (click)="removeExperimentActivityPossibleAnswers(i,activityIndex, answerIndex)">
+                                                            <mat-icon
+                                                                class="bigger-icon accent"
+                                                                matTooltip="Delete Activity">delete</mat-icon>
+                                                        </button>
+                                                    </div>
+                                                </div>
+
+                                                <span mat-caption
                                                     class="input-label header3">
-                                                    Expected Result
+                                                    Correct Answer
                                                     (Optional)
                                                 </span>
                                                 <mat-form-field
@@ -772,8 +809,45 @@
                                 </div>
 
                                 <span mat-caption
+                                    class="input-label header3 vertical-center">
+                                    Possible Answers (Optional)
+                                    <button
+                                        type="button"
+                                        mat-button
+                                        (click)="addPossibleAnswer(i)">
+                                        <mat-icon
+                                            class="add-new bigger-icon"
+                                            matTooltip="Add Option">add_circle</mat-icon>
+                                    </button>
+                                </span>
+                                <div
+                                    formArrayName="possible_answers">
+
+                                    <div style="display: flex"
+                                        class="mb-16"
+                                        *ngFor="let answer of getFinalActivityPossibleAnswers(i).controls; index as answerIndex">
+                                        <mat-form-field
+                                            class="my-custom-field input-field"
+                                            appearance="outline">
+                                            <input matInput
+                                                placeholder="Answer"
+                                                [formControlName]="answerIndex"
+                                                required>
+
+                                        </mat-form-field>
+                                        <button type="button"
+                                            mat-button
+                                            (click)="removePossibleAnswer(i, answerIndex)">
+                                            <mat-icon
+                                                class="bigger-icon accent"
+                                                matTooltip="Delete Activity">delete</mat-icon>
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <span mat-caption
                                     class="input-label header3">
-                                    Expected Result (Optional) </span>
+                                    Correct Answer (Optional) </span>
                                 <mat-form-field class="input-field pr-8"
                                     appearance="outline"
                                     style="width: 75%">

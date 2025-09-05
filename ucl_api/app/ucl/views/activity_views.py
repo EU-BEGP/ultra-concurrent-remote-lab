@@ -5,6 +5,7 @@ from rest_framework.response import Response
 from ucl.models import Activity, Procedure
 from ucl.permissions import ApplicationPermissionManager
 from ucl.serializers import ActivitySerializer
+import json
 
 
 class CreateActivityView(generics.CreateAPIView):
@@ -30,7 +31,18 @@ class CreateActivityView(generics.CreateAPIView):
                 "laboratory": request.data.get("laboratory"),
             }
 
-            # Create experiment
+            # 🔥 Parse possible_answers si llega en la request
+            possible_answers = request.data.get("possible_answers")
+
+            if possible_answers:
+                try:
+                    parsed_answers = json.loads(possible_answers)
+                    cleaned_data["possible_answers"] = parsed_answers
+                except Exception as e:
+                    # fallback: guarda el string directo (por si acaso)
+                    cleaned_data["possible_answers"] = possible_answers
+
+            # Create activity
             serializer = self.get_serializer(data=cleaned_data, partial=True)
             serializer.is_valid(raise_exception=True)
             activity = serializer.save()
@@ -42,7 +54,8 @@ class CreateActivityView(generics.CreateAPIView):
             while True:
                 proc_data = request.data.get(f"procedures[{index}][data]")
                 proc_type = request.data.get(f"procedures[{index}][data_type]")
-                proc_headers = request.data.get(f"procedures[{index}][data_headers]")
+                proc_headers = request.data.get(
+                    f"procedures[{index}][data_headers]")
 
                 if not proc_type or not proc_data:
                     index = 0
