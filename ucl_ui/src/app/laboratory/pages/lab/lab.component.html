@@ -376,7 +376,49 @@
                                                     Answer
                                                 </span>
 
-                                                <div style="display: flex">
+                                                <div style="display: flex"
+                                                    *ngIf="activity.value.possible_answers && activity.value.possible_answers.length > 0">
+
+                                                    <mat-chip-list
+                                                        style="width: 85%"
+                                                        class="mat-mdc-chip-set-stacked"
+                                                        aria-label="Possible Answers">
+
+                                                        <mat-chip
+                                                            style="width: 15%"
+                                                            class="center header3"
+                                                            *ngFor="let answer of activity.value.possible_answers"
+                                                            selectable="true"
+                                                            [selected]="activity.get('result')?.value === answer"
+                                                            (click)="activity.get('result')?.setValue(answer)">
+                                                            {{ answer }}
+                                                        </mat-chip>
+                                                        <span
+                                                            *ngIf="activity.value.expected_result"
+                                                            style="width: 15%; align-items: center;"
+                                                            class="ml-16 input-label body1 vertical-center">
+                                                            {{activity.value.result_unit}}
+                                                            <mat-icon
+                                                                style="height: 36px;"
+                                                                *ngIf="activity.value.result && activity.value.result == activity.value.expected_result"
+                                                                class="ml-16 success vertical-center bigger-icon"
+                                                                matTooltip="Right Answer">check</mat-icon>
+                                                            <mat-icon
+                                                                style="height: 36px;"
+                                                                *ngIf="activity.value.result && activity.value.result != activity.value.expected_result"
+                                                                class="ml-16 error vertical-center bigger-icon"
+                                                                matTooltip="Wrong Answer">close</mat-icon>
+                                                        </span>
+
+                                                    </mat-chip-list>
+                                                </div>
+
+                                                <div
+                                                    *ngIf="!activity.value.possible_answers
+                                                    ||
+                                                    activity.value.possible_answers.length
+                                                    === 0"
+                                                    style="display: flex">
                                                     <mat-form-field
                                                         style="width: 85%"
                                                         class="input-field pr-8"
@@ -404,6 +446,7 @@
                                                             matTooltip="Wrong Answer">close</mat-icon>
                                                     </span>
                                                 </div>
+
                                             </div>
                                         </div>
                                     </div>
@@ -480,7 +523,48 @@
                                     class="input-label header3 vertical-center primary">
                                     Answer
                                 </span>
-                                <div style="display: flex">
+
+                                <div style="display: flex"
+                                    *ngIf="activity.value.possible_answers && activity.value.possible_answers.length > 0">
+
+                                    <mat-chip-list
+                                        style="width: 85%"
+                                        class="mat-mdc-chip-set-stacked"
+                                        aria-label="Possible Answers">
+
+                                        <mat-chip
+                                            style="width: 15%"
+                                            class="center header3"
+                                            *ngFor="let answer of activity.value.possible_answers"
+                                            selectable="true"
+                                            [selected]="activity.get('result')?.value === answer"
+                                            (click)="activity.get('result')?.setValue(answer)">
+                                            {{ answer }}
+                                        </mat-chip>
+                                        <span
+                                            *ngIf="activity.value.expected_result"
+                                            style="width: 15%; align-items: center;"
+                                            class="ml-16 input-label body1 vertical-center">
+                                            {{activity.value.result_unit}}
+                                            <mat-icon
+                                                style="height: 36px;"
+                                                *ngIf="activity.value.result && activity.value.result == activity.value.expected_result"
+                                                class="ml-16 success vertical-center bigger-icon"
+                                                matTooltip="Right Answer">check</mat-icon>
+                                            <mat-icon
+                                                style="height: 36px;"
+                                                *ngIf="activity.value.result && activity.value.result != activity.value.expected_result"
+                                                class="ml-16 error vertical-center bigger-icon"
+                                                matTooltip="Wrong Answer">close</mat-icon>
+                                        </span>
+
+                                    </mat-chip-list>
+                                </div>
+                                <div style="display: flex"
+                                    *ngIf="!activity.value.possible_answers
+                                                    ||
+                                                    activity.value.possible_answers.length
+                                                    === 0">
                                     <mat-form-field
                                         style="width: 85%"
                                         class="input-field pr-8"

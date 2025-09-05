@@ -223,3 +223,11 @@ mat-card-actions{
   padding: 8px;
   text-align: left;
 }
+
+::ng-deep .mat-chip-list-wrapper {
+  margin: 0 !important;
+}
+
+.mat-mdc-chip-set {
+  max-width: 200px;
+}

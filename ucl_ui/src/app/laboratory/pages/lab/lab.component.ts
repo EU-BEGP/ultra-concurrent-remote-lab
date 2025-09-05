@@ -328,7 +328,6 @@ export class LabComponent implements OnInit {
     const experimentActivities = await this.getActivitiesByExperimentId(experimentData.id)
       
       experimentActivities.forEach((activity: any) => {
-        console.log(activity)
         activityArray.push(this.builder.group({
           id: [activity.id],
           statement: [activity.statement],
@@ -384,7 +383,6 @@ export class LabComponent implements OnInit {
     activityArray.clear(); // Limpia las actividades actuales
     this.labActivities = await this.getLabActivities();
     this.labActivities.forEach((activity: any) => {
-       console.log(activity)
       activityArray.push(this.builder.group({
         id: [activity.id],
         statement: [activity.statement],
