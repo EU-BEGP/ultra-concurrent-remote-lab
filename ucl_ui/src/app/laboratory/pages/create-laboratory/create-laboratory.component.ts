@@ -160,16 +160,7 @@ export class CreateLaboratoryComponent implements OnInit {
         file: this.builder.control('', this.fileRequiredValidator()),
         youtube_video:[''],
       })]),
-      activities: new FormArray([
-        this.builder.group({
-          id: [uuidv4()],
-          statement:  this.builder.control('', Validators.required),
-          procedures: this.builder.array([]),
-          possible_answers: this.builder.array([]),
-          result: [''],
-          result_unit: ['']
-        })
-      ]),
+      activities: this.builder.array([]),
       data_file: this.builder.control('')
     })]),
     activities: this.builder.array([

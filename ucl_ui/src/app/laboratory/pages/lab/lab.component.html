@@ -312,6 +312,7 @@
                                         </span>
 
                                         <div
+                                            *ngIf="(getActivities(experiment)?.controls?.length || 0) > 0"
                                             formArrayName="experiment_activities">
                                             <span mat-caption
                                                 class="input-label header3 mt-16 accent">
