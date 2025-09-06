@@ -22,7 +22,7 @@
 
             <div class="activities-container">
                 <!-- Experiments Card -->
-                <mat-card class="activities-card">
+                <mat-card class="activities-card" *ngIf="hasAtLeastOneActivity">
                     <mat-card-title class="dialog-title">
                         <span class="header2">Experiment</span>
                         <span class="header2">Activities</span>
@@ -49,6 +49,7 @@
                                 </ng-container>
                             </div>
                             <span mat-caption
+                                *ngIf="experiment.activites && experiment.activities.length > 0"
                                 class="input-label header3 vertical-center">Activities</span>
                             <div
                                 *ngFor="let activity of experiment.activities; index as activityIndex">

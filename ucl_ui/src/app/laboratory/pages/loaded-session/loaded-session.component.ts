@@ -26,6 +26,7 @@ export class LoadedSessionComponent implements OnInit {
   solvedActivities!:any[]
   mergedExperiments!:any[]
   testData:any[]=[[1,2,3],[1,2,3]]
+  hasAtLeastOneActivity:boolean=false
   timeSeriesData = [
     {
       name: 'Experiment A',
@@ -165,6 +166,13 @@ export class LoadedSessionComponent implements OnInit {
             const bSolved = b.activities.some((activity: any) => activity.solved);
             return bSolved - aSolved; // Sort so that solved ones come first
           });
+
+           // Boolean: al menos un experimento tiene actividad
+          this.hasAtLeastOneActivity = this.labExperiments.some(
+            (experiment: any) => experiment.activities && experiment.activities.length > 0
+          );
+
+      
         } catch (e) {
           console.log(e);
           this.toastr.error('There was an error processing the activities. Please try again later.');
