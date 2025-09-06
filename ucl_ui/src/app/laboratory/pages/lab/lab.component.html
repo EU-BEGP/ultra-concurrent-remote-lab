@@ -339,6 +339,13 @@
                                                                 class="add-new bigger-icon"
                                                                 matTooltip="Add Procedure">add_circle</mat-icon>
                                                         </button>
+                                                        <p
+                                                            *ngIf="activity.get('procedures')?.errors?.['minLengthArray'] &&
+         (activity.get('procedures')?.touched || activity.get('procedures')?.dirty)"
+                                                            class="error-message body1">
+                                                            Please add at least
+                                                            one procedure
+                                                        </p>
                                                     </span>
                                                     <div class="procedure-grid">
                                                         <ng-container
@@ -488,6 +495,13 @@
                                                 class="add-new bigger-icon"
                                                 matTooltip="Add Procedure">add_circle</mat-icon>
                                         </button>
+                                        <p
+                                            *ngIf="activity.get('procedures')?.errors?.['minLengthArray'] &&
+         (activity.get('procedures')?.touched || activity.get('procedures')?.dirty)"
+                                            class="error-message body1">
+                                            Please add at least
+                                            one procedure
+                                        </p>
                                     </span>
 
                                     <div class="procedure-grid">

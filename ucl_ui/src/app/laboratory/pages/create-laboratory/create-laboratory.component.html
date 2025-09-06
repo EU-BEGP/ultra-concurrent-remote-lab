@@ -593,6 +593,7 @@
                                                                 class="add-new bigger-icon"
                                                                 matTooltip="Add Procedure">add_circle</mat-icon>
                                                         </button>
+
                                                     </span>
                                                     <div class="procedure-grid">
                                                         <ng-container
@@ -624,6 +625,13 @@
                                                     </div>
 
                                                 </div>
+
+                                                <mat-checkbox
+                                                    class="header3 mb-16"
+                                                    formControlName="is_procedure_mandatory">
+                                                    Make procedure
+                                                    mandatory
+                                                </mat-checkbox>
 
                                                 <span mat-caption
                                                     class="input-label header3 vertical-center">
@@ -808,6 +816,12 @@
                                         </ng-container>
                                     </div>
                                 </div>
+                                <mat-checkbox
+                                    class="header3 mb-16"
+                                    formControlName="is_procedure_mandatory">
+                                    Make procedure
+                                    mandatory
+                                </mat-checkbox>
 
                                 <span mat-caption
                                     class="input-label header3 vertical-center">

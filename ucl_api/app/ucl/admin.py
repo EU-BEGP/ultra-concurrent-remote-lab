@@ -78,6 +78,7 @@ class ActivityAdmin(admin.ModelAdmin):
         "experiment",
         "laboratory",
         "possible_answers",
+        "is_procedure_mandatory",
         "registration_date",
     ]
 

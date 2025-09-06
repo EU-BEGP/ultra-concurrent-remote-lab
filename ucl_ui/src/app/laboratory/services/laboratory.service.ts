@@ -161,6 +161,11 @@ export class LaboratoryService {
     if(activity.result_unit){
       formData.append('result_unit', activity.result_unit!);
     }
+
+    if(activity.is_procedure_mandatory){
+      formData.append('is_procedure_mandatory', activity.is_procedure_mandatory!);
+    }
+    
     
     if(activity.laboratory) formData.append('laboratory', activity.laboratory!);
     
@@ -195,11 +200,17 @@ export class LaboratoryService {
     if(activity.result_unit){
       formData.append('result_unit', activity.result_unit!);
     }
+
+     if(activity.is_procedure_mandatory){
+      formData.append('is_procedure_mandatory', activity.is_procedure_mandatory!);
+    }
+    
     
     if(activity.laboratory) formData.append('laboratory', activity.laboratory!);
     
 
     if(activity.experiment) formData.append('experiment', activity.experiment!);
+    
 
     if(activity.procedures.length > 0) {
       activity.procedures.forEach((procedure: any, index: number) => {

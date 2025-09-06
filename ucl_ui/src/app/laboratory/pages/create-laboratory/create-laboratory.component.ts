@@ -170,7 +170,8 @@ export class CreateLaboratoryComponent implements OnInit {
         procedures: this.builder.array([]),
         possible_answers: this.builder.array([]),
         result: [''],
-        result_unit: ['']
+        result_unit: [''],
+        is_procedure_mandatory: [false] 
       })
     ])
   })
@@ -181,6 +182,7 @@ export class CreateLaboratoryComponent implements OnInit {
       return file ? null : { required: true };
     };
   }
+  
 
   isVideo(media: any): boolean {
     
@@ -314,7 +316,8 @@ export class CreateLaboratoryComponent implements OnInit {
           result: [''],
           procedures: this.builder.array([]),
           possible_answers: this.builder.array([]),
-          result_unit: ['']
+          result_unit: [''],
+          is_procedure_mandatory: [false] 
         })
       ]),
       data_file: this.builder.control('')
@@ -372,7 +375,8 @@ export class CreateLaboratoryComponent implements OnInit {
       procedures: this.builder.array([]),
       possible_answers: this.builder.array([]),
       result: [''],
-      result_unit: ['']
+      result_unit: [''],
+      is_procedure_mandatory: [false] 
     })
     this.getExperimentActivites(index).push(activityFormGroup)
   }
@@ -395,7 +399,8 @@ export class CreateLaboratoryComponent implements OnInit {
       result: [''],
       procedures: this.builder.array([]),
       possible_answers: this.builder.array([]),
-      result_unit: ['']
+      result_unit: [''],
+      is_procedure_mandatory: [false] 
     })
     this.activities.push(activityFormGroup)
   }
@@ -787,6 +792,7 @@ async getUrl(file: File, parameterIndex?: number, index?: number, source?: strin
                 'possible_answers': activity.possible_answers,
                 'expected_result': activity.result,
                 'result_unit': activity.result_unit,
+                'is_procedure_mandatory': activity.is_procedure_mandatory,
                 'experiment': experiment.id
               }
 
@@ -821,6 +827,7 @@ async getUrl(file: File, parameterIndex?: number, index?: number, source?: strin
         'possible_answers': activity.possible_answers,
         'expected_result': activity.result,
         'result_unit': activity.result_unit,
+        'is_procedure_mandatory': activity.is_procedure_mandatory,
         'laboratory': this.newLaboratory.value.id,
       }
       this.labService.addActivities(activityFields).subscribe({

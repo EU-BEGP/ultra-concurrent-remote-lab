@@ -4,7 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import {map} from 'rxjs/operators';
 import {Observable} from 'rxjs';
 import {BreakpointObserver} from '@angular/cdk/layout';
-import { FormGroup, FormArray, FormBuilder, Validators, AbstractControl } from '@angular/forms';
+import { FormGroup, FormArray, FormBuilder, Validators, AbstractControl, ValidationErrors } from '@angular/forms';
 import { StepperOrientation } from '@angular/cdk/stepper';
 import { ToastrService } from 'ngx-toastr';
 import { MatSort} from '@angular/material/sort';
@@ -333,20 +333,34 @@ export class LabComponent implements OnInit {
           statement: [activity.statement],
           expected_result: [activity.expected_result],
           result: [''],  
-          procedures: this.builder.array(  
+          procedures: this.builder.array(
             activity.procedures 
-              ? activity.procedures.map((procedure: any) => this.builder.group({
-                  data: [JSON.parse(procedure.data)],
-                  data_headers:[JSON.parse(procedure.data_headers)],
-                  data_type: [procedure.data_type]
-                })) 
-              : [] 
+              ? activity.procedures.map((procedure: any) =>
+                  this.builder.group({
+                    data: [JSON.parse(procedure.data)],
+                    data_headers: [JSON.parse(procedure.data_headers)],
+                    data_type: [procedure.data_type]
+                  })
+                )
+              : [],
+            activity.is_procedure_mandatory ? [this.minLengthArray(1)] : null
           ),
+          is_procedure_mandatory:[activity.is_procedure_mandatory],
           possible_answers:[activity.possible_answers],
           result_unit: [activity.result_unit]
         }));
       });
 
+  }
+
+  minLengthArray(min: number) {
+    return (control: AbstractControl): ValidationErrors | null => {
+    const array = control.value;
+      if (Array.isArray(array) && array.length < min) {
+        return { minLengthArray: { requiredLength: min, actualLength: array.length } };
+      }
+    return null;
+    };
   }
 
   getActivitiesByExperimentId(id: any): Promise<any> {
@@ -388,15 +402,19 @@ export class LabComponent implements OnInit {
         statement: [activity.statement],
         expected_result: [activity.expected_result],
         result: [''],
-        procedures: this.builder.array(  
+        procedures: this.builder.array(
           activity.procedures 
-            ? activity.procedures.map((procedure: any) => this.builder.group({
-                data: [JSON.parse(procedure.data)],
-                data_headers:[JSON.parse(procedure.data_headers)],
-                data_type: [procedure.data_type]
-              })) 
-            : [] 
+            ? activity.procedures.map((procedure: any) =>
+                this.builder.group({
+                  data: [JSON.parse(procedure.data)],
+                  data_headers: [JSON.parse(procedure.data_headers)],
+                  data_type: [procedure.data_type]
+                })
+              )
+            : [],
+          activity.is_procedure_mandatory ? [this.minLengthArray(1)] : null
         ),
+        is_procedure_mandatory:[activity.is_procedure_mandatory],
         possible_answers:[activity.possible_answers],
         result_unit: [activity.result_unit]
       }));
@@ -554,7 +572,7 @@ export class LabComponent implements OnInit {
       });
   
       dialogRef.afterClosed().subscribe((result) => {
-        if (result !== undefined) {
+        if (result !== null && result !== undefined) {
           this.sessionName=result
           this.saveSession()
         }
@@ -564,6 +582,19 @@ export class LabComponent implements OnInit {
 
 
   onSubmit(): void {
+    this.experiments.controls.forEach((experimentCtrl: AbstractControl) => {
+      const activitiesArray = (experimentCtrl.get('experimentDetailsGroup') as FormGroup).get('experiment_activities') as FormArray;
+      activitiesArray.controls.forEach((activityCtrl: AbstractControl) => {
+        (activityCtrl.get('procedures') as FormArray).markAllAsTouched();
+      });
+    });
+
+    this.finalActivities.controls.forEach((activityCtrl: AbstractControl) => {
+      const proceduresArray = activityCtrl.get('procedures') as FormArray;
+      proceduresArray.markAllAsTouched(); // Marca todos los procedimientos como tocados
+    });
+
+
     if (this.studentSession.valid) {
     this.openNameDialog()
     } else {

@@ -217,6 +217,8 @@ class Activity(models.Model):
 
     possible_answers = models.JSONField(default=list, blank=True, null=True)
 
+    is_procedure_mandatory = models.BooleanField(default=False)
+
     experiment = models.ForeignKey(
         Experiment,
         related_name="experiment_activities",

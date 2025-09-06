@@ -29,6 +29,7 @@ class CreateActivityView(generics.CreateAPIView):
                 "result_unit": request.data.get("result_unit"),
                 "experiment": request.data.get("experiment"),
                 "laboratory": request.data.get("laboratory"),
+                "is_procedure_mandatory": request.data.get("is_procedure_mandatory", False),
             }
 
             # 🔥 Parse possible_answers si llega en la request

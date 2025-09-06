@@ -124,6 +124,7 @@ class ActivitySerializer(serializers.ModelSerializer):
             "expected_result",
             "result_unit",
             "possible_answers",
+            "is_procedure_mandatory",
             "registration_date",
             "experiment",
             "laboratory",
