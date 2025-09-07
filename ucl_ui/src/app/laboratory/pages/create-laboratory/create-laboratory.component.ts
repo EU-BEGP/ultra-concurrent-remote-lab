@@ -41,6 +41,7 @@ export class CreateLaboratoryComponent implements OnInit {
   breakpointVideo: any
   breakpointOption: any
   videoRowHeight: any
+  videoCaption:string=''
   defaultImg = 'assets/emptyimage.jpeg';
   defaultVideo = 'assets/emptyimage.jpeg';
   categories = [
@@ -51,7 +52,6 @@ export class CreateLaboratoryComponent implements OnInit {
     { name: 'Hydraulic Energy' },
     { name: 'Other' },
   ];
-
   currentUserId: any = 0;
 
   constructor(private builder: FormBuilder, 
@@ -70,47 +70,8 @@ export class CreateLaboratoryComponent implements OnInit {
   
   }
 
-  ngOnInit(): void {
-  this.videoRowHeight = window.innerWidth <= 600 ? 340 : 380;
-  this.breakpoint = Math.floor(window.innerWidth / 260);
-  this.breakpointVideo = Math.floor((window.innerWidth / 400) / 2);
-  this.breakpointOption = Math.floor(window.innerWidth / 400);
-  this.parameters.valueChanges.subscribe(() => {
-    this.syncSelectedOptionsWithParameters();
-  });
-  
-  this.userService.getUserData().subscribe(() => {
-    this.userService.currentUser$.subscribe(user => {
-      if (!user) return; // 👈 ignorar el null inicial
-
-      if (!(user.groups?.some(g => g.name === Group.Instructors))) {
-        this.toastr.info('You are not authorized to create a laboratory');
-        this.router.navigateByUrl('');
-      } else {
-        this.getCurrentUserId();
-      }
-    });
-  });
-}
-
-  getCurrentUserId() {
-    const user = this.userService['currentUserSubject'].value; // valor actual del BehaviorSubject
-    if (user?.id) {
-      this.newLaboratory.get('info')?.get('instructor')?.setValue(user.id);
-    }
-  }
-  
-  onResize(event: any): void {
-    this.breakpoint = Math.floor(event.target.innerWidth / 260);
-  }
-
-  onResizeParameter(event: any): void {
-    this.videoRowHeight = window.innerWidth <= 600 ? 340 : 380
-    this.breakpointOption = Math.floor(window.innerWidth / 400);
-    this.breakpointVideo = Math.floor((event.target.innerWidth / 400) / 2);
-  }
-
   newLaboratory = this.builder.group({
+    sameVideoCaption: this.builder.control<boolean>(false),  
     id: [uuidv4()],
     info: this.builder.group({
       instructor: 0,
@@ -155,7 +116,7 @@ export class CreateLaboratoryComponent implements OnInit {
       id: [uuidv4()],
       selectedOptions: new FormArray([this.builder.control('', Validators.required)]),
       videos: new FormArray([this.builder.group({
-        name: this.builder.control('', Validators.required),
+         name: this.builder.control('',Validators.required),
         media: [this.defaultImg],
         file: this.builder.control('', this.fileRequiredValidator()),
         youtube_video:[''],
@@ -175,6 +136,80 @@ export class CreateLaboratoryComponent implements OnInit {
       })
     ])
   })
+
+  ngOnInit(): void {
+  this.videoRowHeight = window.innerWidth <= 600 ? 340 : 380;
+  this.breakpoint = Math.floor(window.innerWidth / 260);
+  this.breakpointVideo = Math.floor((window.innerWidth / 400) / 2);
+  this.breakpointOption = Math.floor(window.innerWidth / 400);
+  this.parameters.valueChanges.subscribe(() => {
+    this.syncSelectedOptionsWithParameters();
+  });
+
+  this.sameVideoCaptionCtrl.valueChanges.subscribe((same: boolean) => {
+   this.initSameVideoCaption(same)
+  });
+  
+  
+  this.userService.getUserData().subscribe(() => {
+    this.userService.currentUser$.subscribe(user => {
+      if (!user) return; // 👈 ignorar el null inicial
+
+      if (!(user.groups?.some(g => g.name === Group.Instructors))) {
+        this.toastr.info('You are not authorized to create a laboratory');
+        this.router.navigateByUrl('');
+      } else {
+        this.getCurrentUserId();
+      }
+    });
+  });
+  }
+
+  initSameVideoCaption(same: boolean){
+  const experiments = this.newLaboratory.get('experiments') as FormArray;
+      if (experiments.length === 0) return;
+
+      const firstExperiment = experiments.at(0) as FormGroup;
+      const videos = firstExperiment.get('videos') as FormArray;
+
+      if (videos.length === 0) return;
+
+      const firstVideoName = videos.at(0).get('name')?.value;
+      this.videoCaption=firstVideoName
+
+      if (same && firstVideoName) {
+        experiments.controls.forEach(exp => {
+          const vids = exp.get('videos') as FormArray;
+          vids.controls.forEach(video => {
+            video.get('name')?.setValue(firstVideoName, { emitEvent: false });
+          });
+        });
+      }
+  }
+
+
+  get sameVideoCaptionCtrl(): FormControl<boolean> {
+    return this.newLaboratory.get('sameVideoCaption') as FormControl<boolean>;
+  }
+
+  getCurrentUserId() {
+    const user = this.userService['currentUserSubject'].value; // valor actual del BehaviorSubject
+    if (user?.id) {
+      this.newLaboratory.get('info')?.get('instructor')?.setValue(user.id);
+    }
+  }
+  
+  onResize(event: any): void {
+    this.breakpoint = Math.floor(event.target.innerWidth / 260);
+  }
+
+  onResizeParameter(event: any): void {
+    this.videoRowHeight = window.innerWidth <= 600 ? 340 : 380
+    this.breakpointOption = Math.floor(window.innerWidth / 400);
+    this.breakpointVideo = Math.floor((event.target.innerWidth / 400) / 2);
+  }
+
+  
 
   fileRequiredValidator(): ValidatorFn {
     return (control: AbstractControl): { [key: string]: any } | null => {
@@ -305,21 +340,15 @@ export class CreateLaboratoryComponent implements OnInit {
       id: [uuidv4()],
       selectedOptions: selectedOptionsArray,
       videos: new FormArray([this.builder.group({
-        name:  this.builder.control('', Validators.required),
+        name: this.builder.control(
+          this.sameVideoCaptionCtrl.value ? this.videoCaption : '', 
+          Validators.required
+        ),
         media: [this.defaultImg],
         file: this.builder.control('', this.fileRequiredValidator()),
         youtube_video:[''],
       })]),
-      activities: new FormArray([
-        this.builder.group({
-          statement:  this.builder.control('', Validators.required),
-          result: [''],
-          procedures: this.builder.array([]),
-          possible_answers: this.builder.array([]),
-          result_unit: [''],
-          is_procedure_mandatory: [false] 
-        })
-      ]),
+      activities: this.builder.array([]),
       data_file: this.builder.control('')
     }));
   }
@@ -353,7 +382,10 @@ export class CreateLaboratoryComponent implements OnInit {
 
   addVideo(index: number): void {
     const videoFormGroup = this.builder.group({
-      name:  this.builder.control('', Validators.required),
+      name: this.builder.control(
+          this.sameVideoCaptionCtrl.value ? this.videoCaption : '', 
+          Validators.required
+        ),
       media: [this.defaultImg],
       file: this.builder.control('', this.fileRequiredValidator()),
       youtube_video:[''],
@@ -495,6 +527,8 @@ export class CreateLaboratoryComponent implements OnInit {
     
     answers.push(this.builder.control('', Validators.required),);
   }
+
+
 
   getDataFile(index: number) {
     return this.experiments.at(index).get('data_file') as FormControl

@@ -475,9 +475,15 @@
                                                             video file.
                                                         </p>
                                                         <mat-label
-                                                            class="body mt-8">
+                                                            class="header3 mt-8">
                                                             Media
-                                                            Name</mat-label>
+                                                            Name <mat-checkbox
+                                                                *ngIf="videoIndex === 0 && i===0"
+                                                                class="body3"
+                                                                [formControl]="sameVideoCaptionCtrl">
+                                                                Same Caption for
+                                                                all
+                                                            </mat-checkbox></mat-label>
                                                         <mat-form-field
                                                             class="input-field"
                                                             appearance="outline">
@@ -486,6 +492,7 @@
                                                                 formControlName="name"
                                                                 required
                                                                 class="option-input">
+
                                                         </mat-form-field>
                                                         <mat-card-actions
                                                             class="video-actions">
