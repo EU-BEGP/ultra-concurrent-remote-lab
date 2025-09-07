@@ -51,6 +51,8 @@ export class LabComponent implements OnInit {
   optionsList: any[] = []; 
   duplicateExperimentMessage = ''; 
   experimentCombinations: any[] = [];
+  grade:number=0
+  hasAllExpectedResults: boolean = true;
 
   timeSeriesData = [
     {
@@ -396,7 +398,12 @@ export class LabComponent implements OnInit {
     const activityArray = this.studentSession.get('finalActivities') as FormArray;
     activityArray.clear(); // Limpia las actividades actuales
     this.labActivities = await this.getLabActivities();
+    this.hasAllExpectedResults = true; // reset
+
     this.labActivities.forEach((activity: any) => {
+      if (!activity.expected_result) {
+        this.hasAllExpectedResults = false;
+      }
       activityArray.push(this.builder.group({
         id: [activity.id],
         statement: [activity.statement],
@@ -419,6 +426,35 @@ export class LabComponent implements OnInit {
         result_unit: [activity.result_unit]
       }));
     });
+  activityArray.valueChanges.subscribe(() => {
+    this.calculateGrade();
+  });
+  
+}
+
+private calculateGrade() {
+  if (!this.hasAllExpectedResults) {
+    this.grade = 0;
+    return;
+  }
+  const activityArray = this.studentSession.get('finalActivities') as FormArray;
+  const activities = activityArray.value;
+
+  if (!activities || activities.length === 0) {
+    this.grade = 0;
+    return;
+  }
+
+  const pointsPerActivity = 100 / activities.length;
+  let total = 0;
+
+  activities.forEach((activity: any) => {
+    if (activity.result && activity.expected_result && activity.result === activity.expected_result) {
+      total += pointsPerActivity;
+    }
+  });
+
+  this.grade = Math.round(total);
 }
 
 

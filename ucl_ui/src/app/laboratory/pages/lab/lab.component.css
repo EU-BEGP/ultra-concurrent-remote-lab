@@ -231,3 +231,9 @@ mat-card-actions{
 .mat-mdc-chip-set {
   max-width: 200px;
 }
+
+.grading{
+  justify-content: flex-end;
+  display: flex;
+  margin: 0px 0px
+}

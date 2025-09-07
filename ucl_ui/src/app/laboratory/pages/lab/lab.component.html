@@ -476,7 +476,10 @@
 
                         <mat-step label="Final Activities"
                             [stepControl]="finalActivities">
-
+                            <span *ngIf="hasAllExpectedResults" mat-caption
+                                class="mt-16 grading input-label header1 vertical-center grading">
+                                Grade: {{grade}}/100
+                            </span>
                             <div
                                 *ngFor="let activity of finalActivities.controls; index as activityIndex"
                                 [formGroupName]="activityIndex"
@@ -609,6 +612,7 @@
                                 </div>
 
                             </div>
+
                             <mat-card-actions>
                                 <button type="button" mat-raised-button
                                     matStepperPrevious
