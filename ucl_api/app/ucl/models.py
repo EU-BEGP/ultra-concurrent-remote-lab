@@ -211,8 +211,10 @@ class MediaExperiment(models.Model):
 class Activity(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     statement = models.CharField(max_length=500)
-    expected_result = models.CharField(max_length=500, null=True, default=None)
-    result_unit = models.CharField(max_length=20, null=True, default=None)
+    expected_result = models.CharField(
+        max_length=500, null=True, blank=True, default=None)
+    result_unit = models.CharField(
+        max_length=20, null=True, blank=True, default=None)
     registration_date = models.DateTimeField(auto_now_add=True)
 
     possible_answers = models.JSONField(default=list, blank=True, null=True)
@@ -225,13 +227,13 @@ class Activity(models.Model):
         on_delete=models.CASCADE,
         null=True,
         default=None,
+        blank=True,
     )
     laboratory = models.ForeignKey(
         Laboratory,
         related_name="laboratory_activities",
         on_delete=models.CASCADE,
-        null=True,
-        default=None,
+        null=True, blank=True, default=None,
     )
 
     class Meta:
