@@ -1,3 +1,7 @@
+# Copyright (c) Universidad Privada Boliviana (UPB) - EU-BEGP
+# MIT License - See LICENSE file in the root directory
+# Andres Gamboa, Boris Pedraza, Alex Villazon, Omar Ormachea
+
 from django.contrib.auth.models import (
     AbstractBaseUser,
     BaseUserManager,
@@ -67,7 +71,8 @@ class User(AbstractBaseUser, PermissionsMixin):
     email_verification_code = models.CharField(
         max_length=6, unique=True, default=None, null=True
     )
-    email_expiration_time = models.DateTimeField(default=default_expiration_time)
+    email_expiration_time = models.DateTimeField(
+        default=default_expiration_time)
     name = models.CharField(max_length=255)
     last_name = models.CharField(max_length=255)
     is_active = models.BooleanField(default=True)

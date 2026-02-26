@@ -1,3 +1,7 @@
+# Copyright (c) Universidad Privada Boliviana (UPB) - EU-BEGP
+# MIT License - See LICENSE file in the root directory
+# Andres Gamboa, Boris Pedraza, Alex Villazon, Omar Ormachea
+
 from rest_framework import generics, status
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.exceptions import ValidationError
@@ -45,9 +49,12 @@ class CreateParameterView(generics.CreateAPIView):
                 if not option_id:
                     break  # No more options
 
-                option_value = request.data.get(f"parameter_options[{index}][value]")
-                option_unit = request.data.get(f"parameter_options[{index}][unit]")
-                image_file = request.FILES.get(f"parameter_options[{index}][image]")
+                option_value = request.data.get(
+                    f"parameter_options[{index}][value]")
+                option_unit = request.data.get(
+                    f"parameter_options[{index}][unit]")
+                image_file = request.FILES.get(
+                    f"parameter_options[{index}][image]")
 
                 # Validate option uuid
                 validate_uuid(option_id, Option)

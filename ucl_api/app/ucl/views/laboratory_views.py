@@ -1,3 +1,7 @@
+# Copyright (c) Universidad Privada Boliviana (UPB) - EU-BEGP
+# MIT License - See LICENSE file in the root directory
+# Andres Gamboa, Boris Pedraza, Alex Villazon, Omar Ormachea
+
 from drf_spectacular.utils import extend_schema_view, extend_schema, OpenApiParameter
 from rest_framework import generics, status
 from rest_framework.authentication import TokenAuthentication

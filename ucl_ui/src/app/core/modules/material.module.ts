@@ -1,3 +1,9 @@
+/*
+Copyright (c) Universidad Privada Boliviana (UPB) - EU-BEGP
+MIT License - See LICENSE file in the root directory
+Andres Gamboa, Boris Pedraza, Alex Villazon, Omar Ormachea
+*/
+
 import { NgModule } from '@angular/core';
 import {A11yModule} from '@angular/cdk/a11y';
 import { MatButtonModule } from '@angular/material/button';

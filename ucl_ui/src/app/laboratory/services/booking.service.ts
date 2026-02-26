@@ -1,3 +1,9 @@
+/*
+Copyright (c) Universidad Privada Boliviana (UPB) - EU-BEGP
+MIT License - See LICENSE file in the root directory
+Andres Gamboa, Boris Pedraza, Alex Villazon, Omar Ormachea
+*/
+
 import config from '../../config.json';
 import { HttpClient, HttpParams, HttpHeaders, HttpErrorResponse } from '@angular/common/http'; import { Observable, lastValueFrom, of } from 'rxjs';
 import { Injectable } from '@angular/core'

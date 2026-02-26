@@ -1,3 +1,7 @@
+# Copyright (c) Universidad Privada Boliviana (UPB) - EU-BEGP
+# MIT License - See LICENSE file in the root directory
+# Andres Gamboa, Boris Pedraza, Alex Villazon, Omar Ormachea
+
 from rest_framework import generics, status
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
@@ -38,7 +42,8 @@ class ListCreateSolvedActivityView(generics.ListCreateAPIView):
             while True:
                 proc_data = request.data.get(f"procedures[{index}][data]")
                 proc_type = request.data.get(f"procedures[{index}][data_type]")
-                proc_headers = request.data.get(f"procedures[{index}][data_headers]")
+                proc_headers = request.data.get(
+                    f"procedures[{index}][data_headers]")
 
                 if not proc_type or not proc_data:
                     index = 0

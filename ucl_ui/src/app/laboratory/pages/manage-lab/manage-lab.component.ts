@@ -1,3 +1,9 @@
+/*
+Copyright (c) Universidad Privada Boliviana (UPB) - EU-BEGP
+MIT License - See LICENSE file in the root directory
+Andres Gamboa, Boris Pedraza, Alex Villazon, Omar Ormachea
+*/
+
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { LaboratoryService } from '../../services/laboratory.service';
 import { SessionService } from '../../services/session.service';

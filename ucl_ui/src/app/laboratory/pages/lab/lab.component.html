@@ -318,6 +318,11 @@
                                                 class="input-label header3 mt-16 accent">
                                                 Activities
                                             </span>
+                                            <span *ngIf="hasAllExpectedResults"
+                                                mat-caption
+                                                class="mt-16 grading input-label header1 vertical-center grading">
+                                                Grade: {{grade}}/100
+                                            </span>
                                             <div
                                                 *ngFor="let activity of getActivities(experiment).controls; index as activityIndex"
                                                 [formGroupName]="activityIndex">

@@ -1,3 +1,7 @@
+# Copyright (c) Universidad Privada Boliviana (UPB) - EUBBC-Digital
+# MIT License - See LICENSE file in the root directory
+# Andres Gamboa, Boris Pedraza, Alex Villazon, Omar Ormachea
+
 import os
 from pathlib import Path
 
@@ -21,8 +25,10 @@ trusted_hosts = os.environ.get("TRUSTED_HOSTS", "*")
 ALLOWED_HOSTS = [origin.strip() for origin in trusted_hosts.split(",")]
 
 trusted_origins = os.environ.get("TRUSTED_ORIGINS", "*")
-CORS_ALLOWED_ORIGINS = [origin.strip() for origin in trusted_origins.split(",")]
-CSRF_TRUSTED_ORIGINS = [origin.strip() for origin in trusted_origins.split(",")]
+CORS_ALLOWED_ORIGINS = [origin.strip()
+                        for origin in trusted_origins.split(",")]
+CSRF_TRUSTED_ORIGINS = [origin.strip()
+                        for origin in trusted_origins.split(",")]
 
 # Application-specific settings
 
