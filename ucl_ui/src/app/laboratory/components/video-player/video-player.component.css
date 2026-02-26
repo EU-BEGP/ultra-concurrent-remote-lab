@@ -1,0 +1,38 @@
+
+.vg-controls {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    display: flex;
+    justify-content: flex-start; /* Alinea los controles a la izquierda */
+    transform-origin: bottom left; /* Escala desde la esquina inferior izquierda */
+  }
+
+  .loader-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.945); /* Fondo semitransparente */
+    z-index: 10; /* Para asegurarse de que se muestre sobre el video */
+}
+
+.loader {
+    border: 5px solid #f3f3f3;
+    border-top: 5px solid #203587;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    animation: spin 1s linear infinite;
+}
+
+
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}

@@ -1,16 +1,29 @@
 <app-navbar></app-navbar>
 <div>
-  <mat-tab-group mat-align-tabs="center">
-    <mat-tab label="Activity 1">
-      <div class="activity-content">
-        <div class="column">
-        </div>
-        <div class="column">
-        </div>
-      </div>
-    </mat-tab>
-    <mat-tab label="Activity 2">
-      Content for activity 2
-    </mat-tab>
-  </mat-tab-group>
+    <mat-card class="home-container">
+        <mat-card-content class="mat-card-content">
+            <video autoplay class="video" loop muted playsinline>
+                <source src="assets/Newton.mp4" type="video/mp4">
+            </video>
+            <div class="header-content">
+                <span *ngIf="laboratory"
+                    class="headerHome">{{laboratory.name}}</span>
+                <span *ngIf="!laboratory" class="headerHome">Ultra-Concurrent
+                    Remote Labs Builder</span>
+
+                <span *ngIf="laboratory" class="institution">by
+                    {{laboratory.institution}}</span>
+
+                <button *ngIf="laboratory" mat-raised-button color="primary"
+                    (click)="goToRemoteLab()" class="buttonsHome">
+                    Go to Remote Lab
+                </button>
+
+                <button *ngIf="!laboratory" mat-raised-button color="primary"
+                    (click)="createRemoteLab()" class="buttonsHome">
+                    Create a Remote Lab
+                </button>
+            </div>
+        </mat-card-content>
+    </mat-card>
 </div>

@@ -17,6 +17,16 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
+            "allowedCommonJsDependencies": [
+              "handsontable",
+              "core-js",
+              "moment",
+              "pikaday",
+              "plotly.js-dist-min",
+              "handsontable",
+              "dompurify",
+              "tiny-emitter"
+            ],
             "outputPath": "dist/ultra-concurrent-remote-lab",
             "index": "src/index.html",
             "main": "src/main.ts",
@@ -27,8 +37,10 @@
             ],
             "styles": [
               "src/theme.scss",
+              "node_modules/@videogular/ngx-videogular/fonts/videogular.css",
               "src/styles.css",
-              "node_modules/ngx-toastr/toastr.css"
+              "node_modules/ngx-toastr/toastr.css",
+              "node_modules/handsontable/dist/handsontable.full.css"
             ],
             "scripts": []
           },
@@ -37,13 +49,13 @@
               "budgets": [
                 {
                   "type": "initial",
-                  "maximumWarning": "4mb",
-                  "maximumError": "6mb"
+                  "maximumWarning": "7mb",
+                  "maximumError": "7mb"
                 },
                 {
                   "type": "anyComponentStyle",
-                  "maximumWarning": "2kb",
-                  "maximumError": "4kb"
+                  "maximumWarning": "1mb",
+                  "maximumError": "1mb"
                 }
               ],
               "fileReplacements": [
@@ -103,7 +115,8 @@
               "src/theme.scss",
               "node_modules/@videogular/ngx-videogular/fonts/videogular.css",
               "src/styles.css",
-              "node_modules/ngx-toastr/toastr.css"
+              "node_modules/ngx-toastr/toastr.css",
+              "node_modules/handsontable/dist/handsontable.full.css"
             ],
             "scripts": []
           }

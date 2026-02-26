@@ -1,0 +1,58 @@
+.activation-dialog {
+    text-align: center;
+    padding: 16px;
+  }
+  
+  .input-container {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin: 16px 0;
+  }
+  
+  .input-element {
+    width: 4vw;
+    height: 4vw;
+    font-size: 24px;
+    text-align: center;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+
+  .mat-raised-button {
+    border-radius: 8px;
+  }
+  
+  .button-container {
+    text-align: center;
+    width: 100%;
+  }
+
+  .header2 {
+    width: 100%; /* Hacer que el botón ocupe el 100% del ancho */
+    padding-top: 8px;
+    padding-bottom: 8px;
+  }
+
+  form{
+    padding: 0;
+  }
+  
+  .clickable-text {
+    color: #f3ae20; /* Color azul como un enlace */
+    cursor: pointer;
+    text-decoration: underline;
+  }
+  
+  .clickable-text:hover {
+    color: #203587; /* Color más oscuro al pasar el mouse */
+  }
+
+
+  .verification-text span,
+.input-container,
+.body,
+.button-container {
+  display: block;  /* Asegura que los spans se comporten como bloques */
+  margin-bottom: 24px;
+}

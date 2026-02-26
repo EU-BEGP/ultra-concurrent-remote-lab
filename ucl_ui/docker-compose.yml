@@ -1,4 +1,4 @@
-version: "3"
+version: "3.8"
 
 services:
   ui:
@@ -6,4 +6,6 @@ services:
       context: .
     ports:
       - "4202:80"
-    restart: ${RESTART_POLICY}
+    restart: unless-stopped
+    environment:
+      - NODE_ENV=production

@@ -1,3 +1,9 @@
+/*
+Copyright (c) Universidad Privada Boliviana (UPB) - EU-BEGP
+MIT License - See LICENSE file in the root directory
+Andres Gamboa, Boris Pedraza, Alex Villazon, Omar Ormachea
+*/
+
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl } from '@angular/forms';
 import { Validators } from '@angular/forms';
@@ -7,6 +13,9 @@ import { ToastrService } from 'ngx-toastr';
 import { AuthService } from '../../services/auth.service';
 import { User } from '../../interfaces/user';
 import config from 'src/app/config.json'
+import { MatDialogRef } from '@angular/material/dialog';
+import { RegistrationComponent } from '../registration/registration.component';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-login',
@@ -26,7 +35,9 @@ export class LoginComponent implements OnInit {
   constructor(
     private authService: AuthService,
     private toastr: ToastrService,
-    private router: Router
+    private router: Router,
+    private dialogRef: MatDialogRef<LoginComponent>,
+    private dialogRefChange: MatDialog,
   ) { }
 
   ngOnInit(): void { }
@@ -49,8 +60,8 @@ export class LoginComponent implements OnInit {
       this.authService.login(user).subscribe((response) => {
         if (response != undefined) {
           localStorage.setItem('token', response.body.token);
-          this.checkReturnUrl();
-          this.toastr.success(`Welcome ${user.email}`);
+          this.dialogRef.close(true)
+          this.toastr.success(`Welcome back`);
         }
       });
     } else {
@@ -86,5 +97,11 @@ export class LoginComponent implements OnInit {
     else {
       this.router.navigateByUrl('');
     }
+  }
+
+  openSignUp(): void {
+    this.dialogRefChange.closeAll(); 
+    const dialogWidth = window.innerWidth < 1000 ? '75vw' : '35vw';
+    this.dialogRefChange.open(RegistrationComponent, { width: dialogWidth });
   }
 }

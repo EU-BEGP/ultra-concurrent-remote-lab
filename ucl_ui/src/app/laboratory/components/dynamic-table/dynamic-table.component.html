@@ -1,0 +1,12 @@
+<div class="table-container mb-16">
+
+    <div #hotTable></div>
+
+    <button *ngIf="!read_only" type="button"
+        class="delete-btn bigger-icon"
+        mat-button
+        (click)="onDeleteTable()">
+        <mat-icon class="accent"
+            matTooltip="Delete Procedure">delete</mat-icon>
+    </button>
+</div>

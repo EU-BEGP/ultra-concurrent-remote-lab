@@ -1,0 +1,637 @@
+<app-navbar></app-navbar>
+<div>
+    <div class="page-container">
+
+        <mat-grid-list style="display: flex;"
+            [cols]="1" rowHeight="28px" class="mb-24 mt-16">
+            <mat-grid-tile rowspan='2'>
+                <span
+                    class="header1 primary ">{{laboratory?.name}}</span>
+            </mat-grid-tile>
+            <mat-grid-tile>
+                <span
+                    class="header3">by {{laboratory?.institution}}</span>
+            </mat-grid-tile>
+
+        </mat-grid-list>
+        <mat-card-content>
+            <form [formGroup]="studentSession" (ngSubmit)="onSubmit()"
+                style="padding: 0px;">
+                <mat-stepper [linear]="false"
+                    [orientation]="(stepperOrientation | async)!"
+                    class="custom-stepper">
+                    <mat-step label="Introduction">
+                        <div class="mt-24">
+                            <span
+                                class="body">{{laboratory?.description}}</span>
+                        </div>
+
+                        <div
+                            class="introduction-video-card center mt-16 mb-8">
+
+                            <app-video-player
+                                [videoSrc]="laboratory?.youtube_video || laboratory?.video"></app-video-player>
+
+                        </div>
+
+                        <span mat-caption
+                            class="input-label header3 mt-24 accent"> Guides
+                        </span>
+
+                        <table mat-table [dataSource]="dataSource"
+                            class="demo-table" matSort>
+                            <!-- Position Column -->
+                            <ng-container matColumnDef="title">
+                                <th mat-header-cell *matHeaderCellDef
+                                    mat-sort-header
+                                    class="header3 table-header">
+                                    Title </th>
+                                <td mat-cell *matCellDef="let element"
+                                    class="body">
+                                    {{element.title}} </td>
+                            </ng-container>
+
+                            <ng-container matColumnDef="url">
+                                <th mat-header-cell *matHeaderCellDef
+                                    class="header3 table-header">
+                                </th>
+                                <td mat-cell *matCellDef="let element"
+                                    class="actions-column">
+                                    <button mat-menu-item type="button"
+                                        (click)="redirectTo(element.url)">
+                                        <span class="header3"> Open Guide
+                                        </span>
+                                        <mat-icon
+                                            class="accent bigger-icon ml-24">open_in_new</mat-icon>
+                                    </button>
+                                </td>
+                            </ng-container>
+
+                            <tr mat-header-row
+                                *matHeaderRowDef="displayedColumns"></tr>
+                            <tr mat-row
+                                *matRowDef="let row; columns: displayedColumns;"></tr>
+
+                        </table>
+
+                        <mat-paginator
+                            [pageSizeOptions]="[5, 10]"></mat-paginator>
+                        <mat-card-actions>
+                            <button type="button" class="header2"
+                                mat-raised-button
+                                matStepperNext>Next</button>
+                        </mat-card-actions>
+                    </mat-step>
+
+                    <div formGroupName="experiments">
+                        <mat-step label="Experimentation"
+                            [stepControl]="experiments">
+                            <mat-tab-group
+                                mat-stretch-tabs="false"
+                                mat-align-tabs="center"
+                                [(selectedIndex)]="selectedTabIndex">
+                                <mat-tab
+                                    *ngFor="let experiment of experiments.controls; index as experimentIndex"
+                                    [formGroupName]="experimentIndex">
+
+                                    <ng-template mat-tab-label
+                                        class="tab-label">
+                                        <span
+                                            class="header3 label">Experiment
+                                            {{experimentIndex + 1}}
+                                            <span class="buttons-container">
+                                                <button type="button"
+                                                    *ngIf="experimentIndex==0"
+                                                    mat-button
+                                                    class="center"
+                                                    (click)="addExperiment()">
+                                                    <mat-icon
+                                                        class="add-new"
+                                                        matTooltip="New Experiment">add_circle</mat-icon>
+                                                </button>
+
+                                                <button type="button"
+                                                    mat-button
+                                                    class="center"
+                                                    (click)="deleteExperiment(experimentIndex)">
+                                                    <mat-icon
+                                                        class="add-new"
+                                                        matTooltip="Delete Experiment">delete</mat-icon>
+                                                </button>
+                                            </span>
+
+                                        </span>
+
+                                    </ng-template>
+
+                                    <mat-expansion-panel hideToggle>
+                                        <mat-expansion-panel-header>
+                                            <mat-panel-title>
+                                                <span mat-caption
+                                                    class="label header3 mt-16 mb-16 accent">
+                                                    Experiment Settings <button
+                                                        type="button"
+                                                        mat-button
+                                                        class="center"
+                                                        (click)="openAvailableExperiments()">
+                                                        <mat-icon
+                                                            class="info-icon"
+                                                            matTooltip="Available Experiments">info</mat-icon>
+                                                    </button>
+                                                </span>
+                                            </mat-panel-title>
+
+                                        </mat-expansion-panel-header>
+                                        <div>
+                                            <mat-label
+                                                class="header3">Available
+                                                Experiments:</mat-label>
+                                            <table
+                                                class="experiment-table mt-16 mb-16">
+                                                <thead>
+                                                    <tr class="header3 primary">
+                                                        <th>#</th>
+                                                        <th>Experiment</th>
+                                                        <th>#</th>
+                                                        <th>Experiment</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <ng-container
+                                                        *ngFor="let exp of experimentCombinations; let i = index">
+                                                        <tr *ngIf="i % 2 === 0"
+                                                            class="header3">
+                                                            <!-- Primera columna -->
+                                                            <td>{{ i + 1 }}</td>
+                                                            <td>{{
+                                                                experimentCombinations[i].label
+                                                                }}</td>
+
+                                                            <!-- Segunda columna, solo si existe -->
+                                                            <td
+                                                                *ngIf="experimentCombinations[i + 1]">{{
+                                                                i + 2 }}</td>
+                                                            <td
+                                                                *ngIf="experimentCombinations[i + 1]">
+                                                                {{
+                                                                experimentCombinations[i
+                                                                + 1].label }}
+                                                            </td>
+                                                        </tr>
+                                                    </ng-container>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </mat-expansion-panel>
+
+                                    <div formGroupName=optionsGroup
+                                        class="mt-16">
+                                        <mat-grid-list
+                                            [cols]="breakpointParameter"
+                                            [gutterSize]="'16px'"
+                                            rowHeight="72px"
+                                            (window:resize)="onResizeParameter($event)"
+                                            formArrayName="selectedOptions">
+                                            <mat-grid-tile
+                                                *ngFor="let parameter of optionsList; index as j">
+                                                <span mat-caption
+                                                    class="parameter-title input-label header3">
+                                                    {{parameter.name}}:
+                                                </span>
+                                                <mat-form-field
+                                                    appearance="outline"
+                                                    class="ml-8 input-field pb-0">
+                                                    <mat-select
+                                                        placeholder="Choose Option"
+                                                        required
+                                                        [formControlName]="j"
+                                                        (selectionChange)="onOptionChange(experiment,experimentIndex)">
+                                                        <mat-option
+                                                            class="parameter"
+                                                            *ngFor="let option of parameter.parameter_options"
+                                                            [value]="option.id">
+                                                            <mat-card
+                                                                class="parameter-option">
+                                                                <img
+                                                                    class="parameter-image"
+                                                                    mat-card-image
+                                                                    [src]="option.image ? option.image : defaultImg">
+
+                                                                <mat-card-content>
+                                                                    <mat-label
+                                                                        class="header3 center">{{
+                                                                        option.value
+                                                                        +
+                                                                        (parameter.unit
+                                                                        &&
+                                                                        parameter.unit
+                                                                        !==
+                                                                        'N/A' ?
+                                                                        ' ' +
+                                                                        parameter.unit
+                                                                        : '') }}
+                                                                    </mat-label>
+                                                                </mat-card-content>
+                                                            </mat-card>
+                                                        </mat-option>
+                                                    </mat-select>
+                                                </mat-form-field>
+                                            </mat-grid-tile>
+                                        </mat-grid-list>
+                                    </div>
+
+                                    <div *ngIf="duplicateExperimentMessage">
+                                        <p
+                                            class="header3 info center mt-24 mb-24">{{
+                                            duplicateExperimentMessage
+                                            }}</p>
+                                    </div>
+
+                                    <div
+                                        *ngIf="experiment.get('experimentNotFound')?.value">
+                                        <span
+                                            class="header3 info center mt-24 mb-24">There
+                                            is no
+                                            Experiment with this
+                                            Configuration,
+                                            change
+                                            it and try
+                                            again</span>
+                                    </div>
+
+                                    <div
+                                        div
+                                        *ngIf="experiment.get('experimentFound')?.value && experiment.get('experimentDetailsGroup') as foundExperiment"
+                                        [formGroup]="foundExperiment">
+
+                                        <span mat-caption
+                                            class="input-label header3 accent">
+                                            Visualization
+                                        </span>
+
+                                        <mat-tab-group mat-stretch-tabs
+                                            class="visualization-video-tabs mat-elevation-z4 center">
+                                            <mat-tab
+                                                *ngFor="let video of foundExperiment.value.experiment_media; index as videoIndex">
+                                                <ng-template mat-tab-label>
+                                                    <span
+                                                        class="header3">{{video.name}}</span>
+                                                </ng-template>
+                                                <div
+                                                    class="visualization-video-card">
+
+                                                    <app-video-player
+                                                        *ngIf="isVideo(video.media) ||  isVideo(video.youtube_video)"
+                                                        [videoSrc]="video.youtube_video || video.media">
+                                                    </app-video-player>
+
+                                                    <!-- Renderiza la imagen si es una imagen -->
+                                                    <div
+                                                        *ngIf="isImage(video.media)"
+                                                        class="video-container">
+                                                        <img
+                                                            [src]="video.media"
+                                                            class="video-player auto-height">
+                                                    </div>
+
+                                                </div>
+                                            </mat-tab>
+                                        </mat-tab-group>
+                                        <span mat-caption
+                                            class="center input-label header3 vertical-center header3 mt-16">
+                                            Download the Experiment data in
+                                            Excel or
+                                            CSV
+                                            File:
+                                            <button mat-button type="button"
+                                                (click)="downloadDataFile(foundExperiment.value.data_file)">
+                                                <mat-icon
+                                                    class="bigger-icon accent"
+                                                    matTooltip="Download">save_alt</mat-icon>
+                                            </button>
+                                        </span>
+
+                                        <div
+                                            *ngIf="(getActivities(experiment)?.controls?.length || 0) > 0"
+                                            formArrayName="experiment_activities">
+                                            <span mat-caption
+                                                class="input-label header3 mt-16 accent">
+                                                Activities
+                                            </span>
+                                            <span *ngIf="hasAllExpectedResults"
+                                                mat-caption
+                                                class="mt-16 grading input-label header1 vertical-center grading">
+                                                Grade: {{grade}}/100
+                                            </span>
+                                            <div
+                                                *ngFor="let activity of getActivities(experiment).controls; index as activityIndex"
+                                                [formGroupName]="activityIndex">
+                                                <span mat-caption
+                                                    class="input-label header3">
+                                                    {{activityIndex+1}}.{{' '+activity.value.statement}}
+                                                </span>
+
+                                                <div
+                                                    formArrayName="procedures">
+                                                    <span mat-caption
+                                                        class="input-label header3 vertical-center primary">
+                                                        Procedure
+                                                        <button
+                                                            type="button"
+                                                            mat-button
+                                                            (click)="openProcedures({'experiment':experiment,'activityIndex':activityIndex})">
+                                                            <mat-icon
+                                                                class="add-new bigger-icon"
+                                                                matTooltip="Add Procedure">add_circle</mat-icon>
+                                                        </button>
+                                                        <p
+                                                            *ngIf="activity.get('procedures')?.errors?.['minLengthArray'] &&
+         (activity.get('procedures')?.touched || activity.get('procedures')?.dirty)"
+                                                            class="error-message body1">
+                                                            Please add at least
+                                                            one procedure
+                                                        </p>
+                                                    </span>
+                                                    <div class="procedure-grid">
+                                                        <ng-container
+                                                            *ngFor="let procedureStep of getExperimentActivityProcedures(experiment, activityIndex).controls; let procedureIndex = index">
+
+                                                            <!-- Cada tabla ocupa una celda independiente -->
+                                                            <div
+                                                                class="procedure-item"
+                                                                [formGroupName]="procedureIndex">
+                                                                <app-dynamic-table
+                                                                    [read_only]="false"
+                                                                    [headers]="procedureStep.get('data_headers')?.value"
+                                                                    [data]="procedureStep.get('data')?.value"
+                                                                    (dataChange)="onExperimentTableDataChange(experiment, activityIndex, procedureIndex, $event)"
+                                                                    (deleteProcedure)="removeExperimentActivityProcedure(experiment, activityIndex, procedureIndex)">
+                                                                </app-dynamic-table>
+                                                            </div>
+
+                                                            <!-- Cada gráfico ocupa una celda independiente -->
+                                                            <div
+                                                                class="procedure-item"
+                                                                *ngIf="procedureStep.get('data_type')?.value == 'chart'">
+                                                                <app-timeline-chart
+                                                                    [data]="procedureStep.get('data')?.value"
+                                                                    [headers]="procedureStep.get('data_headers')?.value || ['C 1', 'C 2']">
+                                                                </app-timeline-chart>
+                                                            </div>
+
+                                                        </ng-container>
+                                                    </div>
+
+                                                </div>
+
+                                                <span mat-caption
+                                                    class="input-label header3 vertical-center primary">
+                                                    Answer
+                                                </span>
+
+                                                <div style="display: flex"
+                                                    *ngIf="activity.value.possible_answers && activity.value.possible_answers.length > 0">
+
+                                                    <mat-chip-list
+                                                        style="width: 85%"
+                                                        class="mat-mdc-chip-set-stacked"
+                                                        aria-label="Possible Answers">
+
+                                                        <mat-chip
+                                                            style="width: 15%"
+                                                            class="center header3"
+                                                            *ngFor="let answer of activity.value.possible_answers"
+                                                            selectable="true"
+                                                            [selected]="activity.get('result')?.value === answer"
+                                                            (click)="activity.get('result')?.setValue(answer)">
+                                                            {{ answer }}
+                                                        </mat-chip>
+                                                        <span
+                                                            *ngIf="activity.value.expected_result"
+                                                            style="width: 15%; align-items: center;"
+                                                            class="ml-16 input-label body1 vertical-center">
+                                                            {{activity.value.result_unit}}
+                                                            <mat-icon
+                                                                style="height: 36px;"
+                                                                *ngIf="activity.value.result && activity.value.result == activity.value.expected_result"
+                                                                class="ml-16 success vertical-center bigger-icon"
+                                                                matTooltip="Right Answer">check</mat-icon>
+                                                            <mat-icon
+                                                                style="height: 36px;"
+                                                                *ngIf="activity.value.result && activity.value.result != activity.value.expected_result"
+                                                                class="ml-16 error vertical-center bigger-icon"
+                                                                matTooltip="Wrong Answer">close</mat-icon>
+                                                        </span>
+
+                                                    </mat-chip-list>
+                                                </div>
+
+                                                <div
+                                                    *ngIf="!activity.value.possible_answers
+                                                    ||
+                                                    activity.value.possible_answers.length
+                                                    === 0"
+                                                    style="display: flex">
+                                                    <mat-form-field
+                                                        style="width: 85%"
+                                                        class="input-field pr-8"
+                                                        appearance="outline">
+                                                        <input matInput
+                                                            placeholder="Answer"
+                                                            formControlName="result"
+                                                            required>
+
+                                                    </mat-form-field>
+                                                    <span
+                                                        *ngIf="activity.value.expected_result"
+                                                        style="width: 15%; align-items: center;"
+                                                        class="ml-16 input-label body1 vertical-center">
+                                                        {{activity.value.result_unit}}
+                                                        <mat-icon
+                                                            style="height: 36px;"
+                                                            *ngIf="activity.value.result && activity.value.result == activity.value.expected_result"
+                                                            class="ml-16 success vertical-center bigger-icon"
+                                                            matTooltip="Right Answer">check</mat-icon>
+                                                        <mat-icon
+                                                            style="height: 36px;"
+                                                            *ngIf="activity.value.result && activity.value.result != activity.value.expected_result"
+                                                            class="ml-16 error vertical-center bigger-icon"
+                                                            matTooltip="Wrong Answer">close</mat-icon>
+                                                    </span>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </mat-tab>
+                            </mat-tab-group>
+
+                            <mat-card-actions>
+                                <button type="button" mat-raised-button
+                                    matStepperPrevious
+                                    class="secondary-button header2">Back</button>
+                                <button type="button" class="header2"
+                                    mat-raised-button
+                                    matStepperNext>Next</button>
+                            </mat-card-actions>
+                        </mat-step>
+                    </div>
+                    <div formGroupName="finalActivities">
+
+                        <mat-step label="Final Activities"
+                            [stepControl]="finalActivities">
+                            <span *ngIf="hasAllExpectedResults" mat-caption
+                                class="mt-16 grading input-label header1 vertical-center grading">
+                                Grade: {{grade}}/100
+                            </span>
+                            <div
+                                *ngFor="let activity of finalActivities.controls; index as activityIndex"
+                                [formGroupName]="activityIndex"
+                                class="mt-16">
+                                <span mat-caption
+                                    class="input-label header3">
+                                    {{activityIndex+1}}.{{' '+activity.value.statement}}
+                                </span>
+                                <div formArrayName="procedures">
+                                    <span mat-caption
+                                        class="input-label header3 vertical-center primary">
+                                        Procedure
+                                        <button type="button" mat-button
+                                            (click)="openProcedures({'activityIndex':activityIndex})">
+                                            <mat-icon
+                                                class="add-new bigger-icon"
+                                                matTooltip="Add Procedure">add_circle</mat-icon>
+                                        </button>
+                                        <p
+                                            *ngIf="activity.get('procedures')?.errors?.['minLengthArray'] &&
+         (activity.get('procedures')?.touched || activity.get('procedures')?.dirty)"
+                                            class="error-message body1">
+                                            Please add at least
+                                            one procedure
+                                        </p>
+                                    </span>
+
+                                    <div class="procedure-grid">
+                                        <ng-container
+                                            *ngFor="let procedureStep of getFinalActivityProcedures(activityIndex).controls; let procedureIndex = index; trackBy: trackByFn">
+                                            <!-- Cada tabla ocupa una celda independiente -->
+                                            <div
+                                                class="procedure-item"
+                                                [formGroupName]="procedureIndex">
+                                                <app-dynamic-table
+                                                    [read_only]="false"
+                                                    [data]="procedureStep.get('data')?.value"
+                                                    [headers]="procedureStep.get('data_headers')?.value"
+                                                    (dataChange)="onTableDataChange(activityIndex, procedureIndex, $event)"
+                                                    (deleteProcedure)="removeProcedure(activityIndex, procedureIndex)">
+                                                </app-dynamic-table>
+                                            </div>
+
+                                            <!-- Cada gráfico ocupa una celda independiente -->
+                                            <div
+                                                class="procedure-item center"
+                                                *ngIf="procedureStep.get('data_type')?.value == 'chart'">
+                                                <app-timeline-chart
+                                                    [data]="procedureStep.get('data')?.value"
+                                                    [headers]="procedureStep.get('data_headers')?.value || ['C 1', 'C 2']">
+                                                </app-timeline-chart>
+                                            </div>
+
+                                        </ng-container>
+                                    </div>
+
+                                </div>
+                                <span mat-caption
+                                    class="input-label header3 vertical-center primary">
+                                    Answer
+                                </span>
+
+                                <div style="display: flex"
+                                    *ngIf="activity.value.possible_answers && activity.value.possible_answers.length > 0">
+
+                                    <mat-chip-list
+                                        style="width: 85%"
+                                        class="mat-mdc-chip-set-stacked"
+                                        aria-label="Possible Answers">
+
+                                        <mat-chip
+                                            style="width: 15%"
+                                            class="center header3"
+                                            *ngFor="let answer of activity.value.possible_answers"
+                                            selectable="true"
+                                            [selected]="activity.get('result')?.value === answer"
+                                            (click)="activity.get('result')?.setValue(answer)">
+                                            {{ answer }}
+                                        </mat-chip>
+                                        <span
+                                            *ngIf="activity.value.expected_result"
+                                            style="width: 15%; align-items: center;"
+                                            class="ml-16 input-label body1 vertical-center">
+                                            {{activity.value.result_unit}}
+                                            <mat-icon
+                                                style="height: 36px;"
+                                                *ngIf="activity.value.result && activity.value.result == activity.value.expected_result"
+                                                class="ml-16 success vertical-center bigger-icon"
+                                                matTooltip="Right Answer">check</mat-icon>
+                                            <mat-icon
+                                                style="height: 36px;"
+                                                *ngIf="activity.value.result && activity.value.result != activity.value.expected_result"
+                                                class="ml-16 error vertical-center bigger-icon"
+                                                matTooltip="Wrong Answer">close</mat-icon>
+                                        </span>
+
+                                    </mat-chip-list>
+                                </div>
+                                <div style="display: flex"
+                                    *ngIf="!activity.value.possible_answers
+                                                    ||
+                                                    activity.value.possible_answers.length
+                                                    === 0">
+                                    <mat-form-field
+                                        style="width: 85%"
+                                        class="input-field pr-8"
+                                        appearance="outline">
+                                        <input matInput
+                                            placeholder="Answer"
+                                            formControlName="result"
+                                            required>
+
+                                    </mat-form-field>
+                                    <span
+                                        *ngIf="activity.value.expected_result"
+                                        style="width: 15%; align-items: center;"
+                                        class="ml-16 input-label body1 vertical-center">
+                                        {{activity.value.result_unit}}
+                                        <mat-icon
+                                            style="height: 36px;"
+                                            *ngIf="activity.value.result && activity.value.result == activity.value.expected_result"
+                                            class="ml-16 success vertical-center bigger-icon"
+                                            matTooltip="Right Answer">check</mat-icon>
+                                        <mat-icon
+                                            style="height: 36px;"
+                                            *ngIf="activity.value.result && activity.value.result != activity.value.expected_result"
+                                            class="ml-16 error vertical-center bigger-icon"
+                                            matTooltip="Wrong Answer">close</mat-icon>
+                                    </span>
+                                </div>
+
+                            </div>
+
+                            <mat-card-actions>
+                                <button type="button" mat-raised-button
+                                    matStepperPrevious
+                                    class="secondary-button header2">Back</button>
+                                <button type="submit" mat-raised-button
+                                    class="header2">Save
+                                    Experiment</button>
+                            </mat-card-actions>
+                        </mat-step>
+                    </div>
+                </mat-stepper>
+            </form>
+
+        </mat-card-content>
+
+    </div>
+</div>

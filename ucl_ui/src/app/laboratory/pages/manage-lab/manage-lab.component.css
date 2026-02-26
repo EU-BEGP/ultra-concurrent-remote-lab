@@ -1,0 +1,63 @@
+.card {
+    padding: 32px;
+    width: 48%; 
+    margin-bottom: 16px;
+    box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;
+}
+
+.card-title {
+    display: flex;
+    justify-content: left; 
+    align-items: center; 
+    gap: 8px; 
+    width: 100%; 
+    text-align: center; 
+  }
+
+.cards-container {
+    display: flex;
+    gap: 20px; 
+    justify-content: center;
+    flex-wrap: wrap; 
+}
+
+.demo-table {
+    max-width: 100%; /* Evita que la tabla se expanda más allá del card */
+    table-layout: fixed; /* Hace que las columnas tengan un ancho fijo */
+    word-wrap: break-word; /* Rompe palabras largas */
+    width: 100%;
+    white-space: nowrap; /* No permite múltiples líneas */
+    overflow: hidden; /* Oculta el contenido que se desborda */
+    text-overflow: ellipsis; /* Agrega '...' cuando el texto no cabe */
+  }
+  
+.demo-table td, 
+.demo-table th {
+    max-width: 150px; /* Limita el ancho de cada celda */
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    padding: 8px 12px; /* Ajusta el padding según sea necesario */
+}
+  
+  
+.dialog-title{
+  margin-bottom: 16px;
+}
+  
+  
+.mat-menu-item .mat-icon-no-color{
+  color: #f3ae20;
+}
+
+.table-header{
+  border-bottom: 3px solid currentColor;
+}
+  
+.buttons-cell  {
+    display: flex;
+    justify-content: center; /* Centra horizontalmente */
+    align-items: center; /* Alinea verticalmente */
+    gap: 10px; /* Espaciado entre botones */
+}
+    

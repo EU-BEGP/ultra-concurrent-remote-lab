@@ -1,26 +1,36 @@
-<div class="exterior-container">
-  <form [formGroup]="editionForm" #formDirective="ngForm" (ngSubmit)="updateUser(formDirective)">
-    <mat-form-field class="input-field">
-      <mat-label>Name</mat-label>
-      <input matInput formControlName="name" />
-    </mat-form-field>
+<div>
+  <mat-card-title class="dialog-title center">
+    <span class="first-title header2">Manage</span>
+    <span class="second-title header2">my Account</span>
+  </mat-card-title>
 
-    <mat-form-field class="input-field">
-      <mat-label>Last name</mat-label>
-      <input matInput formControlName="lastName" />
-    </mat-form-field>
+  <form [formGroup]="editionForm" #formDirective="ngForm"
+    (ngSubmit)="updateUser(formDirective)">
+    <div class="input-container">
+      <span class="body input-label">Name</span>
+      <mat-form-field class="input-field" appearance="outline">
+        <input matInput formControlName="name" />
+      </mat-form-field>
+    </div>
 
-    <mat-form-field class="input-field">
-      <mat-label>Email</mat-label>
-      <input matInput placeholder="user@gmail.com" formControlName="email" />
-      <mat-icon matSuffix>email</mat-icon>
-    </mat-form-field>
+    <div class="input-container">
+      <span class="body input-label">Last name</span>
+      <mat-form-field class="input-field" appearance="outline">
+        <input matInput formControlName="lastName" />
+      </mat-form-field>
+    </div>
 
-    <p class="mat-caption">Required fields are marked with *</p>
+    <div class="input-container">
+      <span class="body input-label">Email</span>
+      <mat-form-field class="input-field" appearance="outline">
+        <input matInput placeholder="user@gmail.com" formControlName="email" />
+        <mat-icon matSuffix>email</mat-icon>
+      </mat-form-field>
+    </div>
 
-    <div class="button-container">
-      <button class="access-button" type="submit" mat-raised-button color="primary">
-        Update data
+    <div class="button-container mt-24">
+      <button mat-raised-button color="primary" type="submit" class="header2">
+        Update
       </button>
     </div>
   </form>

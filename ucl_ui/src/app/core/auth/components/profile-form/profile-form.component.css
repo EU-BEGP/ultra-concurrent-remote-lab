@@ -1,13 +1,27 @@
-.exterior-container {
-  width: 65%;
-  padding-right: 30px;
-  padding-left: 30px;
-  padding-bottom: 30px;
-  margin: auto;
+.mat-caption {
+  color: #f3ae20;
 }
 
-.access-button {
-  width: 50%;
+.input-container {
+  margin-bottom: 16px; /* Añadido espacio entre los inputs */
+  mat-form-field-wrapper{
+    padding-bottom: 0px;
+  }
+}
+
+.input-label {
+  padding-bottom: 0px;
+  margin-bottom: 8px; /* Espacio entre el label y el input */
+  display: block;
+}
+
+
+.input-field {
+  width: 100%;
+}
+
+.mat-raised-button {
+  border-radius: 8px;
 }
 
 .button-container {
@@ -15,16 +29,12 @@
   width: 100%;
 }
 
-@media only screen and (max-width: 680px) {
-  .exterior-container {
-    width: 100%;
-    padding-right: 15px;
-    padding-left: 15px;
-    padding-bottom: 15px;
-    margin: auto;
-  }
-  .access-button {
-    width: 100%;
-  }
+.header2 {
+  width: 100%; /* Hacer que el botón ocupe el 100% del ancho */
+  padding-top: 8px;
+  padding-bottom: 8px;
 }
 
+.mat-form-field {
+  width: 100%;
+}

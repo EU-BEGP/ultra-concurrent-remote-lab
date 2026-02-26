@@ -7,9 +7,10 @@
       "login": "users/token/",
       "signup": "users/signup/",
       "activate": "users/activate/",
-      "passwordReset": "accounts/password_reset/"
-    },
-    "messagesWS": ""
+      "passwordReset": "accounts/password_reset/",
+      "accountActivation": "users/activate-account/",
+      "codeRequest": "users/request-code/"
+    }
   },
   "organizationData": {
     "name": "Universidad Privada Boliviana",

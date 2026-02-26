@@ -1,0 +1,77 @@
+
+
+  .activities-container {
+    display: flex;
+    gap: 20px; 
+    justify-content: center;
+    flex-wrap: wrap; 
+}
+
+.activities-card {
+    padding-bottom: 24px;
+    padding-left: 32px;
+    padding-right: 32px;
+    width: 48%; 
+    min-width: 300px; 
+    box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;
+}
+
+
+  .input-label {
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: center;
+    white-space: nowrap;
+  }
+
+  span {
+    margin-right: 8px; 
+  }
+
+  .activities-card mat-card-title {
+    text-align: center;
+    display: block;
+    margin-top: 16px;
+    margin-bottom: 16px;
+}
+
+/* 🌍 Modo móvil: cambia a una sola columna */
+@media (max-width: 1000px) {
+  .activities-card {
+      width: 100%; 
+  }
+}
+
+.headers {
+  display: flex;
+  flex-direction: column; 
+  align-items: center; 
+  gap: 10px; 
+  margin-top: 24px;
+  margin-bottom: 16px;
+}
+
+.dialog-title {
+  display: flex;
+  justify-content: center; 
+  align-items: center; 
+  gap: 8px; 
+  width: 100%; 
+  text-align: center; 
+}
+
+
+.procedure-item {
+  display: flex;
+  justify-content: center;  /* Alinea horizontalmente */
+  align-items: center;  /* Alinea verticalmente */
+  min-width: 0; 
+  height: auto;  /* Ajusta el alto según el contenido */
+  width: 100%;  /* Asegura que ocupe el 100% del espacio disponible */
+}
+
+/* Si hay un contenedor envolvente para el gráfico */
+.app-timeline-chart {
+  width: 100%;  /* Asegura que el gráfico ocupe todo el ancho del contenedor */
+  height: auto;  /* Ajusta el alto según el contenido */
+}

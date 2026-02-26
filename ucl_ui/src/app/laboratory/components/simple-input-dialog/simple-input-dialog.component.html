@@ -1,0 +1,28 @@
+<div cdkTrapFocus [cdkTrapFocusAutoCapture]="true">
+
+    <mat-card-title class="dialog-title center">
+        <span class="second-title header2">{{ data.title }}</span>
+    </mat-card-title>
+
+    <div class="input-container mt-32">
+        <span class="body input-label">{{ data.label }}</span>
+        <mat-form-field class="input-field" appearance="outline">
+            <input matInput [(ngModel)]="data.value"
+                (keydown.enter)="onSave()"
+                #inputField
+                cdkFocusInitial />
+        </mat-form-field>
+    </div>
+
+    <mat-dialog-actions align="end">
+        <button type="button"
+            mat-raised-button
+            (click)="onCancel()"
+            class="header2 secondary-button">Cancel</button>
+        <button mat-raised-button color="primary" type="submit"
+            (click)="onSave()" [disabled]="!data.value"
+            class="header2">
+            Save
+        </button>
+    </mat-dialog-actions>
+</div>

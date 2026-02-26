@@ -6,6 +6,12 @@ import {
   HttpEvent,
   HttpErrorResponse,
 } from '@angular/common/http';
+/*
+Copyright (c) Universidad Privada Boliviana (UPB) - EU-BEGP
+MIT License - See LICENSE file in the root directory
+Andres Gamboa, Boris Pedraza, Alex Villazon, Omar Ormachea
+*/
+
 import { CookieService } from 'ngx-cookie-service';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';

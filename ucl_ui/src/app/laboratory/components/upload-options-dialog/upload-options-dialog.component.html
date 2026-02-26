@@ -1,0 +1,62 @@
+<mat-card-title class="dialog-title">
+    <span class="first-title header2">Upload</span>
+    <span class="second-title header2">Options</span>
+</mat-card-title>
+
+<mat-dialog-content>
+
+    <!-- Si no se ha seleccionado la opción de YouTube aún -->
+    <div *ngIf="!showYouTubeInput">
+        <mat-grid-list
+            class="mt-16 centered-grid"
+            [gutterSize]="'16px'"
+            [cols]="breakpoint"
+            rowHeight="256px"
+            (window:resize)="onResize($event)">
+            <mat-grid-tile class="tile">
+                <mat-card
+                    (click)="onSelectOption('File')"
+                    class="parameter-option">
+                    <img mat-card-image src="assets/computer.jpg">
+                    <mat-card-content>
+                        <mat-label class="header3 center">From
+                            Computer</mat-label>
+                    </mat-card-content>
+                </mat-card>
+            </mat-grid-tile>
+
+            <mat-grid-tile class="tile">
+                <mat-card
+                    (click)="onSelectOption('Youtube')"
+                    class="parameter-option">
+                    <img mat-card-image src="assets/youtube_logo.png">
+                    <mat-card-content>
+                        <mat-label class="header3 center">YouTube
+                            Link</mat-label>
+                    </mat-card-content>
+                </mat-card>
+            </mat-grid-tile>
+        </mat-grid-list>
+    </div>
+
+    <!-- Si se seleccionó la opción de YouTube, mostrar input -->
+    <div *ngIf="showYouTubeInput" class="youtube-input-container">
+        <div class="input-container">
+            <span class="body input-label mt-16">Enter the YouTube URL</span>
+            <mat-form-field class="input-field" appearance="outline">
+                <input matInput [(ngModel)]="youtubeUrl" />
+            </mat-form-field>
+        </div>
+    </div>
+
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+    <button *ngIf="!showYouTubeInput" mat-dialog-close type="button"
+        mat-raised-button
+        class="header2">Close</button>
+    <button *ngIf="showYouTubeInput"
+        mat-raised-button
+        class="header2"
+        (click)="confirmYouTubeUrl()">Confirm</button>
+</mat-dialog-actions>

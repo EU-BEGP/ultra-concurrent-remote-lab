@@ -1,37 +1,93 @@
-/* ---------------- Activity Content Layout ---------------- */
-.activity-content {
-  display: flex;
-  justify-content: space-between;
-  padding: 10px;
-}
-
-.column {
-  flex: 1;
-  margin-right: 20px;
-  padding: 10px;
-  border: 2px solid #203587;
-  border-radius: 8px;
-  background-color: #f9f9f9;
-}
-
-.column:last-child {
-  margin-right: 0;
-}
-
 /* ---------------- Angular Material ---------------- */
-.mat-button {
-  background-color: #203587;
-  color: white;
-  padding: 8px 12px;
-  font-size: 16px;
+.mat-raised-button {
+  padding: 4px 12px;
   cursor: pointer;
+  border-radius: 8px;
 }
 
-mat-tab-group {
-  margin: 0 auto;
+@media screen and (min-width: 664px) {
+  .mat-raised-button {
+    padding: 8px 16px;
+  }
+}
+
+.home-container {
+    height: calc(100vh - 152px);
+    width: 100%;
+    border-radius: 0;
+    padding: 0;
+    margin-top: 56px;
+    position: relative;
+}
+
+.content {
+  padding: 0;
+  margin: 0;
+  border-radius: 0;
+}
+
+.video {
+  height: calc(100vh - 152px);
   width: 100%;
+  object-fit: cover;
 }
 
-mat-tab-group[mat-align-tabs='center'] .mat-tab-labels {
-  justify-content: center;
+.header-content {
+  position: absolute;
+  color: white;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  width: 100%;
+  padding: 0 20px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  justify-content: center; /* Centra los elementos de arriba hacia abajo */
+  align-items: center; /* Centra los elementos horizontalmente */
+}
+
+.headerHome {
+  color: white;
+  font-size: 3vw;
+  word-wrap: break-word;
+  hyphens: auto;
+  min-width: 60vw;
+  max-width: 90%;
+  margin: 0 auto;
+  line-height: 1.2;
+}
+
+.institution {
+  color: white;
+  font-size: 1.5vw;
+}
+
+.header2 {
+  font-size: 1.2rem;
+  margin-top: 10px;
+  display: block;
+}
+
+.buttonsHome {
+  margin-top: 20px;
+}
+
+@media (max-width: 1200px) {
+  .headerHome {
+    font-size: 4vw;
+  }
+  .institution {
+    font-size: 2vw;
+  }
+}
+
+@media (max-width: 800px) {
+  .headerHome {
+    font-size: 6vw;
+  }
+  .institution {
+    font-size: 3vw;
+  }
 }

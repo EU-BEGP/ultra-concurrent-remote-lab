@@ -1,3 +1,9 @@
+/*
+Copyright (c) Universidad Privada Boliviana (UPB) - EU-BEGP
+MIT License - See LICENSE file in the root directory
+Andres Gamboa, Boris Pedraza, Alex Villazon, Omar Ormachea
+*/
+
 import { Injectable } from '@angular/core';
 import {
   HttpClient,
@@ -67,6 +73,15 @@ export class AuthService {
 
       throw error;
     };
+  }
+  activateAccount(params: any): Observable<any> {
+    var URL = `${config.api.baseUrl}${config.api.users.accountActivation}`;
+    return this.http.patch(URL, params);
+  }
+
+  requestVerificationCode(id: any): Observable<any> {
+    var URL = `${config.api.baseUrl}${config.api.users.codeRequest}`;
+    return this.http.patch(URL, { id: id });
   }
 
   private getServerErrorMessage(error: HttpErrorResponse): string {

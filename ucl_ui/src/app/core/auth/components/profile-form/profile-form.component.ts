@@ -1,3 +1,9 @@
+/*
+Copyright (c) Universidad Privada Boliviana (UPB) - EU-BEGP
+MIT License - See LICENSE file in the root directory
+Andres Gamboa, Boris Pedraza, Alex Villazon, Omar Ormachea
+*/
+
 import { Component, OnInit } from '@angular/core';
 import {
   UntypedFormGroup,
@@ -12,6 +18,7 @@ import { ToastrService } from 'ngx-toastr';
 import { Router } from '@angular/router';
 import { User } from '../../interfaces/user';
 import { UserService } from '../../services/user.service';
+import { MatDialogRef } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-profile-form',
@@ -36,7 +43,8 @@ export class ProfileFormComponent implements OnInit {
   constructor(
     private userService: UserService,
     private toastr: ToastrService,
-    private router: Router
+    private router: Router,
+    private dialogRef: MatDialogRef<ProfileFormComponent>
   ) { }
 
   ngOnInit() {
@@ -87,6 +95,8 @@ export class ProfileFormComponent implements OnInit {
           this.toastr.success('Successful update of user data');
         }
       });
+
+      this.dialogRef.close();
     } else {
       this.toastr.error(
         'Please, complete correctly the information.',
@@ -132,4 +142,6 @@ export class ProfileFormComponent implements OnInit {
       this.router.navigateByUrl('');
     }
   }
+
+  
 }

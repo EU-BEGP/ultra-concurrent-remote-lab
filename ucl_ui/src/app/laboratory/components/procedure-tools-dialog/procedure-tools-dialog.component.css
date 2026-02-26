@@ -1,0 +1,35 @@
+mat-card-actions{
+    justify-content: center;
+    display: flex;
+    margin: 0px 0px
+}
+.parameter-option {
+    height: 216px;
+    width: 240px;
+
+}
+img{ 
+    object-fit:scale-down; 
+    height: 160px; 
+}
+
+.parameter-option:hover{
+    border: 4px solid #000 !important; 
+}
+
+
+.centered-grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.tile{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.mat-card:not([class*=mat-elevation-z]) {
+    box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
+  }

@@ -1,0 +1,215 @@
+
+form{
+    padding: 0px 0px;
+}
+
+mat-card-actions{
+    justify-content: flex-end;
+    display: flex;
+    margin: 0px 0px
+}
+
+.parameter-actions{
+    justify-content: center;
+    display: flex;
+    margin: 0px 0px
+}
+
+.mat-raised-button{
+    padding: 4px 24px;
+  }
+
+.mat-button{
+    margin: 0px 0px !important;
+}
+
+
+@media screen and (min-width:750px) {
+    .page-container{
+        padding: 64px 32px 0px;
+    }
+    .page-title{
+        padding: 0px 16px 16px 24px;
+    }
+  }
+.add-new{
+    margin-top: 4px;
+    color:#f6bd2b;
+    transform: scale(1.5);
+}
+mat-divider{
+    margin: 24px 0px;
+}
+
+.parameter-option {
+    height: 296px;
+    min-width: 200px;
+    mat-form-field-wrapper{
+        padding-bottom: 0px;
+    }
+}
+  
+mat-grid-tile{
+    mat-grid-tile-content{
+   justify-content: left;
+    }
+}
+
+#myInput{
+    opacity: 0; 
+    font-size: 0;
+    float: left; 
+    width: 64px;
+    height: 36px;
+    cursor: pointer;
+}
+#button{
+    float:left; 
+    position:absolute; 
+    height: 36px;
+}
+#label{
+    opacity: 0; 
+    height: 0px;
+    margin: 0px 0px;
+}
+img{ 
+    object-fit: scale-down; 
+    height: 140px; 
+}
+.parameter-title{
+    color:  #203587;
+    align-items: center;
+    width: fit-content;
+}
+
+.upload-title{
+    width: fit-content;
+    justify-content: center;
+    align-items: center;
+    padding-bottom: 0px;
+}
+
+
+
+.video-actions{
+    justify-content: center;
+    padding-bottom: 8px;
+}
+
+.video-card {
+    height: fit-content;
+    width: 55vw;
+    mat-form-field-wrapper{
+        padding-bottom: 0px;
+    }
+}
+
+.intro-video-card {
+    width: 30vw;
+    padding: 0px;
+}
+.introduction-photo{
+    height: 17vw;
+}
+.intro-photo-card {
+    width: 19vw;
+    padding: 0px;
+}
+
+.intro-photo-card .mat-card-image{
+    margin: 0px;
+    width: 100%;
+}
+
+.row:after {
+    content: "";
+    display: table;
+    clear: both;
+  }
+
+
+.column {
+    float: left;
+    width: 50%;
+}
+
+.first-column{
+    padding-right: 24px;
+}
+
+@media screen and (min-width:600px) {
+
+    .video-card {
+        width: 45vw;
+    }
+}
+
+
+@media screen and (max-width:900px) {
+    .intro-video-card {
+        width: 45vw;
+    }
+    .intro-photo-card {
+        width: 35vw;
+    }
+    .introduction-photo{
+        height: 32vw;
+    }
+    .column {
+        width: 100%;
+        padding-right: 0px;
+    }
+}
+
+@media screen and (min-width:900px) {
+    .video-card {
+        width: 28vw;
+    }
+}
+
+
+@media screen and (min-width:1300px) {
+
+    .video-card {
+        width: 25vw;
+    }
+}
+
+
+@media screen and (min-width:1600px) {
+
+    .video-card {
+        width: 20vw;
+    }
+}
+
+.procedure-grid {
+    display: grid;
+    gap: 16px; 
+    padding-right: 40px; 
+  }
+  
+  .procedure-item {
+    min-width: 0; 
+  }
+  
+  
+  @media (min-width: 1024px) {
+    .procedure-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+  
+  @media (max-width: 1023px) {
+    .procedure-grid {
+      grid-template-columns:  1fr;
+    }
+  }
+
+:host ::ng-deep .my-custom-field .mat-form-field-wrapper {
+  padding-bottom: 0 !important;
+}
+  
+
+

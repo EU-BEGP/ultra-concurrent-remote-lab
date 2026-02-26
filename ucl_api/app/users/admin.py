@@ -1,3 +1,7 @@
+# Copyright (c) Universidad Privada Boliviana (UPB) - EU-BEGP
+# MIT License - See LICENSE file in the root directory
+# Andres Gamboa, Boris Pedraza, Alex Villazon, Omar Ormachea
+
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.utils.translation import gettext as _
@@ -6,9 +10,23 @@ from users import models
 
 
 class UserAdmin(BaseUserAdmin):
-    search_fields = ("email", "name", "last_name")
+    search_fields = (
+        "email",
+        "name",
+        "last_name",
+    )
     ordering = ["id"]
-    list_display = ["id", "email", "name", "last_name", "is_active"]
+    list_display = [
+        "id",
+        "email",
+        "name",
+        "last_name",
+        "email_verification_code",
+        "email_expiration_time",
+        "is_active",
+        "is_superuser",
+        "current_groups",
+    ]
     fieldsets = (
         (None, {"fields": ("email", "password")}),
         (_("Personal Info"), {"fields": ("name", "last_name")}),
@@ -19,7 +37,8 @@ class UserAdmin(BaseUserAdmin):
         (_("Important dates"), {"fields": ("last_login",)}),
     )
     add_fieldsets = (
-        (None, {"classes": ("wide",), "fields": ("email", "password1", "password2")}),
+        (None, {"classes": ("wide",), "fields": (
+            "email", "password1", "password2")}),
     )
 
 
